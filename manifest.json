@@ -1,0 +1,18 @@
+{
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDescription__",
+  "version": "1",
+  "manifest_version": 2,
+  "default_locale": "en",
+  "permissions": [
+    "serial"
+  ],
+  "icons": {},
+  "app": {
+    "background": {
+      "scripts": [
+        "background.js"
+      ]
+    }
+  }
+}
