@@ -15,14 +15,14 @@ Parallax microcontroller development environment based on Chrome application tec
 
 2. Open your Chrome browser and navigate to 
 
-	```chrome://extensions```
+	``` chrome://extensions ```
 	
 3. Click on __'Load unpacked extensions...'__, go to the directory where ChromeIDE was cloned, highlight the *'ChromeIDE'* folder and and click select.
 	
 	![load extension](readme-images/load-unpacked-extensions.png =600x)
 	![select folder](readme-images/select-extension-folder.png =600x)
 	
-4. Return to the ``` chrome://extensions``` page and you should see __'Parallax Chrome IDE'__ listed in available extensions.
+4. Return to the ``` chrome://extensions ``` page and you should see __'Parallax Chrome IDE'__ listed in available extensions.
 
 	![chromeIDE listed](readme-images/chromeIDE-listed.png =600x)
 5. Ensure the checkbox is *'enabled'* and click __'launch'__.
