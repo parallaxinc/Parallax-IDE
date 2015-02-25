@@ -1,7 +1,7 @@
 # ChromeIDE
 Parallax microcontroller development environment based on Chrome application technologies.
 
-## Getting Started
+## Installing from Source
 
 1. Clone this respository.  Choose your file destination from Terminal and
 
