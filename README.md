@@ -1,5 +1,4 @@
 # ChromeIDE
-====
 Parallax microcontroller development environment based on Chrome application technologies.
 
 ## Getting Started
@@ -24,10 +23,10 @@ Parallax microcontroller development environment based on Chrome application tec
 	![load extension](readme-images/load-unpacked-extensions.png)
 	![select folder](readme-images/select-extension-folder.png)
 
-4. Return to the ``` chrome://extensions ``` page and you should see __'Parallax Chrome IDE'__ listed in available extensions.
+5. Return to the ``` chrome://extensions ``` page and you should see __'Parallax Chrome IDE'__ listed in available extensions.
 
 	![chromeIDE listed](readme-images/chromeIDE-listed.png)
-5. Ensure the checkbox is *'enabled'* and click __'launch'__.
-6. __Congratulations!__ You just launched your chrome app which will look something like this:
+6. Ensure the checkbox is *'enabled'* and click __'launch'__.
+7. __Congratulations!__ You just launched your chrome app which will look something like this:
 
 	![app launched](readme-images/chromeIDE-launched.png)
