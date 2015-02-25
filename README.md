@@ -15,7 +15,11 @@ Parallax microcontroller development environment based on Chrome application tec
 
 	``` chrome://extensions ```
 
-3. Click on __'Load unpacked extensions...'__, go to the directory where ChromeIDE was cloned, highlight the *'ChromeIDE'* folder and and click select.
+3. Enable 'Developer Mode' by clicking the checkbox.
+
+  ![enable developer mode](readme-images/enable-developer-mode.png)
+
+4. Click on __'Load unpacked extensions...'__, go to the directory where ChromeIDE was cloned, highlight the *'ChromeIDE'* folder and and click select.
 
 	![load extension](readme-images/load-unpacked-extensions.png)
 	![select folder](readme-images/select-extension-folder.png)
