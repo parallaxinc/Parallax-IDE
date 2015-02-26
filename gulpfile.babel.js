@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const gulp = require('gulp');
 const chalk = require('chalk');
 const gutil = require('gulp-util');
@@ -12,6 +14,9 @@ const webpackConfig = {
   output: {
     path: __dirname,
     filename: 'bundle.js'
+  },
+  resolveLoader: {
+    root: path.join(__dirname, 'node_modules')
   },
   module: {
     loaders: [
