@@ -21,6 +21,14 @@ const webpackConfig = {
   module: {
     loaders: [
       {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
+      {
+        test:/\.html$/,
+        loader: 'html-loader'
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: [
@@ -29,6 +37,7 @@ const webpackConfig = {
       }
     ]
   },
+  bail: true,
   watch: shouldWatch
 };
 
