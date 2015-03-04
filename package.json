@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "codemirror": "^4.13.0",
-    "holovisor": "0.0.3",
-    "irken": "git://github.com/iceddev/irken#workspaces",
+    "holovisor": "0.0.4",
+    "irken": "^0.2.0",
     "react": "^0.12.2",
     "react-material": "git://github.com/iceddev/react-material#fake-release",
     "react-style": "git://github.com/trungpham/react-style#es5-compatible"
