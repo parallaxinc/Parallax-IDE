@@ -10,19 +10,42 @@ function editor(app, opts, cb){
 
   var codeEditor;
 
+  var space = app.workspace;
+
   app.view('editor', function(el, cb){
     console.log('editor render');
 
     if(!codeEditor){
       codeEditor = CodeMirror(el, {
-        value: opts.initial,
+        value: space.current.deref(),
         mode: 'javascript',
         theme: 'neo',
         lineNumbers: true
       });
+
+      codeEditor.on('change', handleChange);
+
+      space._structure.on('swap', function(){
+        var editorCursor = codeEditor.getCursor();
+        var current = space.current.deref();
+        if(current !== codeEditor.getValue()){
+          codeEditor.setValue(current);
+          codeEditor.setCursor(editorCursor);
+        }
+      });
     }
 
     cb();
+  });
+
+  function handleChange(inst){
+    space.current.update(function(){
+      return inst.getValue();
+    });
+  }
+
+  space.current.update(function(){
+    return opts.initial;
   });
 
   cb();
