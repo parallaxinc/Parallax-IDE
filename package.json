@@ -27,9 +27,8 @@
     "html-loader": "^0.2.3",
     "json-loader": "^0.5.1",
     "lab": "^5.2.1",
-    "process": "^0.10.0",
     "style-loader": "^0.8.3",
-    "webpack": "^1.6.0"
+    "webpack": "^1.7.2"
   },
   "scripts": {
     "test": "lab -cv",
