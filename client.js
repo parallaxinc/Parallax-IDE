@@ -31,3 +31,6 @@ app.register(plugins, function(err){
     console.log('rendered', err);
   });
 });
+
+// for debugging purposes
+window.app = app;

@@ -15,9 +15,6 @@ const webpackConfig = {
     path: __dirname,
     filename: 'bundle.js'
   },
-  resolveLoader: {
-    root: path.join(__dirname, 'node_modules')
-  },
   module: {
     loaders: [
       {
@@ -29,6 +26,10 @@ const webpackConfig = {
         loader: 'html-loader'
       },
       {
+        test:/\.json$/,
+        loader: 'json-loader'
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: [
@@ -36,6 +37,16 @@ const webpackConfig = {
         ]
       }
     ]
+  },
+  resolve: {
+    alias: {
+      // replacing `fs` with a browser-compatible version
+      fs: 'browserify-fs'
+    }
+  },
+  node: {
+    // `process` was out of date, replaced with newer
+    process: 'process/browser'
   },
   bail: true,
   watch: shouldWatch
