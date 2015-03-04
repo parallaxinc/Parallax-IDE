@@ -44,10 +44,6 @@ const webpackConfig = {
       fs: 'browserify-fs'
     }
   },
-  node: {
-    // `process` was out of date, replaced with newer
-    process: 'process/browser'
-  },
   bail: true,
   watch: shouldWatch
 };

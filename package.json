@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "codemirror": "^4.13.0",
-    "holovisor": "0.0.3",
-    "irken": "git://github.com/iceddev/irken#workspaces",
+    "holovisor": "0.0.4",
+    "irken": "^0.2.0",
     "react": "^0.12.2",
     "react-material": "git://github.com/iceddev/react-material#fake-release",
     "react-style": "git://github.com/trungpham/react-style#es5-compatible"
@@ -27,9 +27,8 @@
     "html-loader": "^0.2.3",
     "json-loader": "^0.5.1",
     "lab": "^5.2.1",
-    "process": "^0.10.0",
     "style-loader": "^0.8.3",
-    "webpack": "^1.6.0"
+    "webpack": "^1.7.2"
   },
   "scripts": {
     "test": "lab -cv",

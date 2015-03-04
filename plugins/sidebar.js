@@ -48,11 +48,9 @@ function sidebar(app, opts, cb){
 
   var space = app.workspace;
 
-  // TODO: add API in irken for setting filename
-  var ourName = '';
-
   function save(){
-    space.saveFile(ourName, space.current, function(err){
+    // TODO: these should transparently accept cursors for all non-function params
+    space.saveFile(space.filename.deref(), space.current, function(err){
       console.log('saved', err);
     });
   }
@@ -60,7 +58,9 @@ function sidebar(app, opts, cb){
   function updateName(evt){
     evt.stopPropagation();
     evt.preventDefault();
-    ourName = evt.target.value;
+    space.filename.update(function(){
+      return evt.target.value;
+    });
   }
 
   app.view('sidebar', function(el, cb){
@@ -69,9 +69,14 @@ function sidebar(app, opts, cb){
     var Component = (
       <Sidebar>
         <FileList>
-        {space.directory.map((filename) => <ListItem disableRipple>{filename}</ListItem>).toJS()}
+        {space.directory.map((filename) => <ListItem key={filename} disableRipple>{filename}</ListItem>).toJS()}
         </FileList>
-        <TextField placeHolder="filename" styles={styles.textField} floatingLabel onChange={updateName} />
+        <TextField
+          value={space.filename.deref()}
+          placeHolder="filename"
+          styles={styles.textField}
+          floatingLabel
+          onChange={updateName} />
         <Button raised onClick={save}>Save</Button>
       </Sidebar>
     );
