@@ -41,7 +41,8 @@ const webpackConfig = {
   resolve: {
     alias: {
       // replacing `fs` with a browser-compatible version
-      fs: 'browserify-fs'
+      fs: 'browserify-fs',
+      leveldown: 'level-js'
     }
   },
   bail: true,

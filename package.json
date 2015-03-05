@@ -10,10 +10,11 @@
     "codemirror": "^4.13.0",
     "frylord": "^0.2.0",
     "holovisor": "0.0.4",
-    "irken": "git://github.com/iceddev/irken#expose",
+    "irken": "^0.3.0",
     "react": "^0.12.2",
     "react-material": "git://github.com/iceddev/react-material#fake-release",
-    "react-style": "git://github.com/trungpham/react-style#es5-compatible"
+    "react-style": "git://github.com/trungpham/react-style#es5-compatible",
+    "snacks": "^0.1.0"
   },
   "devDependencies": {
     "babel": "^4.5.1",
@@ -28,6 +29,7 @@
     "html-loader": "^0.2.3",
     "json-loader": "^0.5.1",
     "lab": "^5.2.1",
+    "level-js": "^2.1.6",
     "style-loader": "^0.8.3",
     "webpack": "^1.7.2"
   },

@@ -85,7 +85,9 @@ function sidebar(app, opts, cb){
     React.render(Component, el, cb);
   });
 
-  space.changeDir('tmp', cb);
+  var cwd = app.userConfig.get('cwd') || 'new-project';
+
+  space.changeDir(cwd, cb);
 }
 
 module.exports = sidebar;
