@@ -69,7 +69,8 @@ function sidebar(app, opts, cb){
     var Component = (
       <Sidebar>
         <FileList>
-        {space.directory.map((filename) => <ListItem key={filename} disableRipple>{filename}</ListItem>).toJS()}
+          <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
+          {space.directory.map((filename) => <ListItem key={filename}>{filename}</ListItem>).toJS()}
         </FileList>
         <TextField
           value={space.filename.deref()}
