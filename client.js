@@ -6,6 +6,9 @@ var app = new Irken();
 
 var plugins = [
   {
+    register: require('frylord')
+  },
+  {
     register: require('holovisor')
   },
   {
