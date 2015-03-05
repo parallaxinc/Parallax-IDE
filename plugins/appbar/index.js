@@ -1,14 +1,15 @@
 'use strict'
 
-var React = require('react');
-var AppBar = require('react-material/components/AppBar');
+const React = require('react');
+
+const TopBar = require('./component');
 
 function appbar(app, opts, cb){
   app.view('appbar', function(el, cb){
     console.log('appbar render');
 
-    var Component = (
-      <AppBar title={opts.title}></AppBar>
+    const Component = (
+      <TopBar title={opts.title} app={app} />
     );
 
     React.render(Component, el, cb);
