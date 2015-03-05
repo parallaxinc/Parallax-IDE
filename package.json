@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "codemirror": "^4.13.0",
-    "frylord": "^0.3.0",
+    "frylord": "^0.4.0",
     "holovisor": "0.0.4",
     "irken": "^0.3.0",
     "react": "^0.12.2",
