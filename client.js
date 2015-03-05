@@ -9,6 +9,9 @@ var plugins = [
     register: require('frylord')
   },
   {
+    register: require('snacks')
+  },
+  {
     register: require('holovisor')
   },
   {

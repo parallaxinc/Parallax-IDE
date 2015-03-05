@@ -63,6 +63,7 @@ const TopBar = React.createClass({
     const space = this.props.app.workspace;
 
     space.changeDir(this.state.projectName, () => {
+      this.props.app.userConfig.set('cwd', this.state.projectName);
       // TODO: handle error
       this.setState({ projectName: '' }, this.hideSidebar)
     });
