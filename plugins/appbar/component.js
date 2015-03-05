@@ -46,7 +46,6 @@ const TopBar = React.createClass({
       chooserType: ''
     });
   },
-
   updateName: function(evt){
     evt.stopPropagation();
     evt.preventDefault();
@@ -55,13 +54,11 @@ const TopBar = React.createClass({
       projectName: evt.target.value
     });
   },
-
   openDir: function(name){
     this.setState({
       projectName: name
     }, this.changeProject);
   },
-
   changeProject: function(){
     const space = this.props.app.workspace;
 
@@ -70,7 +67,6 @@ const TopBar = React.createClass({
       this.setState({ projectName: '' }, this.hideSidebar)
     });
   },
-
   renderChooser: function(){
     const space = this.props.app.workspace;
 
