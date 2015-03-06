@@ -10,6 +10,7 @@ const SideNavigation = require('react-material/components/SideNavigation');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
 
+const IconButton = require('./icon-button');
 const styles = require('./styles');
 
 const TopBar = React.createClass({
@@ -59,6 +60,16 @@ const TopBar = React.createClass({
       projectName: name
     }, this.changeProject);
   },
+  deleteDir: function(name, evt){
+    const space = this.props.app.workspace;
+
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    space.deleteDir(name, function(){
+      console.log('dir deleted', name);
+    });
+  },
   changeProject: function(){
     const space = this.props.app.workspace;
 
@@ -99,6 +110,11 @@ const TopBar = React.createClass({
             {space.projects.map((dirname) => (
               <ListItem icon="folder" key={dirname} onClick={() => this.openDir(dirname)}>
                 {dirname}
+                {
+                  dirname !== space.cwd.deref().substr(1)
+                  ? <IconButton icon="delete" onClick={(evt) => this.deleteDir(dirname, evt)} />
+                  : ''
+                }
               </ListItem>
             )).toJS()}
           </List>

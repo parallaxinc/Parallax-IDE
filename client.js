@@ -21,12 +21,15 @@ var plugins = [
     }
   },
   {
-    register: require('./plugins/sidebar')
+    register: require('./plugins/sidebar'),
+    options: {
+      defaultProject: 'new-project'
+    }
   },
   {
     register: require('./plugins/editor'),
     options: {
-      initial: `function helloWorld(hello){\n  hello = 'world';\n}`
+      initial: ''
     }
   }
 ];

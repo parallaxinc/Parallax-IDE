@@ -26,7 +26,22 @@ const styles = {
   buttonGroup: {
     alignSelf: 'flex-end',
     marginTop: 'auto'
-  }
+  },
+  deleteButton: {
+    border: 0,
+    background: 'none',
+    padding: 0,
+    float: 'right',
+    position: 'relative',
+    zIndex: 7
+  },
+  buttonIcon: ReactStyle({
+    display: 'inline-block',
+    padding: 0,
+    width: '30px',
+    verticalAlign: 'middle',
+    pointerEvents: 'none',
+  })
 };
 
 module.exports = styles;
