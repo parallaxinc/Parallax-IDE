@@ -50,3 +50,19 @@ This is a one-time procedure needed to initially run the application.  To build 
 1. __Congratulations!__ You just launched ChromeIDE which will look something like this:
 
 	![app launched](readme-images/chromeIDE-launched.png)
+
+
+## Coming Back
+
+One you install the built application it is super easy to launch it again.  You can either:
+
+* go to ``` chrome:// extensions ```, search through the list until you find *Parallax ChromeIDE* and then click `launch'
+
+or
+
+* go to chrome app launcher and click on/search for *Parallax ChromeIDE*
+
+  ![chrome app launcher](readme-images/chrome-app-launcher.png)
+
+  ![click chromeIDE](readme-images/search-chrome-app-launcher.png)
+
