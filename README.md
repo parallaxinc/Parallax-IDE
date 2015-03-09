@@ -3,15 +3,15 @@ Parallax microcontroller development environment based on Chrome application tec
 
 ## Building from Source/Developing
 
-This is a one-time procedure needed to initially run the application.  To build the application you will need the node.js JavaScript runtime.  node.js itself comes bundled with the 'npm' package manager. If you don't have it, then:
+Most of below is a one-time procedure needed to build the application, unless otherwise noted.  To build the application you will need the node.js JavaScript runtime.  node.js itself comes bundled with the `npm` package manager. If you don't have it, then:
 
 1. Install node.js by going to [nodejs.org/download](https://nodejs.org/download/) and selecting the option that is right for your system.
 
-1. You also need all the dependencies for node-gyp, a cross-platform command-line tool written in node.js for compiling native addon modules for node.js.  The gyp project is used by the Chromium team makes it easier to build across platforms.
+1. You also need all the dependencies for node-gyp, a tool that comes with node.js for compiling native addon modules.  The gyp project is used by the Chromium team makes it easier to build across platforms.
 
   Please visit the [node-gyp page](https://github.com/TooTallNate/node-gyp#installation) and note your system and the dependencies you will need.
 
-  _* Note: that you do not need to install node-gyp, only its dependencies._
+  __* Note: that you do not need to install node-gyp, only its dependencies.__
 
 1. Clone this respository.  Assuming you have `git` installed (if not, [go here](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git)), choose your file destination from the command-line (CLI like Terminal), and
 
@@ -23,17 +23,17 @@ This is a one-time procedure needed to initially run the application.  To build 
 
   ` cd  ChromeIDE/ `
 
-1. Get all the project dependencies.  At the root of the project you will find `package.json`.  This manifest file includes a list of project dependencies needed to build the application. To learn more, [see this post on dependency installation](https://github.com/iceddev/getting-started/blob/master/environments/nodejs-and-npm.md#user-content-dependency-installation).
+1. Get all the project dependencies.  At the root of the project you will find `package.json`.  This manifest file includes a list of project dependencies needed to build the application. To learn more, [see this post on dependency installation](https://github.com/iceddev/getting-started/blob/master/environments/nodejs-and-npm.md#user-content-dependency-installation). __This step must be run each time you update the repository (including pulling updates from GitHub).__
 
   To get dependencies, enter:
 
   ` npm install `
 
-1. Build and bundle the application by entering
+1. Build the application by entering. __This step must be run each time you update the repository (including pulling updates from GitHub).__
 
   `npm run build` or `npm run build -- --watch`*
 
-  _* if you want to build on any change during development_
+  __* Note: using `--watch` will result in a rebuild of the application any time a file changes__
 
 
 ## Installing in Chrome
