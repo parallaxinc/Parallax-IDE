@@ -23,7 +23,7 @@ This is a one-time procedure needed to initially run the application.  To build 
 
   ` cd  ChromeIDE/ `
 
-1. Get all the project dependencies.  At the root of the project you will find `package.json'.  This manifest file includes a list of project dependencies needed to build the application. To learn more, [see this post on dependency installation](https://github.com/iceddev/getting-started/blob/master/environments/nodejs-and-npm.md#user-content-dependency-installation).
+1. Get all the project dependencies.  At the root of the project you will find `package.json`.  This manifest file includes a list of project dependencies needed to build the application. To learn more, [see this post on dependency installation](https://github.com/iceddev/getting-started/blob/master/environments/nodejs-and-npm.md#user-content-dependency-installation).
 
   To get dependencies, enter:
 
