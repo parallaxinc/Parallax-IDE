@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "browser-serialport": "git://github.com/garrows/browser-serialport#update",
+    "bs2-serial": "jacobrosenthal/bs2-serial",
     "codemirror": "^4.13.0",
     "frylord": "^0.4.0",
     "holovisor": "^0.1.1",
