@@ -6,6 +6,9 @@ var app = new Irken();
 
 var plugins = [
   {
+    register: require('bs2-serial')
+  },
+  {
     register: require('frylord')
   },
   {

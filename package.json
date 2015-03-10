@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "browser-serialport": "git://github.com/garrows/browser-serialport#update",
     "codemirror": "^4.13.0",
     "frylord": "^0.4.0",
     "holovisor": "^0.1.1",
