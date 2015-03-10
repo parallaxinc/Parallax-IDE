@@ -38,7 +38,15 @@ const webpackConfig = {
       }
     ]
   },
+  resolveLoader: {
+    // this is a workaround for loaders being applied
+    // to linked modules
+    root: path.join(__dirname, 'node_modules')
+  },
   resolve: {
+    // this is a workaround for aliasing a top level dependency
+    // inside a symlinked subdependency
+    root: path.join(__dirname, 'node_modules'),
     alias: {
       // replacing `fs` with a browser-compatible version
       fs: 'browserify-fs',
