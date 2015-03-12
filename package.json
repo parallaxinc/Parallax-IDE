@@ -20,21 +20,25 @@
     "babel": "^4.5.1",
     "babel-core": "^4.5.1",
     "babel-loader": "^4.0.0",
+    "babelify": "^5.0.4",
     "browserify-fs": "^1.0.0",
     "chalk": "^1.0.0",
-    "code": "^1.3.0",
     "css-loader": "^0.9.1",
+    "expect": "git://github.com/phated/expect",
     "gulp": "git://github.com/gulpjs/gulp#4.0",
     "gulp-util": "^3.0.4",
     "html-loader": "^0.2.3",
     "json-loader": "^0.5.1",
-    "lab": "^5.2.1",
     "level-js": "^2.1.6",
+    "mocha": "^2.2.1",
+    "phantomjs": "git://github.com/phated/phantomjs",
     "style-loader": "^0.8.3",
-    "webpack": "^1.7.2"
+    "webpack": "^1.7.2",
+    "zuul": "^2.1.1"
   },
   "scripts": {
-    "test": "lab -cv",
+    "test": "zuul test/*.js --local --open",
+    "ci": "zuul test/*.js --phantom",
     "build": "gulp"
   },
   "repository": {
