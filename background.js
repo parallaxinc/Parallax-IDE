@@ -2,11 +2,12 @@
 
 // Listens for the app launching then creates the window
 chrome.app.runtime.onLaunched.addListener(function() {
-  var width = 500;
-  var height = 300;
+  var width = 1000;
+  var height = 500;
 
   chrome.app.window.create('index.html', {
     id: 'main',
+    state: 'maximized',
     bounds: {
       width: width,
       height: height,
