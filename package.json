@@ -9,12 +9,12 @@
   "dependencies": {
     "codemirror": "^4.13.0",
     "frylord": "^0.4.0",
-    "holovisor": "0.0.4",
-    "irken": "^0.3.0",
-    "react": "^0.12.2",
-    "react-material": "git://github.com/iceddev/react-material#fake-release",
-    "react-style": "git://github.com/trungpham/react-style#es5-compatible",
-    "snacks": "^0.1.0"
+    "holovisor": "^0.1.1",
+    "irken": "^0.4.1",
+    "react": "^0.13.0",
+    "react-material": "git://github.com/iceddev/react-material#fake-release-13",
+    "react-style": "^0.4.0",
+    "snacks": "^0.2.0"
   },
   "devDependencies": {
     "babel": "^4.5.1",

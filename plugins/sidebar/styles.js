@@ -1,9 +1,9 @@
 'use strict';
 
-const ReactStyle = require('react-style');
+const StyleSheet = require('react-style');
 
 const styles = {
-  card: ReactStyle({
+  card: StyleSheet.create({
     margin: 0,
     height: 'auto',
     width: '100%',
@@ -11,7 +11,7 @@ const styles = {
     flexDirection: 'column'
   }),
   textField: {
-    containerStyling: ReactStyle({
+    containerStyling: StyleSheet.create({
       width: '100%'
     })
   },
@@ -20,7 +20,7 @@ const styles = {
     flexDirection: 'column',
     marginTop: 'auto'
   },
-  button: ReactStyle({
+  button: StyleSheet.create({
     marginTop: '10px'
   })
 };
