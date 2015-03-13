@@ -1,13 +1,13 @@
 'use strict';
 
-const ReactStyle = require('react-style');
+const StyleSheet = require('react-style');
 
 const styles = {
-  sideNav: ReactStyle({
+  sideNav: StyleSheet.create({
     zIndex: 5,
     width: '13rem'
   }),
-  chooser: ReactStyle({
+  chooser: StyleSheet.create({
     zIndex: 6,
     width: '100%',
     maxWidth: '30rem',
@@ -16,11 +16,11 @@ const styles = {
     flexDirection: 'column'
   }),
   textField: {
-    containerStyling: ReactStyle({
+    containerStyling: StyleSheet.create({
       width: '100%'
     })
   },
-  createButton: ReactStyle({
+  createButton: StyleSheet.create({
     marginLeft: '10px'
   }),
   buttonGroup: {
@@ -35,7 +35,7 @@ const styles = {
     position: 'relative',
     zIndex: 7
   },
-  buttonIcon: ReactStyle({
+  buttonIcon: StyleSheet.create({
     display: 'inline-block',
     padding: 0,
     width: '30px',

@@ -9,6 +9,7 @@ const Overlay = require('react-material/components/Overlay');
 const SideNavigation = require('react-material/components/SideNavigation');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
+const Icon = require('react-material/components/Icon');
 
 const IconButton = require('./icon-button');
 const styles = require('./styles');
@@ -132,8 +133,8 @@ const TopBar = React.createClass({
         <Overlay show={show} onClick={this.hideSidebar} />
         <SideNavigation show={show} styles={styles.sideNav}>
           <List>
-            <ListItem icon="folder" onClick={this.showNewChooser}>New Project</ListItem>
-            <ListItem icon="folder-open" onClick={this.showOpenChooser}>Open Project</ListItem>
+            <ListItem icon onClick={this.showNewChooser}><Icon icon="folder" /> New Project</ListItem>
+            <ListItem icon onClick={this.showOpenChooser}><Icon icon="folder-open" /> Open Project</ListItem>
           </List>
         </SideNavigation>
         {this.renderChooser()}
