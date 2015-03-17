@@ -50,7 +50,8 @@ const webpackConfig = {
     alias: {
       // replacing `fs` with a browser-compatible version
       fs: 'browserify-fs',
-      memdown: 'level-js'
+      memdown: 'level-js',
+      serialport: 'browser-serialport'
     }
   },
   bail: true,

@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "bs2-serial": "jacobrosenthal/bs2-serial",
     "codemirror": "^4.13.0",
     "frylord": "^0.4.0",
     "holovisor": "^0.1.1",
@@ -22,6 +23,7 @@
     "babel-loader": "^4.0.0",
     "babelify": "^5.0.4",
     "browserify-fs": "^1.0.0",
+    "browser-serialport": "git://github.com/garrows/browser-serialport#update",
     "chalk": "^1.0.0",
     "css-loader": "^0.9.1",
     "expect": "git://github.com/phated/expect",
