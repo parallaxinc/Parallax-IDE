@@ -10,3 +10,14 @@ before_install:
   - tar -xjf phantomjs-2.0.0-ubuntu-12.04.tar.bz2
   - export PATH=$PWD:$PATH
 script: npm run ci
+# whenever a tag is pushed, we deploy to github releases
+before_deploy: npm run release
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file: "dist/chromeide.zip"
+  skip_cleanup: true
+  on:
+    tags: true
+    node: '0.10'
+    all_branches: true

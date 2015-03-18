@@ -26,9 +26,11 @@
     "browser-serialport": "git://github.com/garrows/browser-serialport#update",
     "chalk": "^1.0.0",
     "css-loader": "^0.9.1",
+    "del": "^1.1.1",
     "expect": "git://github.com/phated/expect",
     "gulp": "git://github.com/gulpjs/gulp#4.0",
     "gulp-util": "^3.0.4",
+    "gulp-zip": "^2.0.3",
     "html-loader": "^0.2.3",
     "json-loader": "^0.5.1",
     "level-js": "^2.1.6",
@@ -41,7 +43,9 @@
   "scripts": {
     "test": "zuul test/*.js --local --open",
     "ci": "zuul test/*.js --phantom",
-    "build": "gulp"
+    "build": "gulp",
+    "release": "gulp gh-release",
+    "postinstall": "gulp postinstall"
   },
   "repository": {
     "type": "git",
