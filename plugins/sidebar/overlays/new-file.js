@@ -5,7 +5,7 @@ const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
 
-const styles = require('./styles');
+const styles = require('../styles');
 
 class NewFileOverlay extends React.Component {
   constructor(){
