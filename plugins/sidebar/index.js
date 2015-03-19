@@ -8,9 +8,10 @@ const FileList = require('./file-list');
 const File = require('./file');
 const FileOperations = require('./file-operations');
 
-function sidebar(app, opts, cb){
+function sidebar(app, opts, done){
 
   const space = app.workspace;
+  const overlay = app.overlay;
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
@@ -21,7 +22,7 @@ function sidebar(app, opts, cb){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {space.directory.map((filename) => <File key={filename} workspace={space} filename={filename} />).toJS()}
         </FileList>
-        <FileOperations workspace={space} />
+        <FileOperations workspace={space} overlay={overlay} />
       </Sidebar>
     );
 
@@ -30,7 +31,7 @@ function sidebar(app, opts, cb){
 
   const cwd = app.userConfig.get('cwd') || opts.defaultProject;
 
-  space.changeDir(cwd, cb);
+  space.changeDir(cwd, done);
 }
 
 module.exports = sidebar;
