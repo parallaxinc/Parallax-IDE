@@ -35,11 +35,11 @@ const webpackConfig = {
         loader: 'style-loader!css-loader'
       },
       {
-        test:/\.html$/,
+        test: /\.html$/,
         loader: 'html-loader'
       },
       {
-        test:/\.json$/,
+        test: /\.json$/,
         loader: 'json-loader'
       },
       {

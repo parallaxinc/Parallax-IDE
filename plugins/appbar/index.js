@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 const React = require('react');
 
 const TopBar = require('./component');
 
-function appbar(app, opts, cb){
+function appbar(app, opts, done){
   app.view('appbar', function(el, cb){
     console.log('appbar render');
 
@@ -15,7 +15,7 @@ function appbar(app, opts, cb){
     React.render(Component, el, cb);
   });
 
-  cb();
+  done();
 }
 
 module.exports = appbar;

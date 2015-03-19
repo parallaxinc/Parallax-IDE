@@ -6,7 +6,7 @@ require('codemirror/theme/neo.css');
 
 var CodeMirror = require('codemirror');
 
-function editor(app, opts, cb){
+function editor(app, opts, done){
 
   var codeEditor;
 
@@ -48,7 +48,7 @@ function editor(app, opts, cb){
     return opts.initial;
   });
 
-  cb();
+  done();
 }
 
 module.exports = editor;

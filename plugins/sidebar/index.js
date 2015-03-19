@@ -8,7 +8,7 @@ const FileList = require('./file-list');
 const File = require('./file');
 const FileOperations = require('./file-operations');
 
-function sidebar(app, opts, cb){
+function sidebar(app, opts, done){
 
   const space = app.workspace;
   const overlay = app.overlay;
@@ -31,7 +31,7 @@ function sidebar(app, opts, cb){
 
   const cwd = app.userConfig.get('cwd') || opts.defaultProject;
 
-  space.changeDir(cwd, cb);
+  space.changeDir(cwd, done);
 }
 
 module.exports = sidebar;
