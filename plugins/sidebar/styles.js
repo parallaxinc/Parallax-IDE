@@ -15,14 +15,19 @@ const styles = {
       width: '100%'
     })
   },
-  fileOperations: {
+  overlay: StyleSheet.create({
+    width: 400,
+    height: 200,
+    margin: '100px auto 0',
     display: 'flex',
-    flexDirection: 'column',
-    marginTop: 'auto'
+    flexDirection: 'column'
+  }),
+  overlayTitle: {
+    margin: 0
   },
-  button: StyleSheet.create({
-    marginTop: '10px'
-  })
+  overlayButtonContainer: {
+    margin: 'auto 0 0 auto'
+  }
 };
 
 module.exports = styles;

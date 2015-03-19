@@ -18,6 +18,9 @@ var plugins = [
     register: require('holovisor')
   },
   {
+    register: require('skrim')
+  },
+  {
     register: require('./plugins/appbar'),
     options: {
       title: 'Parallax Chrome IDE'

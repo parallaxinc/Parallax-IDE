@@ -11,6 +11,7 @@ const FileOperations = require('./file-operations');
 function sidebar(app, opts, cb){
 
   const space = app.workspace;
+  const overlay = app.overlay;
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
@@ -21,7 +22,7 @@ function sidebar(app, opts, cb){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {space.directory.map((filename) => <File key={filename} workspace={space} filename={filename} />).toJS()}
         </FileList>
-        <FileOperations workspace={space} />
+        <FileOperations workspace={space} overlay={overlay} />
       </Sidebar>
     );
 
