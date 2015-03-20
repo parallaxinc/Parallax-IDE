@@ -8,10 +8,6 @@ const styles = require('../styles');
 
 class DeleteFileOverlay extends React.Component {
   constructor(){
-    this.state = {
-      value: ''
-    };
-
     this.onAccept = this.onAccept.bind(this);
     this.onCancel = this.onCancel.bind(this);
   }

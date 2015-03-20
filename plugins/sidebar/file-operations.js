@@ -6,6 +6,7 @@ const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
 require('react-mfb-iceddev/mfb.css');
 
 const NewFileOverlay = require('./overlays/new-file');
+const DownloadOverlay = require('./overlays/download');
 const DeleteFileOverlay = require('./overlays/delete-file');
 
 const FileOperations = React.createClass({
@@ -42,6 +43,29 @@ const FileOperations = React.createClass({
 
     space.deleteFile(space.filename, overlay.hide);
   },
+  download: function(devicePath){
+    const overlay = this.props.overlay;
+    const programmer = this.props.programmer;
+
+    if(!devicePath){
+      return;
+    }
+
+    programmer.getRevisions(function(error, revs){
+      programmer.compile({}, function(error, memory){
+        var options = {
+          path: devicePath,
+          board: revs.bs2,
+          memory: memory
+        };
+
+        programmer.bootload(options, function(error, result){
+          console.log(error, result);
+          overlay.hide();
+        });
+      });
+    });
+  },
   showCreateOverlay: function(evt){
     evt.preventDefault();
 
@@ -70,10 +94,27 @@ const FileOperations = React.createClass({
 
     overlay.show({ backdrop: true });
   },
+  showDownloadOverlay: function(evt){
+    evt.preventDefault();
+
+    const overlay = this.props.overlay;
+
+    overlay.content(
+      <DownloadOverlay
+        onAccept={this.download}
+        onCancel={overlay.hide} />
+    );
+
+    overlay.show({ backdrop: true });
+  },
   render: function(){
     return (
       <Menu effect="zoomin" method="click" position="bl">
         <MainButton iconResting="ion-plus-round" iconActive="ion-close-round" />
+        <ChildButton
+          onClick={this.showDownloadOverlay}
+          icon="ion-code-download"
+          label="Download" />
         <ChildButton
           onClick={this.showDeleteOverlay}
           icon="ion-backspace-outline"

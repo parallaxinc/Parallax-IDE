@@ -12,6 +12,7 @@ function sidebar(app, opts, done){
 
   const space = app.workspace;
   const overlay = app.overlay;
+  const programmer = app.bs2serial;
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
@@ -22,7 +23,7 @@ function sidebar(app, opts, done){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {space.directory.map((filename) => <File key={filename} workspace={space} filename={filename} />).toJS()}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} />
+        <FileOperations workspace={space} overlay={overlay} programmer={programmer} />
       </Sidebar>
     );
 
