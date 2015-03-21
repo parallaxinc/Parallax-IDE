@@ -27,6 +27,10 @@ const styles = {
   },
   overlayButtonContainer: {
     margin: 'auto 0 0 auto'
+  },
+  overlaySelectContainer: {
+    display: 'flex',
+    marginTop: 20
   }
 };
 
