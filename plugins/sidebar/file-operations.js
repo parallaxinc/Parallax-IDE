@@ -66,46 +66,54 @@ const FileOperations = React.createClass({
       });
     });
   },
+  renderOverlay: function(component){
+    const overlay = this.props.overlay;
+
+    function renderer(el){
+      React.render(component, el);
+    }
+
+    overlay.render(renderer, { backdrop: true });
+  },
+  hideOverlay: function(){
+    const overlay = this.props.overlay;
+    overlay.hide();
+  },
   showCreateOverlay: function(evt){
     evt.preventDefault();
 
-    const overlay = this.props.overlay;
-
-    overlay.content(
+    const component = (
       <NewFileOverlay
         onAccept={this.createFile}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   showDeleteOverlay: function(evt){
     evt.preventDefault();
 
     const space = this.props.workspace;
-    const overlay = this.props.overlay;
 
-    overlay.content(
+    const component = (
       <DeleteFileOverlay
         filename={space.filename.deref()}
         onAccept={this.deleteFile}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   showDownloadOverlay: function(evt){
     evt.preventDefault();
 
-    const overlay = this.props.overlay;
-
-    overlay.content(
+    const component = (
       <DownloadOverlay
         onAccept={this.download}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   render: function(){
     return (
