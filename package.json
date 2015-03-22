@@ -18,7 +18,8 @@
     "react-select": "^0.4.0",
     "react-style": "^0.4.0",
     "skrim": "0.0.2",
-    "snacks": "^0.2.0"
+    "snacks": "^0.2.0",
+    "when": "^3.7.2"
   },
   "devDependencies": {
     "babel": "^4.5.1",

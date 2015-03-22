@@ -29,6 +29,9 @@ const webpackConfig = {
     filename: 'bundle.js'
   },
   module: {
+    noParse: [
+      /pbasic/i
+    ],
     loaders: [
       {
         test: /\.css$/,
@@ -44,7 +47,10 @@ const webpackConfig = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [
+          /node_modules/,
+          /pbasic/i
+        ],
         loaders: [
           'babel-loader?optional=runtime'
         ]
