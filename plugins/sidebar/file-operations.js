@@ -8,7 +8,7 @@ require('react-mfb-iceddev/mfb.css');
 
 const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
-const DeleteFileOverlay = require('./overlays/delete-file');
+const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
 const FileOperations = React.createClass({
   saveFile: function(evt){
@@ -103,8 +103,8 @@ const FileOperations = React.createClass({
     const space = this.props.workspace;
 
     const component = (
-      <DeleteFileOverlay
-        filename={space.filename.deref()}
+      <DeleteConfirmOverlay
+        name={space.filename.deref()}
         onAccept={this.deleteFile}
         onCancel={this.hideOverlay} />
     );
@@ -125,7 +125,9 @@ const FileOperations = React.createClass({
   render: function(){
     return (
       <Menu effect="zoomin" method="click" position="bl">
-        <MainButton iconResting="ion-plus-round" iconActive="ion-close-round" />
+        <MainButton
+          iconResting="ion-plus-round"
+          iconActive="ion-close-round" />
         <ChildButton
           onClick={this.showDownloadOverlay}
           icon="ion-code-download"
