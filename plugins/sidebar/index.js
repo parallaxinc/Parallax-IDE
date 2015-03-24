@@ -16,12 +16,13 @@ function sidebar(app, opts, done){
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
+    const directory = space.directory;
 
     const Component = (
       <Sidebar>
         <FileList>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
-          {space.directory.map((filename) => <File key={filename} workspace={space} filename={filename} />).toJS()}
+          {directory.map((filename) => <File key={filename} workspace={space} filename={filename} />)}
         </FileList>
         <FileOperations workspace={space} overlay={overlay} programmer={programmer} />
       </Sidebar>
