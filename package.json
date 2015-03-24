@@ -1,6 +1,6 @@
 {
   "name": "parallax-chrome-ide",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Parallax microcontroller development environment based on Chrome applications.",
   "main": "index.js",
   "directories": {
