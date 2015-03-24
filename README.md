@@ -1,6 +1,16 @@
 # ChromeIDE
 Parallax microcontroller development environment based on Chrome application technologies.
 
+## Quickstart
+
+1. Visit our [github releases](https://github.com/parallaxinc/ChromeIDE/releases) and download the latest release. Or download [v0.1.0 here](https://github.com/parallaxinc/ChromeIDE/releases/download/v0.1.0/chromeide.zip).
+
+1. Go to your downloads folder and expand the zip file.
+
+  _*Note:* for use on ChromeBook you will need to expand the zip file and copy the expanded build onto the ChromeBook._
+
+1. Open Chrome and follow the [Installing in Chrome](https://github.com/parallaxinc/ChromeIDE#user-content-installing-in-chrome) instructions.
+
 ## Building from Source/Developing
 
 Most of below is a one-time procedure needed to build the application, unless otherwise noted.  To build the application you will need the node.js JavaScript runtime.  node.js itself comes bundled with the `npm` package manager. If you don't have it, then:
