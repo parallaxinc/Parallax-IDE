@@ -7,21 +7,25 @@ const Sidebar = require('./sidebar');
 const FileList = require('./file-list');
 const File = require('./file');
 const FileOperations = require('./file-operations');
+const ProjectOperations = require('./project-operations');
 
 function sidebar(app, opts, done){
 
   const space = app.workspace;
   const overlay = app.overlay;
+  const userConfig = app.userConfig;
   const programmer = app.bs2serial;
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
+    const directory = space.directory;
 
     const Component = (
       <Sidebar>
+        <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
         <FileList>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
-          {space.directory.map((filename) => <File key={filename} workspace={space} filename={filename} />).toJS()}
+          {directory.map((filename) => <File key={filename} workspace={space} filename={filename} />)}
         </FileList>
         <FileOperations workspace={space} overlay={overlay} programmer={programmer} />
       </Sidebar>
@@ -30,7 +34,7 @@ function sidebar(app, opts, done){
     React.render(Component, el, cb);
   });
 
-  const cwd = app.userConfig.get('cwd') || opts.defaultProject;
+  const cwd = userConfig.get('cwd') || opts.defaultProject;
 
   space.changeDir(cwd, done);
 }

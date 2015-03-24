@@ -17,8 +17,9 @@
     "react-mfb-iceddev": "^0.1.0",
     "react-select": "^0.4.0",
     "react-style": "^0.4.0",
-    "skrim": "0.0.1",
-    "snacks": "^0.2.0"
+    "skrim": "0.0.2",
+    "snacks": "^0.2.0",
+    "when": "^3.7.2"
   },
   "devDependencies": {
     "babel": "^4.5.1",
@@ -42,6 +43,7 @@
     "phantomjs": "git://github.com/phated/phantomjs",
     "style-loader": "^0.8.3",
     "webpack": "^1.7.2",
+    "webpack-dev-server": "^1.7.0",
     "zuul": "^2.1.1"
   },
   "scripts": {
@@ -49,7 +51,8 @@
     "ci": "zuul test/*.js --phantom",
     "build": "gulp",
     "release": "gulp gh-release",
-    "postinstall": "gulp postinstall"
+    "postinstall": "gulp postinstall",
+    "serve": "webpack-dev-server"
   },
   "repository": {
     "type": "git",

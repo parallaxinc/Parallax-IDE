@@ -53,8 +53,6 @@ class DownloadOverlay extends React.Component {
 
   getDevices(){
     Serialport.list((err, devices) => {
-      console.log('Error while fetching devices', err);
-
       let options = devices.map(function(device){
         return {
           value: device.comName,

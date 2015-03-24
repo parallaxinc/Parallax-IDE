@@ -1,5 +1,6 @@
 'use strict';
 
+const when = require('when');
 const React = require('react');
 const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
 
@@ -7,7 +8,7 @@ require('react-mfb-iceddev/mfb.css');
 
 const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
-const DeleteFileOverlay = require('./overlays/delete-file');
+const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
 const FileOperations = React.createClass({
   saveFile: function(evt){
@@ -44,6 +45,7 @@ const FileOperations = React.createClass({
     space.deleteFile(space.filename, overlay.hide);
   },
   download: function(devicePath){
+    const space = this.props.workspace;
     const overlay = this.props.overlay;
     const programmer = this.props.programmer;
 
@@ -51,66 +53,81 @@ const FileOperations = React.createClass({
       return;
     }
 
-    programmer.getRevisions(function(error, revs){
-      programmer.compile({}, function(error, memory){
-        var options = {
-          path: devicePath,
-          board: revs.bs2,
-          memory: memory
-        };
+    when.all([
+      programmer.getRevisions(),
+      programmer.compile({ source: space.current.deref() })
+    ]).spread(function(revs, memory){
+      var options = {
+        path: devicePath,
+        board: revs.bs2,
+        memory: memory
+      };
 
-        programmer.bootload(options, function(error, result){
-          console.log(error, result);
-          overlay.hide();
-        });
-      });
+      return programmer.bootload(options);
+    })
+    .tap(function(){
+      console.log('Success!');
+      overlay.hide();
+    })
+    .catch(function(err){
+      console.log('Failed: ', err);
     });
+  },
+  renderOverlay: function(component){
+    const overlay = this.props.overlay;
+
+    function renderer(el){
+      React.render(component, el);
+    }
+
+    overlay.render(renderer, { backdrop: true });
+  },
+  hideOverlay: function(){
+    const overlay = this.props.overlay;
+    overlay.hide();
   },
   showCreateOverlay: function(evt){
     evt.preventDefault();
 
-    const overlay = this.props.overlay;
-
-    overlay.content(
+    const component = (
       <NewFileOverlay
         onAccept={this.createFile}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   showDeleteOverlay: function(evt){
     evt.preventDefault();
 
     const space = this.props.workspace;
-    const overlay = this.props.overlay;
 
-    overlay.content(
-      <DeleteFileOverlay
-        filename={space.filename.deref()}
+    const component = (
+      <DeleteConfirmOverlay
+        name={space.filename.deref()}
         onAccept={this.deleteFile}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   showDownloadOverlay: function(evt){
     evt.preventDefault();
 
-    const overlay = this.props.overlay;
-
-    overlay.content(
+    const component = (
       <DownloadOverlay
         onAccept={this.download}
-        onCancel={overlay.hide} />
+        onCancel={this.hideOverlay} />
     );
 
-    overlay.show({ backdrop: true });
+    this.renderOverlay(component);
   },
   render: function(){
     return (
       <Menu effect="zoomin" method="click" position="bl">
-        <MainButton iconResting="ion-plus-round" iconActive="ion-close-round" />
+        <MainButton
+          iconResting="ion-plus-round"
+          iconActive="ion-close-round" />
         <ChildButton
           onClick={this.showDownloadOverlay}
           icon="ion-code-download"

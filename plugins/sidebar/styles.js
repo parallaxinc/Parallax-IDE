@@ -22,6 +22,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column'
   }),
+  overlayLarge: StyleSheet.create({
+    height: 400
+  }),
   overlayTitle: {
     margin: 0
   },
@@ -31,7 +34,34 @@ const styles = {
   overlaySelectContainer: {
     display: 'flex',
     marginTop: 20
-  }
+  },
+  changeFolderButton: {
+    position: 'absolute',
+    top: -28,
+    margin: 0,
+    right: 19,
+    left: 'auto',
+    transform: 'none'
+  },
+  deleteButton: {
+    border: 0,
+    background: 'none',
+    padding: 0,
+    float: 'right',
+    position: 'relative',
+    zIndex: 7
+  },
+  buttonIcon: StyleSheet.create({
+    display: 'inline-block',
+    padding: 0,
+    width: '30px',
+    verticalAlign: 'middle',
+    pointerEvents: 'none'
+  }),
+  projectList: StyleSheet.create({
+    flex: 1,
+    marginTop: 10
+  })
 };
 
 module.exports = styles;
