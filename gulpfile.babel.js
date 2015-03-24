@@ -16,7 +16,9 @@ const files = {
     'bundle.js',
     'background.js',
     '_locales/**',
-    'icons/**'
+    'icons/**',
+    'fonts/**',
+    'assets/**'
   ]
 };
 
