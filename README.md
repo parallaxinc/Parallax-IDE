@@ -1,5 +1,15 @@
 # ChromeIDE
-Parallax microcontroller development environment based on Chrome application technologies.
+Parallax microcontroller development environment based on Chrome applications.
+
+## Quickstart
+
+1. Visit our [github releases](https://github.com/parallaxinc/ChromeIDE/releases) and download the desired release or download the latest release [here](https://github.com/parallaxinc/ChromeIDE/releases/latest).
+
+1. Go to your downloads folder and unzip the archive.
+
+  _*Note:* for use on Chromebook you will need to unzip the archive and copy the unzipped directory onto the Chromebook._
+
+1. Open Chrome and follow the [Installing in Chrome](https://github.com/parallaxinc/ChromeIDE#user-content-installing-in-chrome) instructions.
 
 ## Building from Source/Developing
 
