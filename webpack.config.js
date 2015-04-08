@@ -51,6 +51,7 @@ module.exports = {
     alias: {
       // replacing `fs` with a browser-compatible version
       fs: 'browserify-fs',
+      'graceful-fs': 'browserify-fs',
       memdown: 'level-js',
       serialport: 'browser-serialport'
     }

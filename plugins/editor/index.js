@@ -23,7 +23,8 @@ function editor(app, opts, done){
         lineNumbers: true
       });
 
-      codeEditor.on('change', handleChange);
+      codeEditor.on('inputRead', handleInput);
+      codeEditor.on('keyHandled', handleInput);
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
@@ -38,17 +39,11 @@ function editor(app, opts, done){
     cb();
   });
 
-  function handleChange(inst){
-    space.current.update(function(){
-      return inst.getValue();
-    });
+  function handleInput(inst){
+    space.updateContent(inst.getValue());
   }
 
-  space.current.update(function(){
-    return opts.initial;
-  });
-
-  done();
+  space.updateContent(opts.initial, done);
 }
 
 module.exports = editor;

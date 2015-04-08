@@ -9,7 +9,10 @@ var plugins = [
     register: require('bs2-serial')
   },
   {
-    register: require('frylord')
+    register: require('frylord'),
+    options: {
+      useTempFiles: true
+    }
   },
   {
     register: require('snacks')
