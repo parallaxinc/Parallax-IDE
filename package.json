@@ -9,7 +9,7 @@
   "dependencies": {
     "bs2-serial": "jacobrosenthal/bs2-serial",
     "codemirror": "^4.13.0",
-    "frylord": "^0.4.0",
+    "frylord": "^0.5.0",
     "holovisor": "^0.2.0",
     "irken": "^0.4.1",
     "react": "^0.13.1",
