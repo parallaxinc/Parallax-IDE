@@ -10,16 +10,30 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
+const styles = require('./styles');
+
 const FileOperations = React.createClass({
+  handleError: function(err){
+    const toast = this.props.toast;
+
+    toast.show(err.message, { style: styles.errorToast });
+  },
+  handleSuccess: function(msg){
+    const toast = this.props.toast;
+
+    toast.show(msg, { style: styles.successToast, timeout: 5000 });
+  },
   saveFile: function(evt){
     evt.preventDefault();
 
     const space = this.props.workspace;
 
+    const name = space.filename.deref();
+
     // TODO: these should transparently accept cursors for all non-function params
-    space.saveFile(space.filename.deref(), space.current, function(err){
-      console.log('saved', err);
-    });
+    space.saveFile(name, space.current)
+      .tap(() => this.handleSuccess(`'${name}' saved successfully`))
+      .catch(this.handleError);
   },
   createFile: function(name){
     const space = this.props.workspace;
@@ -32,7 +46,10 @@ const FileOperations = React.createClass({
     space.filename.update(() => name);
     space.current.update(() => '');
     // TODO: these should transparently accept cursors for all non-function params
-    space.saveFile(space.filename.deref(), space.current, overlay.hide);
+    space.saveFile(space.filename.deref(), space.current)
+      .tap(() => this.handleSuccess(`'${name}' created successfully`))
+      .catch(this.handleError)
+      .finally(overlay.hide);
   },
   deleteFile: function(name){
     const space = this.props.workspace;
@@ -42,12 +59,17 @@ const FileOperations = React.createClass({
       return;
     }
 
-    space.deleteFile(space.filename, overlay.hide);
+    space.deleteFile(space.filename)
+      .tap(() => this.handleSuccess(`'${name}' deleted successfully`))
+      .catch(this.handleError)
+      .finally(overlay.hide);
   },
   download: function(devicePath){
+    const toast = this.props.toast;
     const space = this.props.workspace;
     const overlay = this.props.overlay;
     const programmer = this.props.programmer;
+    const name = space.filename.deref();
 
     if(!devicePath){
       return;
@@ -65,13 +87,10 @@ const FileOperations = React.createClass({
 
       return programmer.bootload(options);
     })
-    .tap(function(){
-      console.log('Success!');
-      overlay.hide();
-    })
-    .catch(function(err){
-      console.log('Failed: ', err);
-    });
+    .tap(() => toast.clear())
+    .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
+    .catch(this.handleError)
+    .finally(overlay.hide);
   },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
@@ -102,9 +121,15 @@ const FileOperations = React.createClass({
 
     const space = this.props.workspace;
 
+    const name = space.filename.deref();
+
+    if(!name){
+      return;
+    }
+
     const component = (
       <DeleteConfirmOverlay
-        name={space.filename.deref()}
+        name={name}
         onAccept={this.deleteFile}
         onCancel={this.hideOverlay} />
     );

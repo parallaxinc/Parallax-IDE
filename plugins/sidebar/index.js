@@ -12,6 +12,7 @@ const ProjectOperations = require('./project-operations');
 function sidebar(app, opts, done){
 
   const space = app.workspace;
+  const toast = app.toast;
   const overlay = app.overlay;
   const userConfig = app.userConfig;
   const programmer = app.bs2serial;
@@ -27,7 +28,7 @@ function sidebar(app, opts, done){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} workspace={space} filename={file.get('name')} temp={file.get('temp')} />)}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} programmer={programmer} />
+        <FileOperations workspace={space} overlay={overlay} toast={toast} programmer={programmer} />
       </Sidebar>
     );
 
