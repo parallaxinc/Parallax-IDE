@@ -25,7 +25,7 @@ function sidebar(app, opts, done){
         <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
         <FileList>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
-          {directory.map((filename) => <File key={filename} workspace={space} filename={filename} />)}
+          {directory.map((file) => <File key={file.get('name')} workspace={space} filename={file.get('name')} temp={file.get('temp')} />)}
         </FileList>
         <FileOperations workspace={space} overlay={overlay} programmer={programmer} />
       </Sidebar>

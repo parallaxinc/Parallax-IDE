@@ -61,7 +61,18 @@ const styles = {
   projectList: StyleSheet.create({
     flex: 1,
     marginTop: 10
-  })
+  }),
+  fileTempIndicator: {
+    backgroundColor: '#159600',
+    height: 10,
+    width: 10,
+    borderRadius: '100%',
+    marginRight: 5,
+    display: 'inline-block'
+  },
+  fileHasTemp: {
+    backgroundColor: '#da2100'
+  }
 };
 
 module.exports = styles;
