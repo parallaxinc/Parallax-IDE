@@ -75,22 +75,20 @@ const FileOperations = React.createClass({
       return;
     }
 
-    when.all([
-      programmer.getRevisions(),
-      programmer.compile({ source: space.current.deref() })
-    ]).spread(function(revs, memory){
-      var options = {
-        path: devicePath,
-        board: revs.bs2,
-        memory: memory
-      };
+    programmer.compile({ source: space.current.deref() })
+      .then(function(memory){
+        var options = {
+          path: devicePath,
+          board: 'bs2',
+          memory: memory
+        };
 
-      return programmer.bootload(options);
-    })
-    .tap(() => toast.clear())
-    .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
-    .catch(this.handleError)
-    .finally(overlay.hide);
+        return programmer.bootload(options);
+      })
+      .tap(() => toast.clear())
+      .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
+      .catch(this.handleError)
+      .finally(overlay.hide);
   },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
