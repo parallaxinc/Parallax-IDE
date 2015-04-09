@@ -2,6 +2,9 @@
 
 const StyleSheet = require('react-style');
 
+const red = '#da2100';
+const green = '#159600';
+
 const styles = {
   card: StyleSheet.create({
     margin: 0,
@@ -63,7 +66,7 @@ const styles = {
     marginTop: 10
   }),
   fileTempIndicator: {
-    backgroundColor: '#159600',
+    backgroundColor: green,
     height: 10,
     width: 10,
     borderRadius: '100%',
@@ -71,7 +74,13 @@ const styles = {
     display: 'inline-block'
   },
   fileHasTemp: {
-    backgroundColor: '#da2100'
+    backgroundColor: red
+  },
+  errorToast: {
+    backgroundColor: red
+  },
+  successToast: {
+    backgroundColor: green
   }
 };
 
