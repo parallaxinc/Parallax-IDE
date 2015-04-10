@@ -30,5 +30,6 @@ node_modules
 .DS_Store
 
 # Generated files
-bundle.js
-dist/
+/bundle.js
+/bundle.js.map
+/dist/
