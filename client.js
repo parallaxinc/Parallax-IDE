@@ -30,15 +30,15 @@ var plugins = [
     }
   },
   {
-    register: require('./plugins/sidebar'),
-    options: {
-      defaultProject: 'new-project'
-    }
-  },
-  {
     register: require('./plugins/editor'),
     options: {
       initial: ''
+    }
+  },
+  {
+    register: require('./plugins/sidebar'),
+    options: {
+      defaultProject: 'new-project'
     }
   }
 ];
