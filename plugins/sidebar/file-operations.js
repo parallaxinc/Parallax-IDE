@@ -1,7 +1,7 @@
 'use strict';
 
-const when = require('when');
 const React = require('react');
+const through = require('through2');
 const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
 
 require('react-mfb-iceddev/mfb.css');
@@ -12,8 +12,12 @@ const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
 const styles = require('./styles');
 
+let boards = {};
+
 const FileOperations = React.createClass({
   handleError: function(err){
+    // leaving this in for better debugging of errors
+    console.log(err);
     const toast = this.props.toast;
 
     toast.show(err.message, { style: styles.errorToast });
@@ -67,24 +71,38 @@ const FileOperations = React.createClass({
   download: function(devicePath){
     const toast = this.props.toast;
     const space = this.props.workspace;
+    const logger = this.props.logger;
     const overlay = this.props.overlay;
-    const programmer = this.props.programmer;
+    const Board = this.props.Board;
     const name = space.filename.deref();
+    const source = space.current.deref();
 
     if(!devicePath){
       return;
     }
 
-    programmer.compile({ source: space.current.deref() })
-      .then(function(memory){
-        var options = {
-          path: devicePath,
-          board: 'bs2',
-          memory: memory
-        };
+    const boardOpts = {
+      path: devicePath,
+      revision: 'bs2',
+      readAfterProgram: true
+    };
 
-        return programmer.bootload(options);
-      })
+    let board;
+    if(boards[devicePath]){
+      board = boards[devicePath];
+    } else {
+      board = boards[devicePath] = new Board(boardOpts);
+    }
+
+    const log = through(function(chunk, enc, cb){
+      logger(chunk.toString());
+      cb(null, chunk);
+    });
+
+    board.compile(source)
+      .tap(() => logger.clear())
+      .then((memory) => board.bootload(memory))
+      .then(() => board.read().pipe(log))
       .tap(() => toast.clear())
       .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
       .catch(this.handleError)
