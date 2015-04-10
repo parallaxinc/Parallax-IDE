@@ -2,9 +2,12 @@
 
 var path = require('path');
 
+var webpack = require('webpack');
+
 var shouldWatch = (process.argv.indexOf('--watch') !== -1);
 
 module.exports = {
+  devtool: 'source-map',
   entry: './client.js',
   output: {
     path: __dirname,
@@ -39,6 +42,9 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new webpack.optimize.DedupePlugin()
+  ],
   resolveLoader: {
     // this is a workaround for loaders being applied
     // to linked modules
