@@ -1,10 +1,15 @@
 'use strict';
 
 require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/search/searchcursor.js');
+require('codemirror/addon/dialog/dialog.js');
+require('codemirror/addon/dialog/dialog.css');
+require('codemirror/addon/search/search.js');
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/neo.css');
 
 var CodeMirror = require('codemirror');
+var keymap = require('./keymap.js');
 
 function editor(app, opts, done){
 
@@ -49,6 +54,8 @@ function editor(app, opts, done){
 
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
+
+      codeEditor.setOption("extraKeys", keymap);
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
