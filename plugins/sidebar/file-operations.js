@@ -163,6 +163,12 @@ const FileOperations = React.createClass({
 
     this.renderOverlay(component);
   },
+  componentDidMount: function(){
+    window.addEventListener('saveFile', this.saveFile);
+  },
+  componentWillUnmount: function(){
+    window.removeEventListener('saveFile', this.saveFile);
+  },
   render: function(){
     return (
       <Menu effect="zoomin" method="click" position="bl">

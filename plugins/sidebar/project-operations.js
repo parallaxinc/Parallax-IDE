@@ -91,6 +91,15 @@ class ProjectOperations extends React.Component {
     this.renderOverlay(component);
   }
 
+   componentDidMount(){
+    window.addEventListener('showProject', this.showProjectOverlay);
+  }
+
+  componentWillUnmount(){
+    window.removeEventListener('showProject', this.showProjectOverlay);
+  }
+
+
   render(){
     return (
       <div className="mfb-component--tl" data-mfb-toggle="hover" style={styles.changeFolderButton}>
