@@ -43,6 +43,7 @@ function editor(app, opts, done){
       editorContainer.style.display = 'flex';
       editorContainer.style.flex = '1';
       editorContainer.style.flexDirection = 'column';
+      editorContainer.setAttribute('id', 'editorContainer');
       el.appendChild(editorContainer);
 
       codeEditor = CodeMirror(editorContainer, {
