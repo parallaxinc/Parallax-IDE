@@ -45,6 +45,27 @@ const keymap = {
   "Ctrl-Shift-Tab": function(cm) {
     //TODO: previous file
     window.dispatchEvent(events.listFiles);
+  },
+  "Ctrl-`": function(cm) {
+    // Log the Irken App
+    console.log(window.app);
+    console.log('filename: ', window.app.workspace.filename.deref());
+  }
+}
+
+// potential solution to avoid codemirror integration
+const storekeys = [];
+  storekeys[17] = false;
+  storekeys[88] = false;
+  storekeys[90] = false;
+
+window.onkeydown = window.onkeyup = function(e) {
+  if(storekeys.hasOwnProperty(e.keyCode)){
+    storekeys[e.keyCode] = e.type == 'keydown';
+  }
+
+  if(storekeys[17] && storekeys[88] && storekeys[90]) {
+    console.log('hit ctrl + z + x');
   }
 }
 
