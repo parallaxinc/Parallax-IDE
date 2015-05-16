@@ -9,7 +9,7 @@ require('codemirror/lib/codemirror.css');
 require('codemirror/theme/neo.css');
 
 var CodeMirror = require('codemirror');
-var keymap = require('./keymap.js');
+var keyExtension = require('./key-extension.js');
 
 function editor(app, opts, done){
 
@@ -56,7 +56,11 @@ function editor(app, opts, done){
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
 
-      codeEditor.setOption("extraKeys", keymap);
+      codeEditor.setOption("extraKeys", {
+        'Ctrl-Up': false,
+        'Ctrl-Down': false
+      });
+      keyExtension.setup(app, codeEditor);
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();

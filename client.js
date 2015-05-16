@@ -24,6 +24,9 @@ var plugins = [
     register: require('skrim')
   },
   {
+    register: require('iggins')
+  },
+  {
     register: require('./plugins/appbar'),
     options: {
       title: 'Parallax Chrome IDE'

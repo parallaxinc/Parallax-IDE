@@ -6,23 +6,32 @@ const List = require('react-material/components/List');
 const FileList = React.createClass({
 
   componentDidMount: function(){
-    window.addEventListener('listFiles', this.listFiles);
+    app.keypress.register('CTRL_TAB', this.previousFile);
+    app.keypress.register('CTRL_SHIFT_TAB', this.nextFile);
   },
   componentWillUnmount: function(){
-    window.removeEventListener('listFiles', this.listFiles);
+    app.keypress.register('CTRL_TAB');
+    app.keypress.register('CTRL_SHIFT_TAB');
   },
-  //TODO: rename to FILE UP or FILE DOWN
-  listFiles: function() {
-    const currentFile = window.app.workspace.file.deref();
-    console.log(this.props.children);
-    React.Children.forEach(this.props.children, function(ch, i) {
-      console.log(i, ch);
-      console.log(ch.key);
-      console.log(currentFile);
-      if(ch.key == currentFile){
-        //openFile
-      }
+  previousFile: function(){
+    this.changeFile(true);
+  },
+  nextFile: function() {
+    this.changeFile(false);
+  },
+  changeFile: function(moveup) {
+    const space = this.props.workspace;
+    const filename = space.filename.deref();
 
+    space.directory.forEach(function(x, i) {
+      if(x.get('name') === filename) {
+        if(i === space.directory.size - 1) {
+          i = -1;
+        }
+        const shift = moveup ? i - 1 : i + 1;
+        const switchFile = space.directory.get(shift).get('name');
+        space.loadFile(switchFile);
+      }
     });
   },
   render: function(){

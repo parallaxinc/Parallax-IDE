@@ -28,7 +28,9 @@ const FileOperations = React.createClass({
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   },
   saveFile: function(evt){
-    evt.preventDefault();
+    if(evt){
+      evt.preventDefault();
+    }
 
     const space = this.props.workspace;
 
@@ -164,10 +166,10 @@ const FileOperations = React.createClass({
     this.renderOverlay(component);
   },
   componentDidMount: function(){
-    window.addEventListener('saveFile', this.saveFile);
+    app.keypress.register('CTRL_S', this.saveFile);
   },
   componentWillUnmount: function(){
-    window.removeEventListener('saveFile', this.saveFile);
+    app.keypress.register('CTRL_S');
   },
   render: function(){
     return (
