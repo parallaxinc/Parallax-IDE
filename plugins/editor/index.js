@@ -11,6 +11,8 @@ require('codemirror/theme/neo.css');
 var CodeMirror = require('codemirror');
 var keyExtension = require('./key-extension');
 
+require('./pbasic')(CodeMirror);
+
 function editor(app, opts, done){
 
   var codeEditor;
@@ -48,7 +50,7 @@ function editor(app, opts, done){
 
       codeEditor = CodeMirror(editorContainer, {
         value: space.current.deref(),
-        mode: 'javascript',
+        mode: 'pbasic',
         theme: 'neo',
         lineNumbers: true
       });
