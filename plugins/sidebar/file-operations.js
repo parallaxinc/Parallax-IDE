@@ -166,10 +166,12 @@ const FileOperations = React.createClass({
     this.renderOverlay(component);
   },
   componentDidMount: function(){
-    app.keypress.register('CTRL_S', this.saveFile);
+    this.remove_saveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
   },
   componentWillUnmount: function(){
-    app.keypress.unregister('CTRL_S');
+    if(this.remove_saveFile) {
+     this.remove_saveFile();
+    }; 
   },
   render: function(){
     return (

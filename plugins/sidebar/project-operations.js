@@ -92,11 +92,13 @@ class ProjectOperations extends React.Component {
   }
 
    componentDidMount(){
-    app.keypress.register('CTRL_O', this.showProjectOverlay);
+    this.remove_CTRL_O = app.keypress(app.keypress.CTRL_O, this.showProjectOverlay);
   }
 
   componentWillUnmount(){
-    app.keypress.unregister('CTRL_O');
+    if(this.remove_CTRL_O) {
+     this.remove_CTRL_O();
+    }; 
   }
 
 

@@ -6,12 +6,16 @@ const List = require('react-material/components/List');
 const FileList = React.createClass({
 
   componentDidMount: function(){
-    app.keypress.register('CTRL_TAB', this.nextFile);
-    app.keypress.register('CTRL_SHIFT_TAB', this.previousFile);
+    this.remove_nextFile = app.keypress(app.keypress.CTRL_TAB, this.nextFile);
+    this.remove_previousFile = app.keypress(app.keypress.CTRL_SHIFT_TAB, this.previousFile);
   },
   componentWillUnmount: function(){
-    app.keypress.unregister('CTRL_TAB');
-    app.keypress.unregister('CTRL_SHIFT_TAB');
+    if(this.remove_nextFile) {
+     this.remove_nextFile();
+    }; 
+    if(this.remove_previousFile) {
+     this.remove_previousFile();
+    }; 
   },
   previousFile: function(){
     this.changeFile({ direction: 'prev' });
