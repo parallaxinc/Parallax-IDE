@@ -18,7 +18,7 @@ const keyExtension = {
         const scrollbox = cm.getScrollInfo();
         cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
       },
-      Tab: function() {
+      tab: function() {
         const spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
         cm.replaceSelection(spaces);
       }
@@ -29,7 +29,7 @@ const keyExtension = {
     app.keypress.register('SHIFT-F3', toRegister.findPrevious);
     app.keypress.register('CTRL_UP', toRegister.moveByScrollUpLine);
     app.keypress.register('CTRL_DOWN', toRegister.moveByScrollDownLine);
-
+    app.keypress.register('TAB', toRegister.tab);
   }
 }
 

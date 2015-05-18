@@ -169,7 +169,7 @@ const FileOperations = React.createClass({
     app.keypress.register('CTRL_S', this.saveFile);
   },
   componentWillUnmount: function(){
-    app.keypress.register('CTRL_S');
+    app.keypress.unregister('CTRL_S');
   },
   render: function(){
     return (

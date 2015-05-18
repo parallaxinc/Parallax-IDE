@@ -96,7 +96,7 @@ class ProjectOperations extends React.Component {
   }
 
   componentWillUnmount(){
-    app.keypress.register('CTRL_O');
+    app.keypress.unregister('CTRL_O');
   }
 
 
