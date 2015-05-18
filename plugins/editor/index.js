@@ -1,15 +1,15 @@
 'use strict';
 
 require('codemirror/mode/javascript/javascript');
-require('codemirror/addon/search/searchcursor.js');
-require('codemirror/addon/dialog/dialog.js');
+require('codemirror/addon/search/searchcursor');
+require('codemirror/addon/dialog/dialog');
 require('codemirror/addon/dialog/dialog.css');
-require('codemirror/addon/search/search.js');
+require('codemirror/addon/search/search');
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/neo.css');
 
 var CodeMirror = require('codemirror');
-var keyExtension = require('./key-extension.js');
+var keyExtension = require('./key-extension');
 
 function editor(app, opts, done){
 
