@@ -11,7 +11,7 @@
 .cm-s-parallax .cm-keyword, .cm-s-parallax .cm-property {color:#000000}
 .cm-s-parallax .cm-atom,.cm-s-parallax .cm-number {color:#000000}
 .cm-s-parallax .cm-node,.cm-s-parallax .cm-tag {color:#000000}
-.cm-s-parallax .cm-string {color:#0000ff}
+.cm-s-parallax .cm-string {color:#ff0000}
 .cm-s-parallax .cm-variable,.cm-s-parallax .cm-qualifier {color:#000000}
 
 .cm-etDirective {color: #008080}
