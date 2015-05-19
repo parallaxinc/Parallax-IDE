@@ -56,13 +56,11 @@ function editor(app, opts, done){
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
 
-      codeEditor.setOption("extraKeys", {
+      codeEditor.setOption('tabSize', 2);
+      codeEditor.setOption('extraKeys', {
         'Ctrl-Up': false,
         'Ctrl-Down': false,
-        Tab: function(cm) {
-          var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-          cm.replaceSelection(spaces);
-        }
+        Tab: false
       });
       keyExtension.setup(app, codeEditor);
 
