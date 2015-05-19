@@ -58,7 +58,11 @@ function editor(app, opts, done){
 
       codeEditor.setOption("extraKeys", {
         'Ctrl-Up': false,
-        'Ctrl-Down': false
+        'Ctrl-Down': false,
+        Tab: function(cm) {
+          var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+          cm.replaceSelection(spaces);
+        }
       });
       keyExtension.setup(app, codeEditor);
 

@@ -167,10 +167,14 @@ const FileOperations = React.createClass({
   },
   componentDidMount: function(){
     this.remove_saveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
+    this.remove_closeDialog = app.keypress(app.keypress.ESC, this.hideOverlay);
   },
   componentWillUnmount: function(){
     if(this.remove_saveFile) {
      this.remove_saveFile();
+    }; 
+    if(this.remove_closeDialog) {
+     this.remove_closeDialog();
     }; 
   },
   render: function(){

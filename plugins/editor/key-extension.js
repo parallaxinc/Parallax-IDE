@@ -1,9 +1,9 @@
 'use strict';
 
-var keyExtension = {
+const keyExtension = {
   setup: function(app, cm) {
 
-    var cmCommands = {
+    const cmCommands = {
       findNext: {
         code: 'F3',
         exec: function() {
@@ -30,18 +30,17 @@ var keyExtension = {
           cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
         }
       },
-      tab: {
-        code: 'TAB',
+      print: {
+        code: 'CTRL_P',
         exec: function() {
-          const spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
-          cm.replaceSelection(spaces);
+          window.print();
         }
       }
     }
 
     function setCodeMirrorCommands() {
-      for (var cmd in cmCommands) {
-        var code = cmCommands[cmd].code;
+      for (let cmd in cmCommands) {
+        const code = cmCommands[cmd].code;
         cmCommands[cmd].removeCode = app.keypress(app.keypress[code], cmCommands[cmd].exec);
       }
     }

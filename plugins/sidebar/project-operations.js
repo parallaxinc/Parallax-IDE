@@ -91,16 +91,20 @@ class ProjectOperations extends React.Component {
     this.renderOverlay(component);
   }
 
-   componentDidMount(){
-    this.remove_CTRL_O = app.keypress(app.keypress.CTRL_O, this.showProjectOverlay);
+  componentDidMount(){
+    this.remove_showProjectOverlay = app.keypress(app.keypress.CTRL_O, this.showProjectOverlay);
+    this.remove_closeDialog = app.keypress(app.keypress.ESC, this.hideOverlay);
   }
 
   componentWillUnmount(){
-    if(this.remove_CTRL_O) {
-     this.remove_CTRL_O();
+    if(this.remove_showProjectOverlay) {
+     this.remove_showProjectOverlay();
     }; 
-  }
+    if(this.remove_closeDialog) {
+     this.remove_closeDialog();
+    }; 
 
+  }
 
   render(){
     return (
