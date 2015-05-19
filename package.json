@@ -13,6 +13,7 @@
     "holovisor": "^0.2.0",
     "iggins": "^0.1.0",
     "irken": "^0.4.1",
+    "lodash": "^3.9.1",
     "react": "^0.13.1",
     "react-material": "git://github.com/iceddev/react-material#fake-release-13",
     "react-mfb-iceddev": "^0.1.0",

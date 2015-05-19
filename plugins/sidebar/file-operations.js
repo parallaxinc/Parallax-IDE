@@ -12,8 +12,6 @@ const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
 const styles = require('./styles');
 
-let boards = {};
-
 const FileOperations = React.createClass({
   handleError: function(err){
     // leaving this in for better debugging of errors
@@ -70,31 +68,20 @@ const FileOperations = React.createClass({
       .catch(this.handleError)
       .finally(overlay.hide);
   },
-  download: function(devicePath){
+  download: function(device){
     const toast = this.props.toast;
     const space = this.props.workspace;
     const logger = this.props.logger;
     const overlay = this.props.overlay;
-    const Board = this.props.Board;
+    const irken = this.props.irken;
     const name = space.filename.deref();
     const source = space.current.deref();
 
-    if(!devicePath){
+    if(!device){
       return;
     }
 
-    const boardOpts = {
-      path: devicePath,
-      revision: 'bs2',
-      readAfterProgram: true
-    };
-
-    let board;
-    if(boards[devicePath]){
-      board = boards[devicePath];
-    } else {
-      board = boards[devicePath] = new Board(boardOpts);
-    }
+    const board = irken.getBoard(device);
 
     const log = through(function(chunk, enc, cb){
       logger(chunk.toString());
@@ -160,7 +147,8 @@ const FileOperations = React.createClass({
     const component = (
       <DownloadOverlay
         onAccept={this.download}
-        onCancel={this.hideOverlay} />
+        onCancel={this.hideOverlay}
+        irken={this.props.irken} />
     );
 
     this.renderOverlay(component);

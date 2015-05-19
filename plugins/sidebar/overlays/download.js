@@ -1,11 +1,10 @@
 'use strict';
 
+const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Select = require('react-select');
-
-const Serialport = require('browser-serialport');
 
 require('react-select/dist/default.css');
 
@@ -15,23 +14,24 @@ class DownloadOverlay extends React.Component {
   constructor(){
     this.state = {
       devicePath: null,
-      options: []
+      searching: false,
+      selectedDevice: null,
+      devices: []
     };
 
     this.onAccept = this.onAccept.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.reloadDevices = this.reloadDevices.bind(this);
     this.updateSelected = this.updateSelected.bind(this);
-    this.getDevices = this.getDevices.bind(this);
   }
 
   componentDidMount(){
-    this.getDevices();
+    this.reloadDevices();
   }
 
   onAccept(evt){
     if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(this.state.devicePath, evt);
+      this.props.onAccept(this.state.selectedDevice, evt);
     }
   }
 
@@ -42,31 +42,40 @@ class DownloadOverlay extends React.Component {
   }
 
   updateSelected(devicePath){
+    var device = _.find(this.state.devices, { path: devicePath });
     this.setState({
-      devicePath: devicePath
+      devicePath: devicePath,
+      selectedDevice: device
     });
   }
 
   reloadDevices(){
-    this.setState({ devicePath: null }, this.getDevices());
+    const irken = this.props.irken;
+    this.setState({ devicePath: null, searching: true });
+    irken.scanBoards()
+      .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 
-  getDevices(){
-    Serialport.list((err, devices) => {
-      let options = devices.map(function(device){
-        return {
-          value: device.comName,
-          label: device.comName
-        };
-      });
+  buildDeviceLabel(device){
+    if(device.name){
+      return `${device.name} - ${device.path}`;
+    }else{
+      return device.path;
+    }
+  }
 
-      this.setState({
-        options: options
-      });
+  createDeviceList(devices){
+    var self = this;
+    return devices.map(function(device){
+      return {
+        value: device.path,
+        label: self.buildDeviceLabel(device)
+      };
     });
   }
 
   render(){
+    const devices = this.createDeviceList(this.state.devices);
     return (
       <Card styles={styles.overlay}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
@@ -79,7 +88,7 @@ class DownloadOverlay extends React.Component {
             searchable={false}
             clearable={false}
             onChange={this.updateSelected}
-            options={this.state.options} />
+            options={devices} />
           <Button onClick={this.reloadDevices}>Reload Devices</Button>
         </div>
         <div style={styles.overlayButtonContainer}>
