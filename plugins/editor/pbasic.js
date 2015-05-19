@@ -31,50 +31,57 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
     var middleKeywords = ['else','#else','elseif','case', '#case'];
     var endKeywords = ['next','loop','endselect','#endselect', 'endif', '#endif'];
 
-    var etDirective = ['$STAMP', '$PORT', '$PBASIC'];
+    var etInstruction = ['DATA','FOR','NEXT','GOTO','GOSUB','RETURN','IF','BRANCH','LOOKUP','LOOKDOWN',
+      'RANDOM','READ','WRITE','PAUSE','INPUT','OUTPUT','LOW','HIGH','TOGGLE','REVERSE','SEROUT','SERIN',
+      'PULSOUT','PULSIN','COUNT','SHIFTOUT','SHIFTIN','RCTIME','BUTTON','PWM','FREQOUT','DTMFOUT','XOUT',
+      'DEBUG','STOP','NAP','SLEEP','END','TO','STEP','THEN','DO','EXIT','LOOP','UNTIL','WHILE','ELSE',
+      'ELSEIF','ENDIF','SELECT','CASE','ENDSELECT','ON'];
+
+    var etDirective = ['STAMP', 'PORT', 'PBASIC'];
+    var etTargetModule = ['BS1','BS2','BS2E','BS2SX', 'BS2P', 'BS2PE','BS2PX'];
+    var etIOFormatter = ['ASC', 'STR','REP', 'SKIP', 'WAITSTR','WAIT','NUM','SNUM']
+      .concat(getWordRange('DEC', 1, 5))
+      .concat(getWordRange('BIN', 1, 16))
+      .concat(getWordRange('ISBIN', 1, 16))
+      .concat(getWordRange('ISHEX', 1, 4))
+      .concat(getWordRange('IHEX', 1, 4))
+      .concat(getWordRange('IBIN', 1, 16))
+      .concat(getWordRange('HEX', 1, 4))
+      .concat(getWordRange('SHEX', 1, 4))
+      .concat(getWordRange('SBIN', 1, 16))
+      .concat(getWordRange('SDEC', 1, 5));
+
+    var etVariable = ['INA', 'INB', 'INC', 'IND', 'OUTA', 'OUTB', 'OUTC', 'OUTD',
+      'DIRA', 'DIRB', 'DIRC', 'DIRD', 'INL', 'INH', 'OUTL', 'OUTH', 'DIRL', 'DIRH',
+      'INS', 'OUTS', 'DIRS']
+      .concat(getWordRange('B', 0, 25))
+      .concat(getWordRange('DIR', 0, 15))
+      .concat(getWordRange('BIT', 0, 15))
+      .concat(getWordRange('W', 0, 12))
+      .concat(getWordRange('OUT', 0, 15))
+      .concat(getWordRange('NIB', 0, 3))
+      .concat(getWordRange('IN', 1, 16));
+
+    var etConstant = ['CLS','HOME','BELL','BKSP','TAB','CR','UNITON','UNITOFF','UNITSOFF',
+      'LIGHTSON','DIM','BRIGHT','LSBFIRST','MSBFIRST','MSBPRE','LSBPRE','MSBPOST','LSBPOST'];
+
+    var etCCDirective = ['#DEFINE', '#ERROR', '#IF', '#THEN', '#ELSE', '#ENDIF', '#SELECT',
+      '#CASE', '#ENDSELECT'];
 
     var wordOperators = wordRegexp(['and', 'or', 'not', 'xor']);
 
-    var commonkeywords = ['dim','then', '#then', 'until','goto', 'return',
-                          'CRSRX', 'INC', 'PULSIN', '#DEFINE', 'CRSRXY', 'IND', 'PULSOUT', 'CRSRY', 'INH', 'PWM', 'DATA', 'INL', 'RANDOM',
-                          'DCD', 'INPUT', 'RCTIME','#ERROR', 'DEBUG', 'INS', 'READ', 'DEBUGIN', 'REP', 'DEC', 'REV', '$PBASIC', 'DIG', 'REVERSE',
-                          '$PORT', 'LF', '$STAMP', 'LIGHTSON', 'ABS', 'LOOKDOWN', 'LOOKUP', 'ASC', 'ATN', 'SERIN', 'SEROUT',
-                          'BELL', 'LOWNIB', 'LSBFIRST', 'SHIFTIN', 'DTMFOUT', 'LSBPOST', 'SHIFTOUT', 'LSBPRE', 'SIN', 'BKSP', 'MAX', 'SKIP',
-                          'BRANCH', 'MIN', 'SLEEP', 'BRIGHT', 'MSBFIRST', 'SNUM', 'BS1', 'MSBPOST', 'SQR', 'BS2', 'EXIT', 'MSBPRE', 'STEP',
-                          'BS2E', 'FOR', 'NAP', 'STOP', 'BS2P', 'FREQOUT', 'NCD', 'STR', 'BS2PE', 'GOSUB', 'TAB', 'BS2SX', 'GOTO', 'BUTTON',
-                          'HEX', 'TO', 'TOGGLE', 'NUM', 'UNITOFF', 'ON', 'UNITON', 'UNITSOFF', 'CLRDN', 'HIGHNIB', 'CLREOL', 'HOME',
-                          'VAR', 'CLS', 'HYP', 'CON', 'WAIT', 'COS', 'WAITSTR', 'COUNT', 'CR', 'WORD',
-                          'CRSRDN', 'OUPUT', 'WRITE', 'CRSRLF', 'CRSRRT', 'INA', 'PAUSE', 'XOUT', 'CRSRUP', 'INB', 'PIN'];
-
-    var commontypes = ['BYTE', 'BYTE0', 'LOWBYTE', 'HIGHBYTE', 'BIT', 'LOWBIT', 'HIGHBIT', 'BIN', 'HEX', 'ISHEX','IBIN', 'ISBIN','SHEX', 'IHEX', 'NIB', 'SBIN', 'SDEC',
-                       'HIGH', 'LOW', 'OUTA', 'OUTB', 'OUTC', 'OUTD', 'OUTL', 'OUTH', 'OUTS', 'DIRA', 'DIRB', 'DIRC', 'DIRD', 'DIRH', 'DIRL', 'DIRS']
-        .concat(getWordRange('B', 0, 25))
-        .concat(getWordRange('BIN', 1, 16))
-        .concat(getWordRange('ISBIN', 1, 16))
-        .concat(getWordRange('ISHEX', 1, 4))
-        .concat(getWordRange('DEC', 1, 5))
-        .concat(getWordRange('DIR', 0, 15))
-        .concat(getWordRange('BIT', 0, 15))
-        .concat(getWordRange('IHEX', 1, 4))
-        .concat(getWordRange('IBIN', 1, 16))
-        .concat(getWordRange('HEX', 1, 4))
-        .concat(getWordRange('SHEX', 1, 4))
-        .concat(getWordRange('W', 0, 12))
-        .concat(getWordRange('OUT', 0, 15))
-        .concat(getWordRange('NIB', 0, 3))
-        .concat(getWordRange('IN', 1, 16))
-        .concat(getWordRange('SBIN', 1, 16))
-        .concat(getWordRange('SDEC', 1, 5));
-
-
-
-    var keywords = wordRegexp(commonkeywords);
-    var types = wordRegexp(commontypes);
     var stringPrefixes = '"';
 
     var opening = wordRegexp(openingKeywords);
     var middle = wordRegexp(middleKeywords);
     var closing = wordRegexp(endKeywords);
+    var etdirective = wordRegexp(etDirective);
+    var ettargetmodule = wordRegexp(etTargetModule);
+    var etioformatter = wordRegexp(etIOFormatter);
+    var etvariable = wordRegexp(etVariable);
+    var etccdirective = wordRegexp(etCCDirective);
+    var etconstant = wordRegexp(etConstant);
+    var etinstruction = wordRegexp(etInstruction);
     var doubleClosing = wordRegexp(['END']);
     var doOpening = wordRegexp(['DO']);
 
@@ -153,9 +160,7 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
             return null;
         }
 
-        if (stream.match(etDirective)) {
-          return 'etDirective'
-        }
+
 
         if (stream.match(doubleOperators)
             || stream.match(singleOperators)
@@ -164,6 +169,28 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
         }
         if (stream.match(singleDelimiters)) {
             return null;
+        }
+
+        if (stream.match(etdirective)) {
+          return 'etDirective';
+        }
+        if (stream.match(ettargetmodule)) {
+          return 'etTargetModule';
+        }
+        if (stream.match(etvariable)) {
+          return 'etVariable';
+        }
+        if (stream.match(etioformatter)) {
+          return 'etIOFormatter';
+        }
+        if (stream.match(etccdirective)) {
+          return 'etCCDirective';
+        }
+        if (stream.match(etconstant)) {
+          return 'etConstant';
+        }
+        if (stream.match(etinstruction)) {
+          return 'etInstruction';
         }
         if (stream.match(doOpening)) {
             indent(stream,state);
@@ -191,17 +218,11 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
             return 'keyword';
         }
 
-        if (stream.match(types)) {
-            return 'keyword';
-        }
-
-        if (stream.match(keywords)) {
-            return 'keyword';
-        }
-
         if (stream.match(identifiers)) {
             return 'variable';
         }
+
+
 
         // Handle non-detected items
         stream.next();

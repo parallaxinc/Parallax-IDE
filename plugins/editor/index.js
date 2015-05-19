@@ -59,6 +59,7 @@ function editor(app, opts, done){
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
 
+      codeEditor.setOption('styleSelectedText', true);
       codeEditor.setOption('tabSize', 2);
       codeEditor.setOption('extraKeys', {
         'Ctrl-Up': false,

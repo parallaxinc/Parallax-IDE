@@ -1,22 +1,33 @@
-/* neo theme for codemirror */
+/* PBASIC Full Syntax theme for codemirror */
 
 /* Color scheme */
 
 .cm-s-neo.CodeMirror {
-  background-color:#0000ff;
+  background-color:#ffffff;
   color:#000000;
   line-height:1.4375;
 }
 .cm-s-neo .cm-comment {color:#008000}
-.cm-s-neo .cm-keyword, .cm-s-neo .cm-property {color:#1d75b3}
+.cm-s-neo .cm-keyword, .cm-s-neo .cm-property {color:#000000}
 .cm-s-neo .cm-atom,.cm-s-neo .cm-number {color:#000000}
-.cm-s-neo .cm-node,.cm-s-neo .cm-tag {color:#9c3328}
+.cm-s-neo .cm-node,.cm-s-neo .cm-tag {color:#000000}
 .cm-s-neo .cm-string {color:#0000ff}
-.cm-s-neo .cm-variable,.cm-s-neo .cm-qualifier {color:#047d65}
+.cm-s-neo .cm-variable,.cm-s-neo .cm-qualifier {color:#000000}
 
-.cm-searching {color: #00ff00; background-color: #000000;}
-.CodeMirror-selectedtext {color: #ffffff; background-color: #800000;}
+.cm-etDirective {color: #008080}
+.cm-etTargetModule {color: #008080}
+.cm-etIOFormatter {color: #000080}
+.cm-etVariable {color: #800080}
+.cm-etConstant {color: #800080}
+.cm-etCCDirective {color: #808080}
+.cm-etInstruction {color: #0000ff}
 
+.CodeMirror-selectedtext {color: #ffffff !important;}
+.CodeMirror-selected {background: #800000 !important;}
+.cm-searching {
+  color: #00ff00 !important; 
+  background-color: #000000 !important;
+}
 
 /* Editor styling */
 
