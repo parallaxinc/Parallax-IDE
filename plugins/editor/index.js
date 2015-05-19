@@ -7,7 +7,7 @@ require('codemirror/addon/dialog/dialog.css');
 require('codemirror/addon/search/search');
 require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
-require('../../assets/theme/neo.css');
+require('../../assets/theme/parallax.css');
 
 var CodeMirror = require('codemirror');
 var keyExtension = require('./key-extension');
@@ -52,7 +52,7 @@ function editor(app, opts, done){
       codeEditor = CodeMirror(editorContainer, {
         value: space.current.deref(),
         mode: 'pbasic',
-        theme: 'neo',
+        theme: 'parallax',
         lineNumbers: true
       });
 
