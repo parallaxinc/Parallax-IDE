@@ -1,0 +1,57 @@
+/* PBASIC Full Syntax theme for codemirror */
+
+/* Color scheme */
+
+.cm-s-parallax.CodeMirror {
+  background-color:#ffffff;
+  color:#000000;
+  line-height:1.4375;
+}
+.cm-s-parallax .cm-comment {color:#008000}
+.cm-s-parallax .cm-keyword, .cm-s-parallax .cm-property {color:#000000}
+.cm-s-parallax .cm-atom,.cm-s-parallax .cm-number {color:#000000}
+.cm-s-parallax .cm-node,.cm-s-parallax .cm-tag {color:#000000}
+.cm-s-parallax .cm-string {color:#0000ff}
+.cm-s-parallax .cm-variable,.cm-s-parallax .cm-qualifier {color:#000000}
+
+.cm-etDirective {color: #008080}
+.cm-etTargetModule {color: #008080}
+.cm-etIOFormatter {color: #000080}
+.cm-etVariable {color: #800080}
+.cm-etConstant {color: #800080}
+.cm-etCCDirective {color: #808080}
+.cm-etInstruction {color: #0000ff}
+
+.CodeMirror-selectedtext {color: #ffffff !important;}
+.CodeMirror-selected {background: #800000 !important;}
+.cm-searching {
+  color: #00ff00 !important; 
+  background-color: #000000 !important;
+}
+
+/* Editor styling */
+
+.cm-s-parallax pre {
+  padding:0;
+}
+
+.cm-s-parallax .CodeMirror-gutters {
+  border:none;
+  border-right:10px solid transparent;
+  background-color:transparent;
+}
+
+.cm-s-parallax .CodeMirror-linenumber {
+  padding:0;
+  color:#e0e2e5;
+}
+
+.cm-s-parallax .CodeMirror-guttermarker { color: #1d75b3; }
+.cm-s-parallax .CodeMirror-guttermarker-subtle { color: #e0e2e5; }
+
+.cm-s-parallax div.CodeMirror-cursor {
+  width: auto;
+  border: 0;
+  background: rgba(155,157,162,0.37);
+  z-index: 1;
+}
