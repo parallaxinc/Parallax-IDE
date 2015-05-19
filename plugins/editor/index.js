@@ -5,8 +5,9 @@ require('codemirror/addon/search/searchcursor');
 require('codemirror/addon/dialog/dialog');
 require('codemirror/addon/dialog/dialog.css');
 require('codemirror/addon/search/search');
+require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
-require('codemirror/theme/neo.css');
+require('../../assets/theme/neo.css');
 
 var CodeMirror = require('codemirror');
 var keyExtension = require('./key-extension');

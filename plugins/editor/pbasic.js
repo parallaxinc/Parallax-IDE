@@ -31,6 +31,8 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
     var middleKeywords = ['else','#else','elseif','case', '#case'];
     var endKeywords = ['next','loop','endselect','#endselect', 'endif', '#endif'];
 
+    var etDirective = ['$STAMP', '$PORT', '$PBASIC'];
+
     var wordOperators = wordRegexp(['and', 'or', 'not', 'xor']);
 
     var commonkeywords = ['dim','then', '#then', 'until','goto', 'return',
@@ -139,6 +141,8 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
         }
 
         // Handle Strings
+
+
         if (stream.match(stringPrefixes)) {
             state.tokenize = tokenStringFactory(stream.current());
             return state.tokenize(stream, state);
@@ -148,6 +152,11 @@ CodeMirror.defineMode("pbasic", function(conf, parserConf) {
         if (stream.match(tripleDelimiters) || stream.match(doubleDelimiters)) {
             return null;
         }
+
+        if (stream.match(etDirective)) {
+          return 'etDirective'
+        }
+
         if (stream.match(doubleOperators)
             || stream.match(singleOperators)
             || stream.match(wordOperators)) {
