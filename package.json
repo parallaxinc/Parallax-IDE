@@ -12,7 +12,7 @@
     "frylord": "^0.5.0",
     "holovisor": "^0.2.0",
     "iggins": "^0.1.0",
-    "irken": "^0.4.1",
+    "irken": "git://github.com:iceddev/irken.git#new-api",
     "lodash": "^3.9.1",
     "react": "^0.13.1",
     "react-material": "git://github.com/iceddev/react-material#fake-release-13",
