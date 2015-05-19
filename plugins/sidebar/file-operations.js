@@ -28,7 +28,9 @@ const FileOperations = React.createClass({
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   },
   saveFile: function(evt){
-    evt.preventDefault();
+    if(evt){
+      evt.preventDefault();
+    }
 
     const space = this.props.workspace;
 
@@ -162,6 +164,18 @@ const FileOperations = React.createClass({
     );
 
     this.renderOverlay(component);
+  },
+  componentDidMount: function(){
+    this.remove_saveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
+    this.remove_closeDialog = app.keypress(app.keypress.ESC, this.hideOverlay);
+  },
+  componentWillUnmount: function(){
+    if(this.remove_saveFile) {
+     this.remove_saveFile();
+    }; 
+    if(this.remove_closeDialog) {
+     this.remove_closeDialog();
+    }; 
   },
   render: function(){
     return (

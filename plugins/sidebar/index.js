@@ -25,7 +25,7 @@ function sidebar(app, opts, done){
     const Component = (
       <Sidebar>
         <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
-        <FileList>
+        <FileList workspace={space}>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} workspace={space} filename={file.get('name')} temp={file.get('temp')} />)}
         </FileList>

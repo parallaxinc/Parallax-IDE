@@ -1,10 +1,15 @@
 'use strict';
 
 require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/search/searchcursor');
+require('codemirror/addon/dialog/dialog');
+require('codemirror/addon/dialog/dialog.css');
+require('codemirror/addon/search/search');
 require('codemirror/lib/codemirror.css');
 require('codemirror/theme/neo.css');
 
 var CodeMirror = require('codemirror');
+var keyExtension = require('./key-extension');
 
 function editor(app, opts, done){
 
@@ -38,6 +43,7 @@ function editor(app, opts, done){
       editorContainer.style.display = 'flex';
       editorContainer.style.flex = '1';
       editorContainer.style.flexDirection = 'column';
+      editorContainer.setAttribute('id', 'editorContainer');
       el.appendChild(editorContainer);
 
       codeEditor = CodeMirror(editorContainer, {
@@ -49,6 +55,14 @@ function editor(app, opts, done){
 
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
+
+      codeEditor.setOption('tabSize', 2);
+      codeEditor.setOption('extraKeys', {
+        'Ctrl-Up': false,
+        'Ctrl-Down': false,
+        Tab: false
+      });
+      keyExtension.setup(app, codeEditor);
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
