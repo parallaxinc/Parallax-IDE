@@ -5,11 +5,14 @@ require('codemirror/addon/search/searchcursor');
 require('codemirror/addon/dialog/dialog');
 require('codemirror/addon/dialog/dialog.css');
 require('codemirror/addon/search/search');
+require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
-require('codemirror/theme/neo.css');
+require('../../assets/theme/parallax.css');
 
 var CodeMirror = require('codemirror');
 var keyExtension = require('./key-extension');
+
+require('./pbasic')(CodeMirror);
 
 function editor(app, opts, done){
 
@@ -48,14 +51,15 @@ function editor(app, opts, done){
 
       codeEditor = CodeMirror(editorContainer, {
         value: space.current.deref(),
-        mode: 'javascript',
-        theme: 'neo',
+        mode: 'pbasic',
+        theme: 'parallax',
         lineNumbers: true
       });
 
       codeEditor.on('inputRead', handleInput);
       codeEditor.on('keyHandled', handleInput);
 
+      codeEditor.setOption('styleSelectedText', true);
       codeEditor.setOption('tabSize', 2);
       codeEditor.setOption('extraKeys', {
         'Ctrl-Up': false,
