@@ -57,8 +57,8 @@ class DownloadOverlay extends React.Component {
   }
 
   render(){
+    let highlight;
     const devices = this.state.devices;
-    console.log('DEVICES: ', devices);
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
@@ -76,7 +76,10 @@ class DownloadOverlay extends React.Component {
                   </thead>
                   <tbody>
                     {devices.map(function(device, i) {
-                      return (<tr onClick={this.updateSelected.bind(this, device)}>
+                      if(this.state.selectedDevice) {
+                        highlight = device.path === this.state.selectedDevice.path ? 'active' : 'inactive';
+                      }
+                      return (<tr style={styles[highlight]} onClick={this.updateSelected.bind(this, device)}>
                                 <td style={styles.deviceTd}>{device.name}</td>
                                 <td style={styles.deviceTd}>{device.path}</td>
                               </tr>

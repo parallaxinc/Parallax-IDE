@@ -71,6 +71,12 @@ const styles = {
     verticalAlign: 'top',
     borderTop: '1px solid #ddd'
   },
+  active: {
+    backgroundColor: '#ddd'
+  },
+  inactive: {
+    backgroundColor: 'transparent'
+  },
   changeFolderButton: {
     position: 'absolute',
     top: -28,
