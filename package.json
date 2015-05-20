@@ -15,6 +15,7 @@
     "irken": "git://github.com/iceddev/irken#new-api",
     "lodash": "^3.9.1",
     "react": "^0.13.1",
+    "react-loader": "^1.2.0",
     "react-material": "git://github.com/iceddev/react-material#fake-release-13",
     "react-mfb-iceddev": "^0.1.0",
     "react-select": "^0.4.0",

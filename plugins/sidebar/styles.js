@@ -38,6 +38,39 @@ const styles = {
     display: 'flex',
     marginTop: 20
   },
+  overlayTableContainer: {
+  },
+  deviceTable: {
+    width: '100%',
+    maxWidth: '100%',
+    borderCollapse: 'collapse',
+    borderSpacing: 0,
+    display: 'table',
+
+  },
+  deviceTableWrapper: {
+    position: 'relative'
+  },
+  deviceTableScroll: {
+    height: '250px',
+    overflow: 'auto',
+    marginTop: '5px'
+  },
+  deviceTh: {
+    padding: '8px',
+    textAlign: 'left',
+    borderTop: 0,
+    borderBottom: '2px solid #ddd',
+    verticalAlign: 'bottom',
+    fontWeight: 'bold'
+  },
+  deviceTd: {
+    display: 'table-cell',
+    padding: '8px',
+    borderSpacing: 'collapse',
+    verticalAlign: 'top',
+    borderTop: '1px solid #ddd'
+  },
   changeFolderButton: {
     position: 'absolute',
     top: -28,

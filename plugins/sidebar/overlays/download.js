@@ -5,6 +5,7 @@ const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Select = require('react-select');
+const Loader = require('react-loader');
 
 require('react-select/dist/default.css');
 
@@ -41,10 +42,9 @@ class DownloadOverlay extends React.Component {
     }
   }
 
-  updateSelected(devicePath){
-    var device = _.find(this.state.devices, { path: devicePath });
+  updateSelected(device){
     this.setState({
-      devicePath: devicePath,
+      devicePath: device.path,
       selectedDevice: device
     });
   }
@@ -56,40 +56,37 @@ class DownloadOverlay extends React.Component {
       .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 
-  buildDeviceLabel(device){
-    if(device.name){
-      return `${device.name} - ${device.path}`;
-    }else{
-      return device.path;
-    }
-  }
-
-  createDeviceList(devices){
-    var self = this;
-    return devices.map(function(device){
-      return {
-        value: device.path,
-        label: self.buildDeviceLabel(device)
-      };
-    });
-  }
-
   render(){
-    const devices = this.createDeviceList(this.state.devices);
+    const devices = this.state.devices;
+    console.log('DEVICES: ', devices);
     return (
-      <Card styles={styles.overlay}>
+      <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
-        <div style={styles.overlaySelectContainer}>
-          <Select
-            ref={(ref) => this._select = ref}
-            name="device-select"
-            placeholder="Device..."
-            value={this.state.devicePath}
-            searchable={false}
-            clearable={false}
-            onChange={this.updateSelected}
-            options={devices} />
+        <div style={styles.overlayTableContainer}>
           <Button onClick={this.reloadDevices}>Reload Devices</Button>
+          <Loader loaded={!this.state.searching}>
+            <div style={styles.deviceTableWrapper}>
+              <div style={styles.deviceTableScroll}>
+                <table style={styles.deviceTable}>
+                  <thead>
+                    <tr>
+                      <th style={styles.deviceTh}>Name</th>
+                      <th style={styles.deviceTh}>Path</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {devices.map(function(device, i) {
+                      return (<tr onClick={this.updateSelected.bind(this, device)}>
+                                <td style={styles.deviceTd}>{device.name}</td>
+                                <td style={styles.deviceTd}>{device.path}</td>
+                              </tr>
+                      );
+                    }, this)}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Loader>
         </div>
         <div style={styles.overlayButtonContainer}>
           <Button onClick={this.onAccept}>Download</Button>
