@@ -2,30 +2,18 @@
 
 const React = require('react');
 
+var styles = require('../styles.js');
+
 class Progress extends React.Component {
 
   render(){
 
-    const setComplete = this.props.setComplete + '%';
-
-    const barStyle = {
-      width: setComplete,
-      height: '100%',
-      backgroundColor: '#3a81f0'
-    }
-    const barContainerStyle = {
-      width: '100%',
-      height: '8px',
-      backgroundColor: '#b0d0ef',
-      position: 'absolute',
-      bottom: 0,
-      left: 0
-    }
+    var setComplete = {width: this.props.setComplete + '%'};
 
     return (
-        <div style={barContainerStyle}>
-          <div style={barStyle}></div>
-        </div>
+      <div style={styles.progressContainerStyle}>
+        <div styles={[styles.progressBarStyle, setComplete]}></div>
+      </div>
     );
   }
 }

@@ -35,7 +35,7 @@ class DownloadOverlay extends React.Component {
   }
 
   onAccept(evt){
-      this.download(this.state.selectedDevice);
+    this.download(this.state.selectedDevice);
   }
 
   onCancel(evt){
@@ -45,9 +45,10 @@ class DownloadOverlay extends React.Component {
   }
 
   download(device){
-    const { toast, workspace, logger, overlay } = this.props.irken;
 
     const { irken, handleError, handleSuccess } = this.props;
+
+    const { toast, workspace, logger, overlay } = irken;
 
     const name = workspace.filename.deref();
     const source = workspace.current.deref();
@@ -116,7 +117,7 @@ class DownloadOverlay extends React.Component {
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
-        <div style={styles.overlayTableContainer}>
+        <div>
           <Loader loaded={!this.state.searching}>
             <div style={styles.deviceTableWrapper}>
               <div style={styles.deviceTableScroll}>

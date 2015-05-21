@@ -48,7 +48,17 @@ const styles = {
     display: 'flex',
     marginTop: 20
   },
-  overlayTableContainer: {
+  progressContainerStyle: {
+    width: '100%',
+    height: '8px',
+    backgroundColor: '#b0d0ef',
+    position: 'absolute',
+    bottom: 0,
+    left: 0
+  },
+  progressBarStyle: {
+    height: '100%',
+    backgroundColor: '#3a81f0'
   },
   deviceTable: {
     width: '100%',
@@ -56,7 +66,6 @@ const styles = {
     borderCollapse: 'collapse',
     borderSpacing: 0,
     display: 'table',
-
   },
   deviceTableWrapper: {
     position: 'relative'
