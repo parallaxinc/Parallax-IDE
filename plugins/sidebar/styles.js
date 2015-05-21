@@ -31,14 +31,34 @@ const styles = {
   overlayTitle: {
     margin: 0
   },
-  overlayButtonContainer: {
+  overlayDevicesBottom: {
     margin: 'auto 0 0 auto'
+  },
+  overlayButtonContainer: {
+    margin: 'auto 0 0 auto',
+    display: 'inline-block',
+    height: '40px'
+  },
+  overlayLoadingContainer: {
+    display: 'inline-block',
+    marginRight: '60px',
+    height: '40px'
   },
   overlaySelectContainer: {
     display: 'flex',
     marginTop: 20
   },
-  overlayTableContainer: {
+  progressContainerStyle: {
+    width: '100%',
+    height: '8px',
+    backgroundColor: '#b0d0ef',
+    position: 'absolute',
+    bottom: 0,
+    left: 0
+  },
+  progressBarStyle: {
+    height: '100%',
+    backgroundColor: '#3a81f0'
   },
   deviceTable: {
     width: '100%',
@@ -46,7 +66,6 @@ const styles = {
     borderCollapse: 'collapse',
     borderSpacing: 0,
     display: 'table',
-
   },
   deviceTableWrapper: {
     position: 'relative'
@@ -76,6 +95,10 @@ const styles = {
   },
   inactive: {
     backgroundColor: 'transparent'
+  },
+  progressBar: {
+    height: '50px',
+    width: '50px'
   },
   changeFolderButton: {
     position: 'absolute',

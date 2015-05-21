@@ -11,8 +11,13 @@ module.exports = function(CodeMirror){
       return new RegExp("^((" + words.join(")|(") + "))\\b", "i");
     }
 
-    function getWordRange(word, start, end){
+    function getWordRange(word, start, end, base){
       var words = [];
+
+      if (base) {
+        words.push(word)
+      };
+
       for (var i = start; i < end + 1; i++) {
         words.push(word + i);
       };
@@ -39,30 +44,30 @@ module.exports = function(CodeMirror){
     var etDirective = ['STAMP', 'PORT', 'PBASIC'];
     var etTargetModule = ['BS1','BS2','BS2E','BS2SX', 'BS2P', 'BS2PE','BS2PX'];
     var etIOFormatter = ['ASC', 'STR','REP', 'SKIP', 'WAITSTR','WAIT','NUM','SNUM']
-      .concat(getWordRange('DEC', 1, 5))
-      .concat(getWordRange('BIN', 1, 16))
-      .concat(getWordRange('ISBIN', 1, 16))
-      .concat(getWordRange('ISHEX', 1, 4))
-      .concat(getWordRange('IHEX', 1, 4))
-      .concat(getWordRange('IBIN', 1, 16))
-      .concat(getWordRange('HEX', 1, 4))
-      .concat(getWordRange('SHEX', 1, 4))
-      .concat(getWordRange('SBIN', 1, 16))
-      .concat(getWordRange('SDEC', 1, 5));
+      .concat(getWordRange('DEC', 1, 5, true))
+      .concat(getWordRange('BIN', 1, 16, true))
+      .concat(getWordRange('IBIN', 1, 16, true))
+      .concat(getWordRange('ISBIN', 1, 16, true))
+      .concat(getWordRange('ISHEX', 1, 4, true))
+      .concat(getWordRange('IHEX', 1, 4, true))
+      .concat(getWordRange('IBIN', 1, 16, true))
+      .concat(getWordRange('HEX', 1, 4, true))
+      .concat(getWordRange('SHEX', 1, 4, true))
+      .concat(getWordRange('SBIN', 1, 16, true))
+      .concat(getWordRange('SDEC', 1, 5, true));
 
     var etVariable = ['INA', 'INB', 'INC', 'IND', 'OUTA', 'OUTB', 'OUTC', 'OUTD',
       'DIRA', 'DIRB', 'DIRC', 'DIRD', 'INL', 'INH', 'OUTL', 'OUTH', 'DIRL', 'DIRH',
       'INS', 'OUTS', 'DIRS']
       .concat(getWordRange('B', 0, 25))
       .concat(getWordRange('DIR', 0, 15))
-      .concat(getWordRange('BIT', 0, 15))
       .concat(getWordRange('W', 0, 12))
       .concat(getWordRange('OUT', 0, 15))
-      .concat(getWordRange('NIB', 0, 3))
-      .concat(getWordRange('IN', 1, 16));
+      .concat(getWordRange('IN', 0, 16));
 
     var etConstant = ['CLS','HOME','BELL','BKSP','TAB','CR','UNITON','UNITOFF','UNITSOFF',
-      'LIGHTSON','DIM','BRIGHT','LSBFIRST','MSBFIRST','MSBPRE','LSBPRE','MSBPOST','LSBPOST'];
+      'LIGHTSON','DIM','BRIGHT','LSBFIRST','MSBFIRST','MSBPRE','LSBPRE','MSBPOST','LSBPOST',
+      'DEBUGIN','CRSRXY','CRSRLF','CRSRRT','CRSRUP','CRSRDN','LF','CLREOL','CLRDN','CRSRX','CRSRY'];
 
     var etCCDirective = ['#DEFINE', '#ERROR', '#IF', '#THEN', '#ELSE', '#ENDIF', '#SELECT',
       '#CASE', '#ENDSELECT'];
