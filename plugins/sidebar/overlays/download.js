@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const React = require('react');
+const through = require('through2');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Select = require('react-select');
@@ -18,13 +19,15 @@ class DownloadOverlay extends React.Component {
       devicePath: null,
       searching: false,
       selectedDevice: null,
-      devices: []
+      devices: [],
+      progress: 0
     };
 
     this.onAccept = this.onAccept.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.reloadDevices = this.reloadDevices.bind(this);
     this.updateSelected = this.updateSelected.bind(this);
+    this.updateProgress = this.updateProgress.bind(this);
   }
 
   componentDidMount(){
@@ -32,15 +35,53 @@ class DownloadOverlay extends React.Component {
   }
 
   onAccept(evt){
-    if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(this.state.selectedDevice, evt);
-    }
+      this.download(this.state.selectedDevice);
   }
 
   onCancel(evt){
     if(typeof this.props.onCancel === 'function'){
       this.props.onCancel(evt);
     }
+  }
+
+  download(device){
+    const { toast, workspace, logger, overlay } = this.props.irken;
+
+    const { irken, handleError, handleSuccess } = this.props;
+
+    const name = workspace.filename.deref();
+    const source = workspace.current.deref();
+
+    if(!device){
+      return;
+    }
+
+    const board = irken.getBoard(device);
+
+    board.on('progress', this.updateProgress);
+
+    const log = through(function(chunk, enc, cb){
+      logger(chunk.toString());
+      cb(null, chunk);
+    });
+
+    board.compile(source)
+      .tap(() => logger.clear())
+      .then((memory) => board.bootload(memory))
+      .then(() => board.read().pipe(log))
+      .tap(() => toast.clear())
+      .tap(() => handleSuccess(`'${name}' downloaded successfully`))
+      .catch(handleError)
+      .finally(() => {
+        overlay.hide();
+        board.removeListener('progress', this.updateProgress);
+        this.setState({ progress: 0 });
+      });
+
+  }
+
+  updateProgress(progress){
+    this.setState({ progress: progress});
   }
 
   updateSelected(device){
@@ -99,7 +140,7 @@ class DownloadOverlay extends React.Component {
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this.reloadDevices}>Reload Devices</Button>
-            <Progress setComplete={'40%'} />
+            <Progress setComplete={this.state.progress} />
           </div>
           <div style={styles.overlayButtonContainer}>
             <Button onClick={this.onAccept}>Download</Button>

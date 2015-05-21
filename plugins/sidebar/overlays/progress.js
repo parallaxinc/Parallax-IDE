@@ -6,7 +6,7 @@ class Progress extends React.Component {
 
   render(){
 
-    const { setComplete } = this.props;
+    const setComplete = this.props.setComplete + '%';
 
     const barStyle = {
       width: setComplete,

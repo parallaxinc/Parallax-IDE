@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const through = require('through2');
 const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
 
 require('react-mfb-iceddev/mfb.css');
@@ -67,45 +66,6 @@ const FileOperations = React.createClass({
       .catch(this.handleError)
       .finally(overlay.hide);
   },
-  download: function(device){
-    const toast = this.props.toast;
-    const space = this.props.workspace;
-    const logger = this.props.logger;
-    const overlay = this.props.overlay;
-    const irken = this.props.irken;
-    const name = space.filename.deref();
-    const source = space.current.deref();
-
-    if(!device){
-      return;
-    }
-
-    const board = irken.getBoard(device);
-
-    console.log(board);
-    board.on('progress', this.updateProgress);
-
-    const log = through(function(chunk, enc, cb){
-      logger(chunk.toString());
-      cb(null, chunk);
-    });
-
-    board.compile(source)
-      .tap(() => logger.clear())
-      .then((memory) => board.bootload(memory))
-      .then(() => board.read().pipe(log))
-      .tap(() => toast.clear())
-      .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
-      .catch(this.handleError)
-      .finally(function() {
-        overlay.hide();
-        board.removeListener('progress');
-      });
-
-  },
-  updateProgress: function(progress){
-    console.log(progress);
-  },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
 
@@ -155,9 +115,10 @@ const FileOperations = React.createClass({
 
     const component = (
       <DownloadOverlay
-        onAccept={this.download}
         onCancel={this.hideOverlay}
-        irken={this.props.irken} />
+        irken={this.props.irken}
+        handleSuccess={this.handleSuccess}
+        handleError={this.handleError} />
     );
 
     this.renderOverlay(component);
