@@ -56,9 +56,21 @@ class DownloadOverlay extends React.Component {
       .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 
+  componentizeDevice(device, selectedPath){
+    const highlight = device.path === selectedPath ? 'active' : 'inactive';
+    return (
+      <tr style={styles[highlight]} onClick={this.updateSelected.bind(this, device)}>
+        <td style={styles.deviceTd}>{device.name}</td>
+        <td style={styles.deviceTd}>{device.path}</td>
+      </tr>
+      );
+  }
+
   render(){
-    let highlight;
-    const devices = this.state.devices;
+    const { devices, devicePath } = this.state;
+
+    const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
+
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
@@ -75,16 +87,7 @@ class DownloadOverlay extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {devices.map(function(device, i) {
-                      if(this.state.selectedDevice) {
-                        highlight = device.path === this.state.selectedDevice.path ? 'active' : 'inactive';
-                      }
-                      return (<tr style={styles[highlight]} onClick={this.updateSelected.bind(this, device)}>
-                                <td style={styles.deviceTd}>{device.name}</td>
-                                <td style={styles.deviceTd}>{device.path}</td>
-                              </tr>
-                      );
-                    }, this)}
+                    {deviceRows}
                   </tbody>
                 </table>
               </div>
