@@ -31,8 +31,18 @@ const styles = {
   overlayTitle: {
     margin: 0
   },
-  overlayButtonContainer: {
+  overlayDevicesBottom: {
     margin: 'auto 0 0 auto'
+  },
+  overlayButtonContainer: {
+    margin: 'auto 0 0 auto',
+    display: 'inline-block',
+    height: '40px'
+  },
+  overlayLoadingContainer: {
+    display: 'inline-block',
+    marginRight: '60px',
+    height: '40px'
   },
   overlaySelectContainer: {
     display: 'flex',
@@ -76,6 +86,10 @@ const styles = {
   },
   inactive: {
     backgroundColor: 'transparent'
+  },
+  progressBar: {
+    height: '50px',
+    width: '50px'
   },
   changeFolderButton: {
     position: 'absolute',

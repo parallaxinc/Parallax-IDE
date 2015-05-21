@@ -6,6 +6,7 @@ const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Select = require('react-select');
 const Loader = require('react-loader');
+const Progress = require('./progress');
 
 require('react-select/dist/default.css');
 
@@ -75,7 +76,6 @@ class DownloadOverlay extends React.Component {
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
         <div style={styles.overlayTableContainer}>
-          <Button onClick={this.reloadDevices}>Reload Devices</Button>
           <Loader loaded={!this.state.searching}>
             <div style={styles.deviceTableWrapper}>
               <div style={styles.deviceTableScroll}>
@@ -94,9 +94,17 @@ class DownloadOverlay extends React.Component {
             </div>
           </Loader>
         </div>
-        <div style={styles.overlayButtonContainer}>
-          <Button onClick={this.onAccept}>Download</Button>
-          <Button onClick={this.onCancel}>Cancel</Button>
+        <div>
+        </div>
+        <div style={styles.overlayDevicesBottom}>
+          <div style={styles.overlayLoadingContainer}>
+            <Button onClick={this.reloadDevices}>Reload Devices</Button>
+            <Progress setComplete={'40%'} />
+          </div>
+          <div style={styles.overlayButtonContainer}>
+            <Button onClick={this.onAccept}>Download</Button>
+            <Button onClick={this.onCancel}>Cancel</Button>
+          </div>
         </div>
       </Card>
     );
