@@ -1,11 +1,11 @@
 'use strict';
 
+const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Select = require('react-select');
-
-const Serialport = require('browser-serialport');
+const Loader = require('react-loader');
 
 require('react-select/dist/default.css');
 
@@ -15,23 +15,24 @@ class DownloadOverlay extends React.Component {
   constructor(){
     this.state = {
       devicePath: null,
-      options: []
+      searching: false,
+      selectedDevice: null,
+      devices: []
     };
 
     this.onAccept = this.onAccept.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.reloadDevices = this.reloadDevices.bind(this);
     this.updateSelected = this.updateSelected.bind(this);
-    this.getDevices = this.getDevices.bind(this);
   }
 
   componentDidMount(){
-    this.getDevices();
+    this.reloadDevices();
   }
 
   onAccept(evt){
     if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(this.state.devicePath, evt);
+      this.props.onAccept(this.state.selectedDevice, evt);
     }
   }
 
@@ -41,46 +42,57 @@ class DownloadOverlay extends React.Component {
     }
   }
 
-  updateSelected(devicePath){
+  updateSelected(device){
     this.setState({
-      devicePath: devicePath
+      devicePath: device.path,
+      selectedDevice: device
     });
   }
 
   reloadDevices(){
-    this.setState({ devicePath: null }, this.getDevices());
+    const irken = this.props.irken;
+    this.setState({ devicePath: null, searching: true });
+    irken.scanBoards()
+      .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 
-  getDevices(){
-    Serialport.list((err, devices) => {
-      let options = devices.map(function(device){
-        return {
-          value: device.comName,
-          label: device.comName
-        };
-      });
-
-      this.setState({
-        options: options
-      });
-    });
+  componentizeDevice(device, selectedPath){
+    const highlight = device.path === selectedPath ? 'active' : 'inactive';
+    return (
+      <tr style={styles[highlight]} onClick={this.updateSelected.bind(this, device)}>
+        <td style={styles.deviceTd}>{device.name}</td>
+        <td style={styles.deviceTd}>{device.path}</td>
+      </tr>
+      );
   }
 
   render(){
+    const { devices, devicePath } = this.state;
+
+    const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
+
     return (
-      <Card styles={styles.overlay}>
+      <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
-        <div style={styles.overlaySelectContainer}>
-          <Select
-            ref={(ref) => this._select = ref}
-            name="device-select"
-            placeholder="Device..."
-            value={this.state.devicePath}
-            searchable={false}
-            clearable={false}
-            onChange={this.updateSelected}
-            options={this.state.options} />
+        <div style={styles.overlayTableContainer}>
           <Button onClick={this.reloadDevices}>Reload Devices</Button>
+          <Loader loaded={!this.state.searching}>
+            <div style={styles.deviceTableWrapper}>
+              <div style={styles.deviceTableScroll}>
+                <table style={styles.deviceTable}>
+                  <thead>
+                    <tr>
+                      <th style={styles.deviceTh}>Name</th>
+                      <th style={styles.deviceTh}>Path</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {deviceRows}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </Loader>
         </div>
         <div style={styles.overlayButtonContainer}>
           <Button onClick={this.onAccept}>Download</Button>
