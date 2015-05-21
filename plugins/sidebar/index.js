@@ -9,6 +9,8 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
+function noop(){}
+
 function sidebar(app, opts, done){
 
   const space = app.workspace;
@@ -18,6 +20,23 @@ function sidebar(app, opts, done){
   const logger = app.logger;
   const irken = app;
 
+  function loadFile(filename, cb = noop){
+    if(filename){
+      space.loadFile(filename, (err) => {
+        if(err){
+          cb(err);
+          return;
+        }
+
+        userConfig.set('last-file', filename);
+
+        cb();
+      });
+    } else {
+      cb();
+    }
+  }
+
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
     const directory = space.directory;
@@ -25,11 +44,11 @@ function sidebar(app, opts, done){
     const Component = (
       <Sidebar>
         <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
-        <FileList workspace={space}>
+        <FileList workspace={space} loadFile={loadFile}>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
-          {directory.map((file) => <File key={file.get('name')} workspace={space} filename={file.get('name')} temp={file.get('temp')} />)}
+          {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} logger={logger} />
+        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} logger={logger} loadFile={loadFile} />
       </Sidebar>
     );
 
@@ -37,8 +56,9 @@ function sidebar(app, opts, done){
   });
 
   const cwd = userConfig.get('cwd') || opts.defaultProject;
+  const lastFile = userConfig.get('last-file');
 
-  space.changeDir(cwd, done);
+  space.changeDir(cwd, () => loadFile(lastFile, done));
 }
 
 module.exports = sidebar;

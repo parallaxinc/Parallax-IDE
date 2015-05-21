@@ -12,10 +12,10 @@ const FileList = React.createClass({
   componentWillUnmount: function(){
     if(this.remove_nextFile) {
      this.remove_nextFile();
-    }; 
+    };
     if(this.remove_previousFile) {
      this.remove_previousFile();
-    }; 
+    };
   },
   previousFile: function(){
     this.changeFile({ direction: 'prev' });
@@ -24,17 +24,17 @@ const FileList = React.createClass({
     this.changeFile({ direction: 'next' });
   },
   changeFile: function(move) {
-    const space = this.props.workspace;
-    const filename = space.filename.deref();
+    const { workspace, loadFile } = this.props;
+    const filename = workspace.filename.deref();
 
-    space.directory.forEach(function(x, i) {
+    workspace.directory.forEach(function(x, i) {
       if(x.get('name') === filename) {
-        if(i === space.directory.size - 1) {
+        if(i === workspace.directory.size - 1) {
           i = -1;
         }
         const shift = move.direction === 'prev' ? i - 1 : i + 1;
-        const switchFile = space.directory.getIn([shift, 'name']);
-        space.loadFile(switchFile);
+        const switchFile = workspace.directory.getIn([shift, 'name']);
+        loadFile(switchFile);
       }
     });
   },

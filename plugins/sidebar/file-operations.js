@@ -40,18 +40,17 @@ const FileOperations = React.createClass({
       .catch(this.handleError);
   },
   createFile: function(name){
-    const space = this.props.workspace;
-    const overlay = this.props.overlay;
+    const { workspace, overlay, loadFile } = this.props;
 
     if(!name){
       return;
     }
 
-    space.filename.update(() => name);
-    space.current.update(() => '');
+    workspace.filename.update(() => name);
+    workspace.current.update(() => '');
     // TODO: these should transparently accept cursors for all non-function params
-    space.saveFile(space.filename.deref(), space.current)
-      .tap(() => this.handleSuccess(`'${name}' created successfully`))
+    workspace.saveFile(workspace.filename.deref(), workspace.current)
+      .tap(() => loadFile(name, () => this.handleSuccess(`'${name}' created successfully`)))
       .catch(this.handleError)
       .finally(overlay.hide);
   },
@@ -160,10 +159,10 @@ const FileOperations = React.createClass({
   componentWillUnmount: function(){
     if(this.remove_saveFile) {
      this.remove_saveFile();
-    }; 
+    };
     if(this.remove_closeDialog) {
      this.remove_closeDialog();
-    }; 
+    };
   },
   render: function(){
     return (
