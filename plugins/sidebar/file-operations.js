@@ -83,7 +83,7 @@ const FileOperations = React.createClass({
     const board = irken.getBoard(device);
 
     console.log(board);
-    //board.on('progress', this.updateProgress);
+    board.on('progress', this.updateProgress);
 
     const log = through(function(chunk, enc, cb){
       logger(chunk.toString());
@@ -97,12 +97,14 @@ const FileOperations = React.createClass({
       .tap(() => toast.clear())
       .tap(() => this.handleSuccess(`'${name}' downloaded successfully`))
       .catch(this.handleError)
-      .finally(overlay.hide);
+      .finally(function() {
+        overlay.hide();
+        board.removeListener('progress');
+      });
 
-    //board.removeListener('progress');
   },
-  updateProgress: function(evt){
-    console.log(evt);
+  updateProgress: function(progress){
+    console.log(progress);
   },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
