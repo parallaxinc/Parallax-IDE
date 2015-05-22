@@ -5,11 +5,8 @@ const React = require('react');
 const through = require('through2');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
-const Select = require('react-select');
 const Loader = require('react-loader');
 const Progress = require('./progress');
-
-require('react-select/dist/default.css');
 
 const styles = require('../styles');
 
@@ -138,7 +135,7 @@ class DownloadOverlay extends React.Component {
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this.reloadDevices}>Reload Devices</Button>
-            <Progress setComplete={this.state.progress} />
+            <Progress percent={this.state.progress} />
           </div>
           <div style={styles.overlayButtonContainer}>
             <Button onClick={this.onAccept}>Download</Button>
