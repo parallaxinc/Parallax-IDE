@@ -10,7 +10,9 @@ require('codemirror/lib/codemirror.css');
 require('../../assets/theme/parallax.css');
 
 var CodeMirror = require('codemirror');
+
 var keyExtension = require('./key-extension');
+var ConsoleBuffer = require('./console-buffer');
 
 require('./pbasic')(CodeMirror);
 
@@ -18,17 +20,20 @@ function editor(app, opts, done){
 
   var codeEditor;
   var outputConsole;
+  var buffer = new ConsoleBuffer();
 
   var space = app.workspace;
 
-  function output(text){
+  function output(evt){
+    buffer.update(evt);
     if(outputConsole){
-      outputConsole.innerHTML += text;
+      outputConsole.innerHTML = buffer.getConsoleHTML();
       outputConsole.scrollTop = outputConsole.scrollHeight;
     }
   }
 
   function clearOutput(){
+    buffer.clear();
     if(outputConsole){
       outputConsole.innerHTML = '';
     }

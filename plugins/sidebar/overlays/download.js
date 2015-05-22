@@ -59,17 +59,14 @@ class DownloadOverlay extends React.Component {
 
     const board = irken.getBoard(device);
 
-    board.on('progress', this.updateProgress);
+    board.removeListener('terminal', logger);
 
-    const log = through(function(chunk, enc, cb){
-      logger(chunk.toString());
-      cb(null, chunk);
-    });
+    board.on('progress', this.updateProgress);
 
     board.compile(source)
       .tap(() => logger.clear())
       .then((memory) => board.bootload(memory))
-      .then(() => board.read().pipe(log))
+      .then(() => board.on('terminal', logger))
       .tap(() => toast.clear())
       .tap(() => handleSuccess(`'${name}' downloaded successfully`))
       .catch(handleError)
