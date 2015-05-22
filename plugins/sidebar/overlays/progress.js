@@ -8,7 +8,7 @@ class Progress extends React.Component {
 
   render(){
 
-    var setComplete = {width: this.props.setComplete + '%'};
+    var percent = {width: this.props.percent + '%'};
 
     return (
       <div style={styles.progressContainerStyle}>

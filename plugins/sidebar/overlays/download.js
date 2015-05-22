@@ -138,7 +138,7 @@ class DownloadOverlay extends React.Component {
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this.reloadDevices}>Reload Devices</Button>
-            <Progress setComplete={this.state.progress} />
+            <Progress percent={this.state.progress} />
           </div>
           <div style={styles.overlayButtonContainer}>
             <Button onClick={this.onAccept}>Download</Button>
