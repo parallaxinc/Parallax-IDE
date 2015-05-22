@@ -31,7 +31,7 @@ function editor(app, opts, done){
   function output(evt){
     buffer.update(evt);
 
-    if(refreshQueued){
+    if(refreshQueued != null){
       return;
     }
     if(lastRefresh < Date.now() - refreshDelayMillis){
@@ -55,6 +55,11 @@ function editor(app, opts, done){
     if(outputConsole){
       outputConsole.innerHTML = buffer.getConsoleHTML();
     }
+    if(refreshQueued != null){
+      clearInterval(refreshQueued);
+      refreshQueued = null;
+    }
+    lastRefresh = 0;
   }
 
   output.clear = clearOutput;
