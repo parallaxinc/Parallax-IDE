@@ -12,7 +12,7 @@ class Progress extends React.Component {
 
     return (
       <div style={styles.progressContainerStyle}>
-        <div styles={[styles.progressBarStyle, setComplete]}></div>
+        <div styles={[styles.progressBarStyle, percent]}></div>
       </div>
     );
   }
