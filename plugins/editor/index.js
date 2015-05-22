@@ -22,14 +22,32 @@ function editor(app, opts, done){
   var outputConsole;
   var buffer = new ConsoleBuffer();
 
+  var refreshQueued = null;
+  var lastRefresh = 0;
+  var refreshDelayMillis = 64;
+
   var space = app.workspace;
 
   function output(evt){
     buffer.update(evt);
+
+    if(refreshQueued != null){
+      return;
+    }
+    if(lastRefresh < Date.now() - refreshDelayMillis){
+      refreshConsole();
+    }else{
+      refreshQueued = setTimeout(refreshConsole, refreshDelayMillis);
+    }
+  }
+
+  function refreshConsole(){
     if(outputConsole){
       outputConsole.innerHTML = buffer.getConsoleHTML();
       outputConsole.scrollTop = outputConsole.scrollHeight;
     }
+    refreshQueued = null;
+    lastRefresh = Date.now();
   }
 
   function clearOutput(){
@@ -37,6 +55,11 @@ function editor(app, opts, done){
     if(outputConsole){
       outputConsole.innerHTML = buffer.getConsoleHTML();
     }
+    if(refreshQueued != null){
+      clearInterval(refreshQueued);
+      refreshQueued = null;
+    }
+    lastRefresh = 0;
   }
 
   output.clear = clearOutput;
