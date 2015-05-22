@@ -35,7 +35,7 @@ function editor(app, opts, done){
   function clearOutput(){
     buffer.clear();
     if(outputConsole){
-      outputConsole.innerHTML = '';
+      outputConsole.innerHTML = buffer.getConsoleHTML();
     }
   }
 
