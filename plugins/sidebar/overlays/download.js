@@ -5,11 +5,8 @@ const React = require('react');
 const through = require('through2');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
-const Select = require('react-select');
 const Loader = require('react-loader');
 const Progress = require('./progress');
-
-require('react-select/dist/default.css');
 
 const styles = require('../styles');
 
