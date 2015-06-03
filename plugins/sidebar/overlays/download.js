@@ -11,76 +11,24 @@ const Progress = require('./progress');
 const DeviceActions = require('../../../src/actions/DeviceActions.js');
 const DeviceStore = require('../../../src/stores/DeviceStore.js');
 
-const connectToStores = require('../../../src/connect-to-stores');
+const { createContainer } = require('sovereign');
 
 const styles = require('../styles');
 
 class DownloadOverlay extends React.Component {
 
   constructor(){
-    //this.state = {
-      //devicePath: null,
-      //searching: false,
-      //selectedDevice: null,
-      //devices: [],
-      //progress: 0
-    //};
 
     this._onAccept = this._onAccept.bind(this);
     this._onCancel = this._onCancel.bind(this);
     this._onReloadDevices = this._onReloadDevices.bind(this);
     this._onUpdateSelected = this._onUpdateSelected.bind(this);
+
   }
 
   componentDidMount(){
     this._onReloadDevices();
   }
-
-  //download(device){
-
-    //const { irken, handleError, handleSuccess } = this.props;
-
-    //const { toast, workspace, logger, overlay } = irken;
-
-    //const name = workspace.filename.deref();
-    //const source = workspace.current.deref();
-
-    //if(!device){
-      //return;
-    //}
-
-    //const board = irken.getBoard(device);
-
-    //board.removeListener('terminal', logger);
-
-    //board.on('progress', this.updateProgress);
-
-    //board.compile(source)
-      //.tap(() => logger.clear())
-      //.then((memory) => board.bootload(memory))
-      //.then(() => board.on('terminal', logger))
-      //.tap(() => toast.clear())
-      //.tap(() => handleSuccess(`'${name}' downloaded successfully`))
-      //.catch(handleError)
-      //.finally(() => {
-        //overlay.hide();
-        //board.removeListener('progress', this.updateProgress);
-        //this.setState({ progress: 0 });
-      //});
-
-  //}
-
-  //updateProgress(progress){
-    //this.setState({ progress: progress});
-  //}
-
-  //updateSelected(device){
-    //this.setState({
-      //devicePath: device.path,
-      //selectedDevice: device
-    //});
-  //}
-
 
   componentizeDevice(device, selectedPath){
     const highlight = device.path === selectedPath ? 'active' : 'inactive';
@@ -136,8 +84,8 @@ class DownloadOverlay extends React.Component {
   }
 
   _onAccept(){
-    //this.download(this.state.selectedDevice);
-    DeviceActions.download();
+    DeviceActions.download(this.props.handleSuccess,
+                          this.props.handleError);
   }
 
   _onCancel(evt){
@@ -155,17 +103,16 @@ class DownloadOverlay extends React.Component {
   }
 }
 
-DownloadOverlay = connectToStores(DownloadOverlay, {
-  getStores(props){
+const DownloadOverlayContainer = createContainer(DownloadOverlay, {
+  getStores(){
     return {
       DeviceStore: DeviceStore
     };
   },
 
-  getPropsFromStores(props) {
-    console.log('devicestoregetstate', DeviceStore.getState());
-    return _.assign(DeviceStore.getState());
+  getPropsFromStores() {
+    return DeviceStore.getState();
   }
 });
 
-module.exports = DownloadOverlay;
+module.exports = DownloadOverlayContainer;

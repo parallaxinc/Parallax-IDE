@@ -9,18 +9,25 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
+const DeviceStore = require('../../src/stores/DeviceStore');
+
 function noop(){}
 
 function sidebar(app, opts, done){
 
-  //bind each of these to the Store that needs them
-  //see app.js, and editorStore, workspace is bound with this.getInstance
   const space = app.workspace;
   const toast = app.toast;
   const overlay = app.overlay;
   const userConfig = app.userConfig;
   const logger = app.logger;
   const irken = app;
+  const getBoard = app.getBoard.bind(irken);
+
+  DeviceStore.workspace = space;
+  DeviceStore.toast = toast;
+  DeviceStore.logger = logger;
+  DeviceStore.overlay = overlay;
+  DeviceStore.getBoard = getBoard;
 
   function loadFile(filename, cb = noop){
     if(filename){

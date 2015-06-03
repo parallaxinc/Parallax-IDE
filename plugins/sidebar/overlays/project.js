@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
@@ -8,58 +9,20 @@ const TextField = require('react-material/components/TextField');
 const Project = require('../project');
 const ProjectList = require('../project-list');
 
+const ProjectActions = require('../../../src/actions/ProjectActions.js');
+const ProjectStore = require('../../../src/stores/ProjectStore.js');
+
+const { createContainer } = require('sovereign');
+
 const styles = require('../styles');
 
 class ProjectOverlay extends React.Component {
   constructor(){
-    this.state = {
-      value: ''
-    };
 
-    this.updateName = this.updateName.bind(this);
-    this.onAccept = this.onAccept.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-    this.onCancel = this.onCancel.bind(this);
-    this.newProject = this.newProject.bind(this);
-  }
-
-  updateName(evt){
-    this.setState({
-      value: evt.target.value
-    });
-  }
-
-  clearName(){
-    this.setState({
-      value: ''
-    });
-  }
-
-  newProject(){
-    this.onAccept(this.state.value);
-  }
-
-  onAccept(name, evt){
-    this.clearName();
-    if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(name, evt);
-    }
-  }
-
-  onCancel(evt){
-    this.clearName();
-    if(typeof this.props.onCancel === 'function'){
-      this.props.onCancel(evt);
-    }
-  }
-
-  onDelete(name, evt){
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    if(typeof this.props.onDelete === 'function'){
-      this.props.onDelete(name, evt);
-    }
+    this._onAccept = this._onAccept.bind(this);
+    this._onDelete = this._onDelete.bind(this);
+    this._onCancel = this._onCancel.bind(this);
+    this._newProject = this._newProject.bind(this);
   }
 
   render(){
@@ -73,25 +36,66 @@ class ProjectOverlay extends React.Component {
         <ProjectList>
           {projects.map((name) => <Project
             key={name}
-            onSelect={this.onAccept}
-            onDelete={this.onDelete}
+            onSelect={this._onAccept}
+            onDelete={this._onDelete}
             current={name === cwd}
             name={name} />)}
         </ProjectList>
         <h3 style={styles.overlayTitle}>Or start a brand new one.</h3>
         <TextField
-          value={this.state.value}
+          value={this.props.projectName}
           placeHolder="project name"
           styles={styles.textField}
           floatingLabel
-          onChange={this.updateName} />
+          onChange={ProjectActions.updateName} />
         <div style={styles.overlayButtonContainer}>
-          <Button onClick={this.newProject}>Create</Button>
-          <Button onClick={this.onCancel}>Cancel</Button>
+          <Button onClick={this._newProject}>Create</Button>
+          <Button onClick={this._onCancel}>Cancel</Button>
         </div>
       </Card>
     );
   }
+
+  _newProject(){
+    this._onAccept(this.props.projectName);
+  }
+
+  _onAccept(name, evt){
+    ProjectActions.clearName();
+    if(typeof this.props.onAccept === 'function'){
+      this.props.onAccept(name, evt);
+    }
+  }
+
+  _onCancel(evt){
+    ProjectActions.clearName();
+    if(typeof this.props.onCancel === 'function'){
+      this.props.onCancel(evt);
+    }
+  }
+
+  _onDelete(name, evt){
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    if(typeof this.props.onDelete === 'function'){
+      this.props.onDelete(name, evt);
+    }
+  }
+
 }
 
-module.exports = ProjectOverlay;
+const ProjectOverlayContainer = createContainer(ProjectOverlay, {
+  getStores(){
+    return {
+      ProjectStore: ProjectStore
+    };
+  },
+
+  getPropsFromStores() {
+    return ProjectStore.getState();
+  }
+});
+
+
+module.exports = ProjectOverlayContainer;
