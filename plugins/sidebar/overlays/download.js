@@ -92,7 +92,7 @@ class DownloadOverlay extends React.Component {
       blacklist: [
         /Bluetooth-Incoming-Port/,
         /Bluetooth-Modem/,
-        /cu\./
+        /dev\/cu\./
       ]
     };
     this.setState({ devicePath: null, searching: true });
