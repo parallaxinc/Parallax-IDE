@@ -1,9 +1,11 @@
 'use strict';
 
+function noop(){}
+
 function closeSerialPorts(){
   chrome.serial.getConnections(function(connections){
     connections.forEach(function(connection){
-      chrome.serial.disconnect(connection.connectionId, function(){});
+      chrome.serial.disconnect(connection.connectionId, noop);
     });
   });
 }
@@ -25,8 +27,6 @@ chrome.app.runtime.onLaunched.addListener(function() {
   };
 
   chrome.app.window.create('index.html', windowOpts, function(win){
-    win.onClosed.addListener(function(){
-      closeSerialPorts();
-    });
+    win.onClosed.addListener(closeSerialPorts);
   });
 });
