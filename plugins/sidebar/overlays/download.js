@@ -89,7 +89,7 @@ class DownloadOverlay extends React.Component {
   reloadDevices(){
     const irken = this.props.irken;
     const scanOpts = {
-      blacklist: [
+      reject: [
         /Bluetooth-Incoming-Port/,
         /Bluetooth-Modem/,
         /dev\/cu\./
