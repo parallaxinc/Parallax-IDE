@@ -88,8 +88,15 @@ class DownloadOverlay extends React.Component {
 
   reloadDevices(){
     const irken = this.props.irken;
+    const scanOpts = {
+      blacklist: [
+        /Bluetooth-Incoming-Port/,
+        /Bluetooth-Modem/,
+        /cu\./
+      ]
+    };
     this.setState({ devicePath: null, searching: true });
-    irken.scanBoards()
+    irken.scanBoards(scanOpts)
       .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 
