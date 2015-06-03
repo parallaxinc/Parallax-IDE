@@ -13,6 +13,8 @@ function noop(){}
 
 function sidebar(app, opts, done){
 
+  //bind each of these to the Store that needs them
+  //see app.js, and editorStore, workspace is bound with this.getInstance
   const space = app.workspace;
   const toast = app.toast;
   const overlay = app.overlay;
