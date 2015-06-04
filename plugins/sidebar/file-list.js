@@ -12,10 +12,10 @@ const FileList = React.createClass({
   componentWillUnmount: function(){
     if(this.remove_nextFile) {
      this.remove_nextFile();
-    };
+    }
     if(this.remove_previousFile) {
      this.remove_previousFile();
-    };
+    }
   },
   previousFile: function(){
     this.changeFile({ direction: 'prev' });

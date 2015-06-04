@@ -8,6 +8,7 @@ require('react-mfb-iceddev/mfb.css');
 const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
+const { reloadDevices } = require('../../src/actions/device.js');
 
 const styles = require('./styles');
 
@@ -113,6 +114,8 @@ const FileOperations = React.createClass({
   showDownloadOverlay: function(evt){
     evt.preventDefault();
 
+    reloadDevices();
+
     const component = (
       <DownloadOverlay
         onCancel={this.hideOverlay}
@@ -130,10 +133,10 @@ const FileOperations = React.createClass({
   componentWillUnmount: function(){
     if(this.remove_saveFile) {
      this.remove_saveFile();
-    };
+    }
     if(this.remove_closeDialog) {
      this.remove_closeDialog();
-    };
+    }
   },
   render: function(){
     return (

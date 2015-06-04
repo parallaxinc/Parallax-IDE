@@ -4,63 +4,74 @@ const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
+const { createContainer } = require('sovereign');
+
+const fileStore = require('../../../src/stores/file');
+const { clearName, updateName } = require('../../../src/actions/file');
 
 const styles = require('../styles');
 
 class NewFileOverlay extends React.Component {
   constructor(){
-    this.state = {
-      value: ''
-    };
 
-    this.onAccept = this.onAccept.bind(this);
-    this.onCancel = this.onCancel.bind(this);
-    this.updateName = this.updateName.bind(this);
-  }
+    this._onAccept = this._onAccept.bind(this);
+    this._onCancel = this._onCancel.bind(this);
+    this._onUpdateName = this._onUpdateName.bind(this);
 
-  updateName(evt){
-    this.setState({
-      value: evt.target.value
-    });
-  }
-
-  clearName(){
-    this.setState({
-      value: ''
-    });
-  }
-
-  onAccept(evt){
-    this.clearName();
-    if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(this.state.value, evt);
-    }
-  }
-
-  onCancel(evt){
-    this.clearName();
-    if(typeof this.props.onCancel === 'function'){
-      this.props.onCancel(evt);
-    }
   }
 
   render(){
+    const { fileName } = this.props;
+
     return (
       <Card styles={styles.overlay}>
         <h3 style={styles.overlayTitle}>Please name your file.</h3>
         <TextField
-          value={this.state.value}
+          value={fileName}
           placeHolder="filename"
           styles={styles.textField}
           floatingLabel
-          onChange={this.updateName} />
+          onChange={this._onUpdateName} />
         <div style={styles.overlayButtonContainer}>
-          <Button onClick={this.onAccept}>Create</Button>
-          <Button onClick={this.onCancel}>Cancel</Button>
+          <Button onClick={this._onAccept}>Create</Button>
+          <Button onClick={this._onCancel}>Cancel</Button>
         </div>
       </Card>
     );
   }
+
+  _onUpdateName(evt){
+    const { value } = evt.target;
+
+    updateName(value);
+  }
+  _onAccept(evt){
+    const { onAccept, fileName } = this.props;
+
+    clearName();
+    if(typeof onAccept === 'function'){
+      onAccept(fileName, evt);
+    }
+  }
+
+  _onCancel(evt){
+    const { onCancel } = this.props;
+
+    clearName();
+    if(typeof onCancel === 'function'){
+      onCancel(evt);
+    }
+  }
 }
 
-module.exports = NewFileOverlay;
+module.exports = createContainer(NewFileOverlay, {
+  getStores(){
+    return {
+      fileStore: fileStore
+    };
+  },
+
+  getPropsFromStores() {
+    return fileStore.getState();
+  }
+});
