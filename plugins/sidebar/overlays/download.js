@@ -26,7 +26,6 @@ class DownloadOverlay extends React.Component {
 
   componentizeDevice(device, selectedPath){
     const highlight = device.path === selectedPath ? 'active' : 'inactive';
-    console.log(device);
     return (
       <tr style={styles[highlight]} onClick={this._onUpdateSelected.bind(this, device)}>
         <td style={styles.deviceTd}>{device.name}</td>

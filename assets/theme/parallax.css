@@ -32,7 +32,7 @@
 /* Editor styling */
 
 .cm-s-parallax pre {
-  padding: 0, 8px, 0, 0;
+  padding: 0px 8px 0px 0px;
 }
 
 .cm-s-parallax .CodeMirror-gutter-wrapper {
