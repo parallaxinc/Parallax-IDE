@@ -23,9 +23,9 @@
 .cm-etInstruction {color: #0000ff}
 
 .CodeMirror-selectedtext {color: #ffffff !important;}
-.CodeMirror-selected {background: #800000 !important;}
+.CodeMirror-selected {background: #000080 !important;}
 .cm-searching {
-  color: #00ff00 !important;
+  color: #ffff00 !important;
   background-color: #000000 !important;
 }
 
