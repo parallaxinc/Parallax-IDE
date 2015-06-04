@@ -9,7 +9,7 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
-const DeviceStore = require('../../src/stores/device');
+const deviceStore = require('../../src/stores/device');
 
 function noop(){}
 
@@ -24,12 +24,12 @@ function sidebar(app, opts, done){
   const getBoard = app.getBoard.bind(irken);
   const scanBoards = app.scanBoards.bind(irken);
 
-  DeviceStore.workspace = space;
-  DeviceStore.toast = toast;
-  DeviceStore.logger = logger;
-  DeviceStore.overlay = overlay;
-  DeviceStore.getBoard = getBoard;
-  DeviceStore.scanBoards = scanBoards;
+  deviceStore.workspace = space;
+  deviceStore.toast = toast;
+  deviceStore.logger = logger;
+  deviceStore.overlay = overlay;
+  deviceStore.getBoard = getBoard;
+  deviceStore.scanBoards = scanBoards;
 
   function loadFile(filename, cb = noop){
     if(filename){
