@@ -2,14 +2,14 @@
 
 const alt = require('../alt');
 
-const fileActions = require('../actions/FileActions.js');
+const { clearName, updateName } = require('../actions/file');
 
 class FileStore {
   constructor() {
 
     this.bindListeners({
-      onClearName: fileActions.clearName,
-      onUpdateName: fileActions.updateName
+      onClearName: clearName,
+      onUpdateName: updateName
     });
 
     this.state = {

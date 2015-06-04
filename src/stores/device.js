@@ -2,15 +2,15 @@
 
 const alt = require('../alt');
 
-const deviceActions = require('../actions/DeviceActions.js');
+const { download, reloadDevices, updateSelected } = require('../actions/device');
 
 class DeviceStore {
   constructor() {
 
     this.bindListeners({
-      onDownload: deviceActions.download,
-      onReloadDevices: deviceActions.reloadDevices,
-      onUpdateSelected: deviceActions.updateSelected
+      onDownload: download,
+      onReloadDevices: reloadDevices,
+      onUpdateSelected: updateSelected
     });
 
     this.state = {

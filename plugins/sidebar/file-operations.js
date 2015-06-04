@@ -8,9 +8,7 @@ require('react-mfb-iceddev/mfb.css');
 const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
-
-const deviceActions = require('../../src/actions/DeviceActions.js');
-const { reloadDevices } = deviceActions;
+const { reloadDevices } = require('../../src/actions/device.js');
 
 const styles = require('./styles');
 

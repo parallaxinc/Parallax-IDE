@@ -8,9 +8,8 @@ const { createContainer } = require('sovereign');
 
 const Project = require('../project');
 const ProjectList = require('../project-list');
-const projectStore = require('../../../src/stores/ProjectStore.js');
-const projectActions = require('../../../src/actions/ProjectActions.js');
-const { clearName, updateName } = projectActions;
+const projectStore = require('../../../src/stores/project');
+const { clearName, updateName } = require('../../../src/actions/project');
 
 const styles = require('../styles');
 

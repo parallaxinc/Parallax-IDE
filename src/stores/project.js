@@ -2,14 +2,14 @@
 
 const alt = require('../alt');
 
-const projectActions = require('../actions/ProjectActions.js');
+const { clearName, updateName } = require('../actions/project');
 
 class ProjectStore {
   constructor() {
 
     this.bindListeners({
-      onClearName: projectActions.clearName,
-      onUpdateName: projectActions.updateName
+      onClearName: clearName,
+      onUpdateName: updateName
     });
 
     this.state = {

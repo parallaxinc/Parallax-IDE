@@ -8,9 +8,8 @@ const Loader = require('react-loader');
 const { createContainer } = require('sovereign');
 
 const Progress = require('./progress');
-const deviceStore = require('../../../src/stores/DeviceStore.js');
-const deviceActions = require('../../../src/actions/DeviceActions.js');
-const { download, reloadDevices, updateSelected } = deviceActions;
+const deviceStore = require('../../../src/stores/device');
+const { download, reloadDevices, updateSelected } = require('../../../src/actions/device');
 
 const styles = require('../styles');
 

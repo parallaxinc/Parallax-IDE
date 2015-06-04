@@ -6,9 +6,8 @@ const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
 const { createContainer } = require('sovereign');
 
-const fileStore = require('../../../src/stores/FileStore.js');
-const fileActions = require('../../../src/actions/FileActions.js');
-const { clearName, updateName } = fileActions;
+const fileStore = require('../../../src/stores/file');
+const { clearName, updateName } = require('../../../src/actions/file');
 
 const styles = require('../styles');
 

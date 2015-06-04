@@ -9,7 +9,7 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
-const DeviceStore = require('../../src/stores/DeviceStore');
+const DeviceStore = require('../../src/stores/device');
 
 function noop(){}
 
