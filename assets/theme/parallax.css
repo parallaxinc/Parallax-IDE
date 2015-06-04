@@ -23,16 +23,20 @@
 .cm-etInstruction {color: #0000ff}
 
 .CodeMirror-selectedtext {color: #ffffff !important;}
-.CodeMirror-selected {background: #800000 !important;}
+.CodeMirror-selected {background: #000080 !important;}
 .cm-searching {
-  color: #00ff00 !important; 
+  color: #ffff00 !important;
   background-color: #000000 !important;
 }
 
 /* Editor styling */
 
 .cm-s-parallax pre {
-  padding:0;
+  padding: 0px 8px 0px 0px;
+}
+
+.cm-s-parallax .CodeMirror-gutter-wrapper {
+  margin-left: 4px;
 }
 
 .cm-s-parallax .CodeMirror-gutters {

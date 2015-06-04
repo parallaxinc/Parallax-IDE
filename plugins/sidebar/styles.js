@@ -32,16 +32,14 @@ const styles = {
     margin: 0
   },
   overlayDevicesBottom: {
-    margin: 'auto 0 0 auto'
+    margin: 'auto 0 0',
+    display: 'flex'
   },
   overlayButtonContainer: {
-    margin: 'auto 0 0 auto',
-    display: 'inline-block',
+    marginLeft: 'auto',
     height: '40px'
   },
   overlayLoadingContainer: {
-    display: 'inline-block',
-    marginRight: '60px',
     height: '40px'
   },
   overlaySelectContainer: {

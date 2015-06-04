@@ -39,7 +39,7 @@ module.exports = function(CodeMirror){
       'RANDOM','READ','WRITE','PAUSE','INPUT','OUTPUT','LOW','HIGH','TOGGLE','REVERSE','SEROUT','SERIN',
       'PULSOUT','PULSIN','COUNT','SHIFTOUT','SHIFTIN','RCTIME','BUTTON','PWM','FREQOUT','DTMFOUT','XOUT',
       'DEBUG','STOP','NAP','SLEEP','END','TO','STEP','THEN','DO','EXIT','LOOP','UNTIL','WHILE','ELSE',
-      'ELSEIF','ENDIF','SELECT','CASE','ENDSELECT','ON'];
+      'ELSEIF','ENDIF','SELECT','CASE','ENDSELECT','ON', 'DEBUGIN'];
 
     var etDirective = ['STAMP', 'PORT', 'PBASIC'];
     var etTargetModule = ['BS1','BS2','BS2E','BS2SX', 'BS2P', 'BS2PE','BS2PX'];
@@ -65,9 +65,9 @@ module.exports = function(CodeMirror){
       .concat(getWordRange('OUT', 0, 15))
       .concat(getWordRange('IN', 0, 16));
 
-    var etConstant = ['CLS','HOME','BELL','BKSP','TAB','CR','UNITON','UNITOFF','UNITSOFF',
-      'LIGHTSON','DIM','BRIGHT','LSBFIRST','MSBFIRST','MSBPRE','LSBPRE','MSBPOST','LSBPOST',
-      'DEBUGIN','CRSRXY','CRSRLF','CRSRRT','CRSRUP','CRSRDN','LF','CLREOL','CLRDN','CRSRX','CRSRY'];
+    var etConstant = ['CLS', 'HOME', 'BELL', 'BKSP', 'TAB', 'CR', 'UNITON', 'UNITOFF', 'UNITSOFF',
+      'LIGHTSON', 'DIM', 'BRIGHT', 'LSBFIRST', 'MSBFIRST', 'MSBPRE', 'LSBPRE', 'MSBPOST', 'LSBPOST',
+      'CRSRXY', 'CRSRLF', 'CRSRRT', 'CRSRUP', 'CRSRDN', 'LF', 'CLREOL', 'CLRDN', 'CRSRX', 'CRSRY'];
 
     var etCCDirective = ['#DEFINE', '#ERROR', '#IF', '#THEN', '#ELSE', '#ENDIF', '#SELECT',
       '#CASE', '#ENDSELECT'];
