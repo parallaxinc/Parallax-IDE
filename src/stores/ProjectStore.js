@@ -2,12 +2,15 @@
 
 const alt = require('../alt');
 
-const ProjectActions = require('../actions/ProjectActions.js');
+const projectActions = require('../actions/ProjectActions.js');
 
 class ProjectStore {
   constructor() {
 
-    this.bindActions(ProjectActions);
+    this.bindListeners({
+      onClearName: projectActions.clearName,
+      onUpdateName: projectActions.updateName
+    });
 
     this.state = {
       projectName: ''
@@ -21,9 +24,9 @@ class ProjectStore {
     });
   }
 
-  onUpdateName(evt) {
+  onUpdateName(value) {
     this.setState({
-      projectName: evt.target.value
+      projectName: value
     });
   }
 

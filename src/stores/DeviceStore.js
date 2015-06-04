@@ -2,12 +2,16 @@
 
 const alt = require('../alt');
 
-const DeviceActions = require('../actions/DeviceActions.js');
+const deviceActions = require('../actions/DeviceActions.js');
 
 class DeviceStore {
   constructor() {
 
-    this.bindActions(DeviceActions);
+    this.bindListeners({
+      onDownload: deviceActions.download,
+      onReloadDevices: deviceActions.reloadDevices,
+      onUpdateSelected: deviceActions.updateSelected
+    });
 
     this.state = {
       devices: [],
@@ -25,19 +29,18 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
+    const { handleSuccess, handleError } = handlers;
     const { workspace, toast, logger, overlay, getBoard } = this.getInstance();
-
-    const [ handleSuccess, handleError ] = handlers;
-    const device = this.state.selectedDevice;
+    const { selectedDevice } = this.state;
 
     const name = workspace.filename.deref();
     const source = workspace.current.deref();
 
-    if(!device){
+    if(!selectedDevice){
       return;
     }
 
-    const board = getBoard(device);
+    const board = getBoard(selectedDevice);
 
     board.removeListener('terminal', logger);
 
@@ -58,9 +61,10 @@ class DeviceStore {
 
   }
 
-  onReloadDevices(obj){
-    const props = obj;
-    const irken = props.irken;
+  onReloadDevices(){
+
+    const { scanBoards } = this.getInstance();
+
     const scanOpts = {
       reject: [
         /Bluetooth-Incoming-Port/,
@@ -69,7 +73,7 @@ class DeviceStore {
       ]
     };
     this.setState({ devicePath: null, searching: true });
-    irken.scanBoards(scanOpts)
+    scanBoards(scanOpts)
       .then((devices) => this.setState({ devices: devices, searching: false }));
   }
 

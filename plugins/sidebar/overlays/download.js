@@ -2,16 +2,15 @@
 
 const _ = require('lodash');
 const React = require('react');
-const through = require('through2');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const Loader = require('react-loader');
-const Progress = require('./progress');
-
-const DeviceActions = require('../../../src/actions/DeviceActions.js');
-const DeviceStore = require('../../../src/stores/DeviceStore.js');
-
 const { createContainer } = require('sovereign');
+
+const Progress = require('./progress');
+const deviceStore = require('../../../src/stores/DeviceStore.js');
+const deviceActions = require('../../../src/actions/DeviceActions.js');
+const { download, reloadDevices, updateSelected } = deviceActions;
 
 const styles = require('../styles');
 
@@ -26,10 +25,6 @@ class DownloadOverlay extends React.Component {
 
   }
 
-  componentDidMount(){
-    this._onReloadDevices();
-  }
-
   componentizeDevice(device, selectedPath){
     const highlight = device.path === selectedPath ? 'active' : 'inactive';
     return (
@@ -41,7 +36,7 @@ class DownloadOverlay extends React.Component {
   }
 
   render(){
-    const { devices, devicePath } = this.props;
+    const { devices, devicePath, progress, searching } = this.props;
 
     const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
 
@@ -49,7 +44,7 @@ class DownloadOverlay extends React.Component {
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
         <div>
-          <Loader loaded={!this.props.searching}>
+          <Loader loaded={!searching}>
             <div style={styles.deviceTableWrapper}>
               <div style={styles.deviceTableScroll}>
                 <table style={styles.deviceTable}>
@@ -72,7 +67,7 @@ class DownloadOverlay extends React.Component {
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this._onReloadDevices}>Reload Devices</Button>
-            <Progress percent={this.props.progress} />
+            <Progress percent={progress} />
           </div>
           <div style={styles.overlayButtonContainer}>
             <Button onClick={this._onAccept}>Download</Button>
@@ -84,35 +79,36 @@ class DownloadOverlay extends React.Component {
   }
 
   _onAccept(){
-    DeviceActions.download(this.props.handleSuccess,
-                          this.props.handleError);
+    const { handleSuccess, handleError } = this.props;
+
+    download(handleSuccess, handleError);
   }
 
   _onCancel(evt){
-    if(typeof this.props.onCancel === 'function'){
-      this.props.onCancel(evt);
+    const { onCancel } = this.props;
+
+    if(typeof onCancel === 'function'){
+      onCancel(evt);
     }
   }
 
   _onReloadDevices(){
-    DeviceActions.reloadDevices(this.props);
+    reloadDevices(this.props);
   }
 
   _onUpdateSelected(device){
-    DeviceActions.updateSelected(device);
+    updateSelected(device);
   }
 }
 
-const DownloadOverlayContainer = createContainer(DownloadOverlay, {
+module.exports = createContainer(DownloadOverlay, {
   getStores(){
     return {
-      DeviceStore: DeviceStore
+      deviceStore: deviceStore
     };
   },
 
   getPropsFromStores() {
-    return DeviceStore.getState();
+    return deviceStore.getState();
   }
 });
-
-module.exports = DownloadOverlayContainer;

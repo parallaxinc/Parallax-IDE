@@ -2,12 +2,15 @@
 
 const alt = require('../alt');
 
-const FileActions = require('../actions/FileActions.js');
+const fileActions = require('../actions/FileActions.js');
 
 class FileStore {
   constructor() {
 
-    this.bindActions(FileActions);
+    this.bindListeners({
+      onClearName: fileActions.clearName,
+      onUpdateName: fileActions.updateName
+    });
 
     this.state = {
       fileName: ''
@@ -21,9 +24,9 @@ class FileStore {
     });
   }
 
-  onUpdateName(evt) {
+  onUpdateName(value) {
     this.setState({
-      fileName: evt.target.value
+      fileName: value
     });
   }
 

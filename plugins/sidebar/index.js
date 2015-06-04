@@ -22,12 +22,14 @@ function sidebar(app, opts, done){
   const logger = app.logger;
   const irken = app;
   const getBoard = app.getBoard.bind(irken);
+  const scanBoards = app.scanBoards.bind(irken);
 
   DeviceStore.workspace = space;
   DeviceStore.toast = toast;
   DeviceStore.logger = logger;
   DeviceStore.overlay = overlay;
   DeviceStore.getBoard = getBoard;
+  DeviceStore.scanBoards = scanBoards;
 
   function loadFile(filename, cb = noop){
     if(filename){

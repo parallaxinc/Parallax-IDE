@@ -1,18 +1,16 @@
 'use strict';
 
-const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
+const { createContainer } = require('sovereign');
 
 const Project = require('../project');
 const ProjectList = require('../project-list');
-
-const ProjectActions = require('../../../src/actions/ProjectActions.js');
-const ProjectStore = require('../../../src/stores/ProjectStore.js');
-
-const { createContainer } = require('sovereign');
+const projectStore = require('../../../src/stores/ProjectStore.js');
+const projectActions = require('../../../src/actions/ProjectActions.js');
+const { clearName, updateName } = projectActions;
 
 const styles = require('../styles');
 
@@ -23,12 +21,14 @@ class ProjectOverlay extends React.Component {
     this._onDelete = this._onDelete.bind(this);
     this._onCancel = this._onCancel.bind(this);
     this._newProject = this._newProject.bind(this);
+    this._onUpdateName = this._onUpdateName.bind(this);
   }
 
   render(){
     const space = this.props.workspace;
     const projects = space.projects;
     const cwd = space.cwd.deref().substr(1);
+    const { projectName } = this.props;
 
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
@@ -43,11 +43,11 @@ class ProjectOverlay extends React.Component {
         </ProjectList>
         <h3 style={styles.overlayTitle}>Or start a brand new one.</h3>
         <TextField
-          value={this.props.projectName}
+          value={projectName}
           placeHolder="project name"
           styles={styles.textField}
           floatingLabel
-          onChange={ProjectActions.updateName} />
+          onChange={this._onUpdateName} />
         <div style={styles.overlayButtonContainer}>
           <Button onClick={this._newProject}>Create</Button>
           <Button onClick={this._onCancel}>Cancel</Button>
@@ -56,46 +56,57 @@ class ProjectOverlay extends React.Component {
     );
   }
 
+  _onUpdateName(evt){
+    const { value } = evt.target;
+
+    updateName(value);
+  }
+
   _newProject(){
-    this._onAccept(this.props.projectName);
+    const { projectName } = this.props;
+
+    this._onAccept(projectName);
   }
 
   _onAccept(name, evt){
-    ProjectActions.clearName();
-    if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(name, evt);
+    const { onAccept } = this.props;
+
+    clearName();
+    if(typeof onAccept === 'function'){
+      onAccept(name, evt);
     }
   }
 
   _onCancel(evt){
-    ProjectActions.clearName();
-    if(typeof this.props.onCancel === 'function'){
-      this.props.onCancel(evt);
+    const { onCancel } = this.props;
+
+    clearName();
+    if(typeof onCancel === 'function'){
+      onCancel(evt);
     }
   }
 
   _onDelete(name, evt){
+    const { onDelete } = this.props;
+
     evt.stopPropagation();
     evt.preventDefault();
 
-    if(typeof this.props.onDelete === 'function'){
-      this.props.onDelete(name, evt);
+    if(typeof onDelete === 'function'){
+      onDelete(name, evt);
     }
   }
 
 }
 
-const ProjectOverlayContainer = createContainer(ProjectOverlay, {
+module.exports = createContainer(ProjectOverlay, {
   getStores(){
     return {
-      ProjectStore: ProjectStore
+      projectStore: projectStore
     };
   },
 
   getPropsFromStores() {
-    return ProjectStore.getState();
+    return projectStore.getState();
   }
 });
-
-
-module.exports = ProjectOverlayContainer;

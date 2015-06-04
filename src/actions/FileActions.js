@@ -3,11 +3,12 @@
 const alt = require('../alt');
 
 class FileActions {
-  constructor() {
-    this.generateActions(
-      'clearName',
-      'updateName'
-    );
+  clearName() {
+    this.dispatch();
+  }
+
+  updateName(value) {
+    this.dispatch(value);
   }
 }
 

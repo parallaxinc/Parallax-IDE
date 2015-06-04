@@ -1,15 +1,14 @@
 'use strict';
 
-const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
-
-const FileActions = require('../../../src/actions/FileActions.js');
-const FileStore = require('../../../src/stores/FileStore.js');
-
 const { createContainer } = require('sovereign');
+
+const fileStore = require('../../../src/stores/FileStore.js');
+const fileActions = require('../../../src/actions/FileActions.js');
+const { clearName, updateName } = fileActions;
 
 const styles = require('../styles');
 
@@ -18,19 +17,22 @@ class NewFileOverlay extends React.Component {
 
     this._onAccept = this._onAccept.bind(this);
     this._onCancel = this._onCancel.bind(this);
+    this._onUpdateName = this._onUpdateName.bind(this);
 
   }
 
   render(){
+    const { fileName } = this.props;
+
     return (
       <Card styles={styles.overlay}>
         <h3 style={styles.overlayTitle}>Please name your file.</h3>
         <TextField
-          value={this.props.fileName}
+          value={fileName}
           placeHolder="filename"
           styles={styles.textField}
           floatingLabel
-          onChange={FileActions.updateName} />
+          onChange={this._onUpdateName} />
         <div style={styles.overlayButtonContainer}>
           <Button onClick={this._onAccept}>Create</Button>
           <Button onClick={this._onCancel}>Cancel</Button>
@@ -39,31 +41,38 @@ class NewFileOverlay extends React.Component {
     );
   }
 
+  _onUpdateName(evt){
+    const { value } = evt.target;
+
+    updateName(value);
+  }
   _onAccept(evt){
-    FileActions.clearName();
-    if(typeof this.props.onAccept === 'function'){
-      this.props.onAccept(this.props.fileName, evt);
+    const { onAccept, fileName } = this.props;
+
+    clearName();
+    if(typeof onAccept === 'function'){
+      onAccept(fileName, evt);
     }
   }
 
   _onCancel(evt){
-    FileActions.clearName();
-    if(typeof this.props.onCancel === 'function'){
-      this.props.onCancel(evt);
+    const { onCancel } = this.props;
+
+    clearName();
+    if(typeof onCancel === 'function'){
+      onCancel(evt);
     }
   }
 }
 
-const NewFileOverlayContainer = createContainer(NewFileOverlay, {
+module.exports = createContainer(NewFileOverlay, {
   getStores(){
     return {
-      FileStore: FileStore
+      fileStore: fileStore
     };
   },
 
   getPropsFromStores() {
-    return FileStore.getState();
+    return fileStore.getState();
   }
 });
-
-module.exports = NewFileOverlayContainer;

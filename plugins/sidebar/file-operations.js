@@ -9,6 +9,9 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
+const deviceActions = require('../../src/actions/DeviceActions.js');
+const { reloadDevices } = deviceActions;
+
 const styles = require('./styles');
 
 const FileOperations = React.createClass({
@@ -113,6 +116,8 @@ const FileOperations = React.createClass({
   showDownloadOverlay: function(evt){
     evt.preventDefault();
 
+    reloadDevices();
+
     const component = (
       <DownloadOverlay
         onCancel={this.hideOverlay}
@@ -130,10 +135,10 @@ const FileOperations = React.createClass({
   componentWillUnmount: function(){
     if(this.remove_saveFile) {
      this.remove_saveFile();
-    };
+    }
     if(this.remove_closeDialog) {
      this.remove_closeDialog();
-    };
+    }
   },
   render: function(){
     return (
