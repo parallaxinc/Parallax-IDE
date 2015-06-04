@@ -29,8 +29,8 @@ class DownloadOverlay extends React.Component {
     return (
       <tr style={styles[highlight]} onClick={this._onUpdateSelected.bind(this, device)}>
         <td style={styles.deviceTd}>{device.name}</td>
-        <td style={styles.deviceTd}>{device.path}</td>
         <td style={styles.deviceTd}>{device.version}</td>
+        <td style={styles.deviceTd}>{device.path}</td>
       </tr>
       );
   }
@@ -51,8 +51,8 @@ class DownloadOverlay extends React.Component {
                   <thead>
                     <tr>
                       <th style={styles.deviceTh}>Device</th>
-                      <th style={styles.deviceTh}>Port</th>
                       <th style={styles.deviceTh}>Version</th>
+                      <th style={styles.deviceTh}>Port</th>
                     </tr>
                   </thead>
                   <tbody>
