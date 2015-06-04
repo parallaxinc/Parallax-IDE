@@ -26,10 +26,12 @@ class DownloadOverlay extends React.Component {
 
   componentizeDevice(device, selectedPath){
     const highlight = device.path === selectedPath ? 'active' : 'inactive';
+    console.log(device);
     return (
       <tr style={styles[highlight]} onClick={this._onUpdateSelected.bind(this, device)}>
         <td style={styles.deviceTd}>{device.name}</td>
         <td style={styles.deviceTd}>{device.path}</td>
+        <td style={styles.deviceTd}>{device.version}</td>
       </tr>
       );
   }
@@ -49,8 +51,9 @@ class DownloadOverlay extends React.Component {
                 <table style={styles.deviceTable}>
                   <thead>
                     <tr>
-                      <th style={styles.deviceTh}>Name</th>
-                      <th style={styles.deviceTh}>Path</th>
+                      <th style={styles.deviceTh}>Device</th>
+                      <th style={styles.deviceTh}>Port</th>
+                      <th style={styles.deviceTh}>Version</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -65,14 +68,14 @@ class DownloadOverlay extends React.Component {
         </div>
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
-            <Button onClick={this._onReloadDevices}>Reload Devices</Button>
-            <Progress percent={progress} />
+            <Button onClick={this._onReloadDevices}>Refresh</Button>
           </div>
           <div style={styles.overlayButtonContainer}>
             <Button onClick={this._onAccept}>Download</Button>
             <Button onClick={this._onCancel}>Cancel</Button>
           </div>
         </div>
+        <Progress percent={progress} />
       </Card>
     );
   }

@@ -25,14 +25,18 @@
 .CodeMirror-selectedtext {color: #ffffff !important;}
 .CodeMirror-selected {background: #800000 !important;}
 .cm-searching {
-  color: #00ff00 !important; 
+  color: #00ff00 !important;
   background-color: #000000 !important;
 }
 
 /* Editor styling */
 
 .cm-s-parallax pre {
-  padding:0;
+  padding: 0, 8px, 0, 0;
+}
+
+.cm-s-parallax .CodeMirror-gutter-wrapper {
+  margin-left: 4px;
 }
 
 .cm-s-parallax .CodeMirror-gutters {
