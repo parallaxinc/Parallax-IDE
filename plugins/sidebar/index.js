@@ -19,14 +19,12 @@ function sidebar(app, opts, done){
   const toast = app.toast;
   const overlay = app.overlay;
   const userConfig = app.userConfig;
-  const logger = app.logger;
   const irken = app;
   const getBoard = app.getBoard.bind(irken);
   const scanBoards = app.scanBoards.bind(irken);
 
   deviceStore.workspace = space;
   deviceStore.toast = toast;
-  deviceStore.logger = logger;
   deviceStore.overlay = overlay;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
@@ -59,7 +57,7 @@ function sidebar(app, opts, done){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} logger={logger} loadFile={loadFile} />
+        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} loadFile={loadFile} />
       </Sidebar>
     );
 
