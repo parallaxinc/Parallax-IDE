@@ -7,8 +7,8 @@ class ConsoleActions {
     this.dispatch();
   }
 
-  output(evt) {
-    this.dispatch(evt);
+  output(terminalMsg) {
+    this.dispatch(terminalMsg);
   }
 
 }

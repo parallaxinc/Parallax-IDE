@@ -23,19 +23,17 @@ function editor(app, opts, done){
   var state = {};
 
   function refreshConsole(){
-    const { buffer } = state;
+    state = consoleStore.getState();
+
+    const { text } = state;
+
     if(outputConsole){
-      outputConsole.innerHTML = buffer.getConsoleHTML();
+      outputConsole.innerHTML = text;
       outputConsole.scrollTop = outputConsole.scrollHeight;
     }
   }
 
-  function onChange() {
-    state = consoleStore.getState();
-    refreshConsole();
-  }
-
-  consoleStore.listen(onChange);
+  consoleStore.listen(refreshConsole);
 
   var space = app.workspace;
 
