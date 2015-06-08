@@ -1,57 +1,37 @@
 'use strict';
 
-var CodeMirror = require('codemirror');
+var { findNext, findPrevious, moveByScrollUpLine,
+      moveByScrollDownLine, tab, print } = require('../../src/actions/keys');
 
 const keyExtension = {
-  setup: function(app, cm) {
+  setup: function(app) {
 
     const cmCommands = {
       findNext: {
         code: 'F3',
-        exec: function(evt) {
-          evt.preventDefault();
-          cm.execCommand('findNext');
-        }
+        exec: findNext
       },
       findPrevious: {
         code: 'SHIFT_F3',
-        exec: function(evt) {
-          evt.preventDefault();
-          cm.execCommand('findPrev');
-        }
+        exec: findPrevious
       },
       moveByScrollUpLine: {
         code: 'CTRL_UP',
-        exec: function(evt) {
-          evt.preventDefault();
-          const scrollbox = cm.getScrollInfo();
-          cm.scrollTo(null, scrollbox.top - cm.defaultTextHeight());
-        }
+        exec: moveByScrollUpLine
       },
       moveByScrollDownLine: {
         code: 'CTRL_DOWN',
-        exec: function(evt) {
-          evt.preventDefault();
-          const scrollbox = cm.getScrollInfo();
-          cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
-        }
+        exec: moveByScrollDownLine
       },
       tab: {
         code: 'TAB',
-        exec: function(evt) {
-          evt.preventDefault();
-          cm.execCommand('insertSoftTab');
-          CodeMirror.signal(cm, 'keyHandled', cm);
-        }
+        exec: tab
       },
       print: {
         code: 'CTRL_P',
-        exec: function(evt) {
-          evt.preventDefault();
-          window.print();
-        }
+        exec: print
       }
-    }
+    };
 
     function setCodeMirrorCommands() {
       for (let cmd in cmCommands) {
@@ -62,6 +42,6 @@ const keyExtension = {
 
     setCodeMirrorCommands();
   }
-}
+};
 
 module.exports = keyExtension;
