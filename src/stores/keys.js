@@ -17,9 +17,6 @@ class KeyStore {
       onPrint: print
     });
 
-    this.state = {
-    };
-
   }
 
   onFindNext(evt) {
