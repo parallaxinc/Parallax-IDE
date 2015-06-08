@@ -46,7 +46,6 @@ class KeyStore {
     cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
   }
   onTab(evt) {
-    console.log('tab');
     const { cm } = this.getInstance();
 
     evt.preventDefault();

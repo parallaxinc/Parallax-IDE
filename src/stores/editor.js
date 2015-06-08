@@ -11,10 +11,6 @@ class EditorStore {
       onHandleInput: handleInput
     });
 
-    this.state = {
-
-    };
-
   }
 
   onHandleInput(inst) {
