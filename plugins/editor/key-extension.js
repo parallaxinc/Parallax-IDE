@@ -11,42 +11,42 @@ const keyExtension = {
     const cmCommands = {
       findNext: {
         code: 'F3',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           findNext();
         }
       },
       findPrevious: {
         code: 'SHIFT_F3',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           findPrevious();
         }
       },
       moveByScrollUpLine: {
         code: 'CTRL_UP',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           moveByScrollUpLine();
         }
       },
       moveByScrollDownLine: {
         code: 'CTRL_DOWN',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           moveByScrollDownLine();
         }
       },
       tab: {
         code: 'TAB',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           indent();
         }
       },
       print: {
         code: 'CTRL_P',
-        exec: evt => {
+        exec: (evt) => {
           evt.preventDefault();
           print();
         }
