@@ -2,7 +2,6 @@
 
 const alt = require('../alt');
 const { clearOutput, output } = require('../actions/console');
-//const ConsoleBuffer = require('../../plugins/editor/console-buffer');
 
 class ConsoleStore {
   constructor(options) {

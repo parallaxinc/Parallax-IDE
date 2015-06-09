@@ -20,12 +20,9 @@ function editor(app, opts, done){
 
   var codeEditor;
   var outputConsole;
-  var state = {};
 
   function refreshConsole(){
-    state = consoleStore.getState();
-
-    const { text } = state;
+    const { text } = consoleStore.getState();
 
     if(outputConsole){
       outputConsole.innerHTML = text;
