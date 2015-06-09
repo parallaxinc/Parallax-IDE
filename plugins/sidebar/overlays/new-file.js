@@ -20,6 +20,13 @@ class NewFileOverlay extends React.Component {
 
   }
 
+  componentDidMount() {
+    console.log('comp mountd');
+    console.log(this.refs);
+    console.log(this.refs.filename.getDOMNode());
+    this.refs.filename.getDOMNode().focus();
+  }
+
   render(){
     const { fileName } = this.props;
 
@@ -28,6 +35,7 @@ class NewFileOverlay extends React.Component {
         <h3 style={styles.overlayTitle}>Please name your file.</h3>
         <TextField
           value={fileName}
+          ref="filename"
           placeHolder="filename"
           styles={styles.textField}
           floatingLabel
