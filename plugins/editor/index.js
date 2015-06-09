@@ -16,7 +16,10 @@ const consoleStore = require('../../src/stores/console');
 
 require('./pbasic')(CodeMirror);
 var { handleInput } = require('../../src/actions/editor');
-var keyStore = require('../../src/stores/keys');
+var findStore = require('../../src/stores/find');
+var editorMoveStore = require('../../src/stores/editor-move');
+var textMoveStore = require('../../src/stores/text-move');
+var systemStore = require('../../src/stores/system');
 
 function editor(app, opts, done){
 
@@ -65,7 +68,10 @@ function editor(app, opts, done){
         Tab: false
       });
       keyExtension.setup(app);
-      keyStore.cm = codeEditor;
+      findStore.cm = codeEditor;
+      textMoveStore.cm = codeEditor;
+      editorMoveStore.cm = codeEditor;
+      systemStore.cm = codeEditor;
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();

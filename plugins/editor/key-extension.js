@@ -1,7 +1,9 @@
 'use strict';
 
-var { findNext, findPrevious, moveByScrollUpLine,
-      moveByScrollDownLine, tab, print } = require('../../src/actions/keys');
+var { findNext, findPrevious } = require('../../src/actions/find');
+var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
+var { indent } = require('../../src/actions/text-move');
+var { print } = require('../../src/actions/system');
 
 const keyExtension = {
   setup: function(app) {
@@ -9,27 +11,45 @@ const keyExtension = {
     const cmCommands = {
       findNext: {
         code: 'F3',
-        exec: findNext
+        exec: evt => {
+          evt.preventDefault();
+          findNext();
+        }
       },
       findPrevious: {
         code: 'SHIFT_F3',
-        exec: findPrevious
+        exec: evt => {
+          evt.preventDefault();
+          findPrevious();
+        }
       },
       moveByScrollUpLine: {
         code: 'CTRL_UP',
-        exec: moveByScrollUpLine
+        exec: evt => {
+          evt.preventDefault();
+          moveByScrollUpLine();
+        }
       },
       moveByScrollDownLine: {
         code: 'CTRL_DOWN',
-        exec: moveByScrollDownLine
+        exec: evt => {
+          evt.preventDefault();
+          moveByScrollDownLine();
+        }
       },
       tab: {
         code: 'TAB',
-        exec: tab
+        exec: evt => {
+          evt.preventDefault();
+          indent();
+        }
       },
       print: {
         code: 'CTRL_P',
-        exec: print
+        exec: evt => {
+          evt.preventDefault();
+          print();
+        }
       }
     };
 

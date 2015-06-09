@@ -14,7 +14,6 @@ class EditorStore {
   }
 
   onHandleInput(inst) {
-
     const { workspace } = this.getInstance();
 
     workspace.updateContent(inst.getValue());
