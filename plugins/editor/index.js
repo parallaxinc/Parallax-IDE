@@ -10,11 +10,12 @@ require('codemirror/lib/codemirror.css');
 require('../../assets/theme/parallax.css');
 
 var CodeMirror = require('codemirror');
+require('./pbasic')(CodeMirror);
 
 var keyExtension = require('./key-extension');
 const consoleStore = require('../../src/stores/console');
-
-require('./pbasic')(CodeMirror);
+var editorStore = require('../../src/stores/editor');
+var { handleInput } = require('../../src/actions/editor');
 
 function editor(app, opts, done){
 
@@ -62,7 +63,9 @@ function editor(app, opts, done){
         'Ctrl-Down': false,
         Tab: false
       });
-      keyExtension.setup(app, codeEditor);
+      keyExtension.setup(app);
+      editorStore.cm = codeEditor;
+
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
@@ -87,10 +90,6 @@ function editor(app, opts, done){
 
     cb();
   });
-
-  function handleInput(inst){
-    space.updateContent(inst.getValue());
-  }
 
   space.updateContent(opts.initial, done);
 }

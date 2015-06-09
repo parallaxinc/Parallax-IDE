@@ -1,57 +1,57 @@
 'use strict';
 
-var CodeMirror = require('codemirror');
+var { findNext, findPrevious } = require('../../src/actions/find');
+var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
+var { indent } = require('../../src/actions/text-move');
+var { print } = require('../../src/actions/system');
 
 const keyExtension = {
-  setup: function(app, cm) {
+  setup: function(app) {
 
     const cmCommands = {
       findNext: {
         code: 'F3',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          cm.execCommand('findNext');
+          findNext();
         }
       },
       findPrevious: {
         code: 'SHIFT_F3',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          cm.execCommand('findPrev');
+          findPrevious();
         }
       },
       moveByScrollUpLine: {
         code: 'CTRL_UP',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          const scrollbox = cm.getScrollInfo();
-          cm.scrollTo(null, scrollbox.top - cm.defaultTextHeight());
+          moveByScrollUpLine();
         }
       },
       moveByScrollDownLine: {
         code: 'CTRL_DOWN',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          const scrollbox = cm.getScrollInfo();
-          cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
+          moveByScrollDownLine();
         }
       },
       tab: {
         code: 'TAB',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          cm.execCommand('insertSoftTab');
-          CodeMirror.signal(cm, 'keyHandled', cm);
+          indent();
         }
       },
       print: {
         code: 'CTRL_P',
-        exec: function(evt) {
+        exec: (evt) => {
           evt.preventDefault();
-          window.print();
+          print();
         }
       }
-    }
+    };
 
     function setCodeMirrorCommands() {
       for (let cmd in cmCommands) {
@@ -62,6 +62,6 @@ const keyExtension = {
 
     setCodeMirrorCommands();
   }
-}
+};
 
 module.exports = keyExtension;

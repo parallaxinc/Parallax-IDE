@@ -10,6 +10,7 @@ const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
 const deviceStore = require('../../src/stores/device');
+const editorStore = require('../../src/stores/editor');
 
 function noop(){}
 
@@ -28,6 +29,8 @@ function sidebar(app, opts, done){
   deviceStore.overlay = overlay;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
+
+  editorStore.workspace = space;
 
   function loadFile(filename, cb = noop){
     if(filename){
