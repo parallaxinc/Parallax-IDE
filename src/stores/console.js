@@ -4,9 +4,7 @@ const alt = require('../alt');
 const { clearOutput, output } = require('../actions/console');
 
 class ConsoleStore {
-  constructor(options) {
-
-    this.opts = options || {};
+  constructor() {
 
     this.bindListeners({
       onClearOutput: clearOutput,
@@ -14,15 +12,16 @@ class ConsoleStore {
     });
 
     this.state = {
-      bufferSize: this.opts.bufferSize || 2048,
+      bufferSize: 2048,
       lastRefresh: 0,
       length: 0,
       refreshDelayMillis: 64,
       refreshQueued: null,
       text: '',
-      trimOffset: this.opts.trimOffset || 256
+      trimOffset: 256
     };
 
+    //TODO: these should be actions instead
     if(this.state.bufferSize < 1){
       throw new Error('Invalid buffer length!');
     }
@@ -36,7 +35,8 @@ class ConsoleStore {
     const { refreshQueued } = this.state;
 
     this.setState({
-      length: 0, text: ''
+      length: 0,
+      text: ''
     });
 
     if(refreshQueued != null){
