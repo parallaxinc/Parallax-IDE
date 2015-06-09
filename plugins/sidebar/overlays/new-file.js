@@ -21,10 +21,11 @@ class NewFileOverlay extends React.Component {
   }
 
   componentDidMount() {
-    console.log('comp mountd');
-    console.log(this.refs);
-    console.log(this.refs.filename.getDOMNode());
-    this.refs.filename.getDOMNode().focus();
+    this._setFocus();
+  }
+
+  componentDidUpdate() {
+    this._setFocus();
   }
 
   render(){
@@ -48,11 +49,6 @@ class NewFileOverlay extends React.Component {
     );
   }
 
-  _onUpdateName(evt){
-    const { value } = evt.target;
-
-    updateName(value);
-  }
   _onAccept(evt){
     const { onAccept, fileName } = this.props;
 
@@ -69,6 +65,16 @@ class NewFileOverlay extends React.Component {
     if(typeof onCancel === 'function'){
       onCancel(evt);
     }
+  }
+
+  _onUpdateName(evt){
+    const { value } = evt.target;
+
+    updateName(value);
+  }
+
+  _setFocus() {
+    React.findDOMNode(this.refs.filename).getElementsByTagName('input')[0].focus();
   }
 }
 
