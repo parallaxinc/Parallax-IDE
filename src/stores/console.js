@@ -93,12 +93,8 @@ class ConsoleStore {
         this.addText(evt.data);
       break;
       case 'linefeed':
-        var newLine = pointerLine + 1;
-        if(newLine < lines.length){
-          lines.splice(newLine, 0, '');
-        }
         this.setState({
-          pointerLine: newLine,
+          pointerLine: pointerLine + 1,
           pointerColumn: 0
         });
       break;
@@ -136,7 +132,6 @@ class ConsoleStore {
         this.onClearOutput();
       break;
       case 'backspace':
-        console.log(pointerColumn, lines[pointerLine]);
         if(pointerColumn > 0){
           var targetLine = lines[pointerLine];
           if(pointerColumn < targetLine.length){
@@ -178,6 +173,8 @@ class ConsoleStore {
       var start = line.slice(0, pointerColumn);
       var end = line.slice(pointerColumn);
       lines[pointerLine] = start + data + end;
+    }else if(pointerColumn > line.length){
+      lines[pointerLine] = _.padRight(line, pointerColumn) + data;
     }else{
       lines[pointerLine] = line + data;
     }
