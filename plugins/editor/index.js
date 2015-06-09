@@ -12,7 +12,7 @@ require('../../assets/theme/parallax.css');
 var CodeMirror = require('codemirror');
 
 var keyExtension = require('./key-extension');
-var ConsoleBuffer = require('./console-buffer');
+const consoleStore = require('../../src/stores/console');
 
 require('./pbasic')(CodeMirror);
 
@@ -20,51 +20,19 @@ function editor(app, opts, done){
 
   var codeEditor;
   var outputConsole;
-  var buffer = new ConsoleBuffer();
-
-  var refreshQueued = null;
-  var lastRefresh = 0;
-  var refreshDelayMillis = 64;
-
-  var space = app.workspace;
-
-  function output(evt){
-    buffer.update(evt);
-
-    if(refreshQueued != null){
-      return;
-    }
-    if(lastRefresh < Date.now() - refreshDelayMillis){
-      refreshConsole();
-    }else{
-      refreshQueued = setTimeout(refreshConsole, refreshDelayMillis);
-    }
-  }
 
   function refreshConsole(){
+    const { text } = consoleStore.getState();
+
     if(outputConsole){
-      outputConsole.innerHTML = buffer.getConsoleHTML();
+      outputConsole.innerHTML = text;
       outputConsole.scrollTop = outputConsole.scrollHeight;
     }
-    refreshQueued = null;
-    lastRefresh = Date.now();
   }
 
-  function clearOutput(){
-    buffer.clear();
-    if(outputConsole){
-      outputConsole.innerHTML = buffer.getConsoleHTML();
-    }
-    if(refreshQueued != null){
-      clearInterval(refreshQueued);
-      refreshQueued = null;
-    }
-    lastRefresh = 0;
-  }
+  consoleStore.listen(refreshConsole);
 
-  output.clear = clearOutput;
-
-  app.expose('logger', output);
+  var space = app.workspace;
 
   app.view('editor', function(el, cb){
     console.log('editor render');

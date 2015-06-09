@@ -3,6 +3,7 @@
 const alt = require('../alt');
 
 const { download, reloadDevices, updateSelected } = require('../actions/device');
+const { clearOutput, output } = require('../actions/console');
 
 class DeviceStore {
   constructor() {
@@ -30,7 +31,7 @@ class DeviceStore {
     }
 
     const { handleSuccess, handleError } = handlers;
-    const { workspace, toast, logger, overlay, getBoard } = this.getInstance();
+    const { workspace, toast, overlay, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
     const name = workspace.filename.deref();
@@ -42,14 +43,14 @@ class DeviceStore {
 
     const board = getBoard(selectedDevice);
 
-    board.removeListener('terminal', logger);
+    board.removeListener('terminal', output);
 
     board.on('progress', updateProgress.bind(this));
 
     board.compile(source)
-      .tap(() => logger.clear())
+      .tap(() => clearOutput())
       .then((memory) => board.bootload(memory))
-      .then(() => board.on('terminal', logger))
+      .then(() => board.on('terminal', output))
       .tap(() => toast.clear())
       .tap(() => handleSuccess(`'${name}' downloaded successfully`))
       .catch(handleError)
