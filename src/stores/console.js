@@ -21,14 +21,6 @@ class ConsoleStore {
       trimOffset: 256
     };
 
-    //TODO: these should be actions instead
-    if(this.state.bufferSize < 1){
-      throw new Error('Invalid buffer length!');
-    }
-    if(this.state.trimOffset < 0 || this.state.trimOffset >= this.state.bufferSize){
-      throw new Error('Invalid trim offset length!');
-    }
-
   }
 
   onClearOutput() {
@@ -67,8 +59,7 @@ class ConsoleStore {
 
     if(lastRefresh < Date.now() - refreshDelayMillis){
       refreshBuffer();
-    }
-    else{
+    }else{
       this.setState({
         refreshQueued: setTimeout(refreshBuffer, refreshDelayMillis)
       });
@@ -77,18 +68,41 @@ class ConsoleStore {
     return allowEmit;
   }
 
-  _update(terminalMsg) {
-    //assume text events from terminalMsg for now
-    const { text, bufferSize, trimOffset } = this.state;
-    const currentText = terminalMsg.data || '';
-    this.setState({ text: text + currentText });
-
-    if(text.length > bufferSize){
-      this.setState({ text: text.substr(
-        text.length - (bufferSize - trimOffset)
-      )});
+  _update(events) {
+    if(Array.isArray(events)){
+      _.forEach(events, this.processEvent, this);
+    }else{
+      this.processEvent(events);
     }
-    this.setState({ length: text.length });
+  }
+
+  processEvent(evt){
+    switch(evt.type){
+      case 'text':
+        this.addText(evt.data);
+      break;
+      default:
+        console.log('NYI', evt);
+      break;
+    }
+  }
+
+  addText(data){
+    const { text, bufferSize, trimOffset } = this.state;
+    const newText = text + data;
+
+    if(newText.length > bufferSize){
+      var trimmedText = newText.substr(newText.length - (bufferSize - trimOffset));
+      this.setState({
+        text: trimmedText,
+        length: trimmedText.length
+      });
+    }else{
+      this.setState({
+        text: newText,
+        length: newText.length
+      });
+    }
   }
 
 }
