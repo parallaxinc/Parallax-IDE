@@ -9,6 +9,7 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 const { reloadDevices } = require('../../src/actions/device.js');
+const { clearName } = require('../../src/actions/file');
 
 const styles = require('./styles');
 
@@ -66,6 +67,10 @@ const FileOperations = React.createClass({
       .tap(() => this.handleSuccess(`'${name}' deleted successfully`))
       .catch(this.handleError)
       .finally(overlay.hide);
+  },
+  escapeDialog: function() {
+    this.hideOverlay();
+    clearName();
   },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
@@ -127,15 +132,15 @@ const FileOperations = React.createClass({
     this.renderOverlay(component);
   },
   componentDidMount: function(){
-    this.remove_saveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
-    this.remove_closeDialog = app.keypress(app.keypress.ESC, this.hideOverlay);
+    this.keySaveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
+    this.keyCloseDialog = app.keypress(app.keypress.ESC, this.escapeDialog);
   },
   componentWillUnmount: function(){
-    if(this.remove_saveFile) {
-     this.remove_saveFile();
+    if(this.keySaveFile) {
+     this.keySaveFile();
     }
-    if(this.remove_closeDialog) {
-     this.remove_closeDialog();
+    if(this.keyCloseDialog) {
+     this.keyCloseDialog();
     }
   },
   render: function(){
