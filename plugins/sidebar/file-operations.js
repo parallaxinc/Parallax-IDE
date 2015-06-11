@@ -85,6 +85,24 @@ const FileOperations = React.createClass({
     const overlay = this.props.overlay;
     overlay.hide();
   },
+  newFile: function() {
+    const { workspace } = this.props;
+    workspace.current.update(() => '');
+
+    const directory = workspace.directory.deref();
+    const untitledFiles = directory.filter(x => {
+      return x.get('name').match(/untitled/);
+    });
+
+    console.log(untitledFiles);
+    untitledFiles.takeLast(x => {
+      console.log(x.get('name').match(/\d+/g));
+    });
+
+    const numUntitled = 2;
+
+    workspace.filename.update(() => `untitled${numUntitled}`);
+  },
   showCreateOverlay: function(evt){
     evt.preventDefault();
 
@@ -162,7 +180,7 @@ const FileOperations = React.createClass({
           icon="ion-compose"
           label="Save File" />
         <ChildButton
-          onClick={this.showCreateOverlay}
+          onClick={this.newFile}
           icon="ion-document"
           label="New File" />
       </Menu>
