@@ -88,13 +88,18 @@ class ConsoleStore {
 
   processEvent(evt){
     const { lines, pointerLine, pointerColumn } = this.state;
+    var newLinePos;
     switch(evt.type){
       case 'text':
         this.addText(evt.data);
       break;
       case 'linefeed':
+        newLinePos = pointerLine + 1;
+        if(lines.length === newLinePos){
+          lines[newLinePos] = '';
+        }
         this.setState({
-          pointerLine: pointerLine + 1,
+          pointerLine: newLinePos,
           pointerColumn: 0
         });
       break;
@@ -120,12 +125,12 @@ class ConsoleStore {
         });
       break;
       case 'cursor-down':
-        var newLen = pointerLine + 1;
-        if(lines.length <= newLen){
-          _.fill(lines, '', lines.length, newLen);
+        newLinePos = pointerLine + 1;
+        if(lines.length === newLinePos){
+          lines[newLinePos] = '';
         }
         this.setState({
-          pointerLine: newLen
+          pointerLine: newLinePos
         });
       break;
       case 'clear-screen':
@@ -195,9 +200,7 @@ class ConsoleStore {
 
   updateText(){
     const { lines } = this.state;
-    var text = _.reduce(lines, function(result, line){
-      return result + '\n' + line;
-    }, '');
+    var text = lines.join('\n');
 
     this.setState({
       text: text,
