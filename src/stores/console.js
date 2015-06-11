@@ -9,7 +9,7 @@ class ConsoleStore {
   constructor() {
 
     this.bindListeners({
-      onClearOutput: clearOutput,
+      clearAll: clearOutput,
       onOutput: output
     });
 
@@ -29,7 +29,7 @@ class ConsoleStore {
 
   }
 
-  onClearOutput() {
+  clearAll() {
     const { refreshQueued } = this.state;
 
     this.setState({
@@ -86,97 +86,139 @@ class ConsoleStore {
     }
   }
 
-  processEvent(evt){
+  addLinefeed(){
+    const { lines, pointerLine } = this.state;
+    const newLinePos = pointerLine + 1;
+    if(lines.length === newLinePos){
+      lines[newLinePos] = '';
+    }
+    this.setState({
+      pointerLine: newLinePos,
+      pointerColumn: 0
+    });
+  }
+
+  setCursorHome(){
+    this.setState({
+      pointerLine: 0,
+      pointerColumn: 0
+    });
+  }
+
+  setCursorLeft(){
+    const { pointerColumn } = this.state;
+    this.setState({
+      pointerColumn: Math.max(0, pointerColumn - 1)
+    });
+  }
+
+  setCursorRight(){
+    const { pointerColumn } = this.state;
+    this.setState({
+      pointerColumn: Math.min(255, pointerColumn + 1)
+    });
+  }
+
+  setCursorUp(){
+    const { pointerLine } = this.state;
+    this.setState({
+      pointerLine: Math.max(0, pointerLine - 1)
+    });
+  }
+
+  setCursorDown(){
+    const { lines, pointerLine } = this.state;
+    const newLinePos = pointerLine + 1;
+    if(lines.length === newLinePos){
+      lines[newLinePos] = '';
+    }
+    this.setState({
+      pointerLine: newLinePos
+    });
+  }
+
+  backspace(){
     const { lines, pointerLine, pointerColumn } = this.state;
-    var newLinePos;
+    if(pointerColumn > 0){
+      const targetLine = lines[pointerLine];
+      if(pointerColumn < targetLine.length){
+        lines[pointerLine] = targetLine.slice(0, pointerColumn - 1) + targetLine.slice(pointerColumn);
+      } else {
+        lines[pointerLine] = targetLine.slice(0, pointerColumn - 1);
+      }
+    } else {
+      const prevLineNum = Math.max(0, pointerLine - 1);
+      const prevLine = lines[prevLineNum] || '';
+      this.setState({
+        pointerLine: prevLineNum,
+        pointerColumn: prevLine.length
+      });
+    }
+  }
+
+  clearEol(){
+    const { lines, pointerLine, pointerColumn } = this.state;
+    const line = lines[pointerLine] || '';
+    if(pointerColumn < line.length){
+      lines[pointerLine] = line.slice(0, pointerColumn);
+    }
+  }
+
+  clearBelow(){
+    const { lines, pointerLine } = this.state;
+    const newLines = lines.slice(0, Math.min(pointerLine + 1, lines.length));
+    this.setState({
+      lines: newLines
+    });
+  }
+
+  processEvent(evt){
     switch(evt.type){
       case 'text':
         this.addText(evt.data);
-      break;
+        break;
       case 'linefeed':
-        newLinePos = pointerLine + 1;
-        if(lines.length === newLinePos){
-          lines[newLinePos] = '';
-        }
-        this.setState({
-          pointerLine: newLinePos,
-          pointerColumn: 0
-        });
-      break;
+        this.addLinefeed();
+        break;
       case 'cursor-home':
-        this.setState({
-          pointerLine: 0,
-          pointerColumn: 0
-        });
-      break;
+        this.setCursorHome();
+        break;
       case 'cursor-left':
-        this.setState({
-          pointerColumn: Math.max(0, pointerColumn - 1)
-        });
-      break;
+        this.setCursorLeft();
+        break;
       case 'cursor-right':
-        this.setState({
-          pointerColumn: Math.min(255, pointerColumn + 1)
-        });
-      break;
+        this.setCursorRight();
+        break;
       case 'cursor-up':
-        this.setState({
-          pointerLine: Math.max(0, pointerLine - 1)
-        });
-      break;
+        this.setCursorUp();
+        break;
       case 'cursor-down':
-        newLinePos = pointerLine + 1;
-        if(lines.length === newLinePos){
-          lines[newLinePos] = '';
-        }
-        this.setState({
-          pointerLine: newLinePos
-        });
-      break;
+        this.setCursorDown();
+        break;
       case 'clear-screen':
-        this.onClearOutput();
-      break;
+        this.clearAll();
+        break;
       case 'backspace':
-        if(pointerColumn > 0){
-          var targetLine = lines[pointerLine];
-          if(pointerColumn < targetLine.length){
-            lines[pointerLine] = targetLine.slice(0, pointerColumn - 1) + targetLine.slice(pointerColumn);
-          }else{
-            lines[pointerLine] = targetLine.slice(0, pointerColumn - 1);
-          }
-        }else{
-          var prevLineNum = Math.max(0, pointerLine - 1);
-          var prevLine = lines[prevLineNum] || '';
-          this.setState({
-            pointerLine: prevLineNum,
-            pointerColumn: prevLine.length
-          });
-        }
-      break;
+        this.backspace();
+        break;
       case 'clear-eol':
-        var line = lines[pointerLine] || '';
-        if(pointerColumn < line.length){
-          lines[pointerLine] = line.slice(0, pointerColumn);
-        }
-      break;
+        this.clearEol();
+        break;
       case 'clear-below':
-        var newLines = lines.slice(0, Math.min(pointerLine + 1, lines.length));
-        this.setState({
-          lines: newLines
-        });
-      break;
+        this.clearBelow();
+        break;
       default:
         console.log('Not yet implemented:', evt);
-      break;
+        break;
     }
   }
 
   addText(data){
     const { lines, pointerLine, pointerColumn, trimCount, maxLines } = this.state;
-    var line = lines[pointerLine] || '';
+    const line = lines[pointerLine] || '';
     if(pointerColumn < line.length){
-      var start = line.slice(0, pointerColumn);
-      var end = line.slice(pointerColumn);
+      const start = line.slice(0, pointerColumn);
+      const end = line.slice(pointerColumn);
       lines[pointerLine] = start + data + end;
     }else if(pointerColumn > line.length){
       lines[pointerLine] = _.padRight(line, pointerColumn) + data;
@@ -185,7 +227,7 @@ class ConsoleStore {
     }
 
     if(lines.length > maxLines){
-      var newLines = lines.slice(trimCount);
+      const newLines = lines.slice(trimCount);
       this.setState({
         lines: newLines,
         pointerLine: Math.max(0, pointerLine - trimCount),
@@ -200,7 +242,7 @@ class ConsoleStore {
 
   updateText(){
     const { lines } = this.state;
-    var text = lines.join('\n');
+    const text = lines.join('\n');
 
     this.setState({
       text: text,
