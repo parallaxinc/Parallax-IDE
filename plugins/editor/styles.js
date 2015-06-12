@@ -1,7 +1,6 @@
 'use strict';
 
 const red = '#da2100';
-const green = '#159600';
 const blue = 'rgb(44, 131, 216)';
 const grey = '#666666';
 

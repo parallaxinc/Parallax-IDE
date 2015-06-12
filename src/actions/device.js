@@ -7,10 +7,6 @@ class DeviceActions {
     this.dispatch({ handleSuccess, handleError });
   }
 
-  progress(value) {
-    this.dispatch(value);
-  }
-
   reloadDevices() {
     this.dispatch();
   }
