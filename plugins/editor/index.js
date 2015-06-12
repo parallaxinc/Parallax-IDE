@@ -17,10 +17,14 @@ const consoleStore = require('../../src/stores/console');
 var editorStore = require('../../src/stores/editor');
 var { handleInput } = require('../../src/actions/editor');
 
+const React = require('react');
+const TransmissionBar = require('./transmission-bar');
+
 function editor(app, opts, done){
 
   var codeEditor;
   var outputConsole;
+  var transmission;
 
   function refreshConsole(){
     const { text } = consoleStore.getState();
@@ -77,15 +81,24 @@ function editor(app, opts, done){
       });
     }
 
+
+
     if(!outputConsole){
       outputConsole = document.createElement('pre');
       outputConsole.style.height = '200px';
-      outputConsole.style.boxShadow = 'inset 0 5px 10px -5px rgba(0, 0, 0, 0.26)';
+      outputConsole.style.boxShadow = 'inset 0 5px 10px -5px rgba(0, 0, 0, 0.42)';
       outputConsole.style.backgroundColor = 'white';
       outputConsole.style.padding = '10px';
+      outputConsole.style.margin = '0';
       outputConsole.style.overflow = 'auto';
       outputConsole.style.whiteSpace = 'pre-wrap';
       el.appendChild(outputConsole);
+    }
+    if(!transmission) {
+      transmission = document.createElement('div');
+      transmission.id = 'transmission';
+      el.appendChild(transmission);
+      React.render(<TransmissionBar />, document.getElementById('transmission'));
     }
 
     cb();
