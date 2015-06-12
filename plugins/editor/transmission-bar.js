@@ -1,35 +1,33 @@
 'use strict';
 
 const React = require('react');
+const { createContainer } = require('sovereign');
 
+const Indicators = require('./indicators');
 const styles = require('./styles');
+const transmissionStore = require('../../src/stores/transmission');
 
 class TransmissionBar extends React.Component {
 
   render() {
-    const baudRate = 115200;
-    const { rx, tx } = this.props;
-
-    let indicatorRx = [styles.indicator];
-    let indicatorTx = [styles.indicator];
-    if(rx) {
-      indicatorRx.push(styles.rx);
-    }
-    if(tx) {
-      indicatorTx.push(styles.tx);
-    }
+    const { flashRx, flashTx } = this.props;
 
     return (
       <div style={styles.bar}>
-        <span style={styles.baud}>
-          BAUD <span style={styles.baudRate}>{baudRate}</span>
-        </span>
-        <span style={styles.rxtx}>
-          TX<span styles={indicatorTx} />RX<span styles={indicatorRx} />
-        </span>
+        <Indicators flashRx={flashRx} flashTx={flashTx} />
       </div>
     );
   }
 }
 
-module.exports = TransmissionBar;
+module.exports = createContainer(TransmissionBar, {
+  getStores(){
+    return {
+      deviceStore: transmissionStore
+    };
+  },
+
+  getPropsFromStores() {
+    return transmissionStore.getState();
+  }
+});

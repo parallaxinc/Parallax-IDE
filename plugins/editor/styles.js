@@ -2,7 +2,8 @@
 
 const red = '#da2100';
 const green = '#159600';
-const blue = 'blue';
+const blue = 'rgb(44, 131, 216)';
+const grey = '#666666';
 
 const styles = {
   bar: {
@@ -19,7 +20,7 @@ const styles = {
     paddingLeft: 8
   },
   indicator: {
-    backgroundColor: green,
+    backgroundColor: grey,
     height: 10,
     width: 10,
     borderRadius: '100%',
