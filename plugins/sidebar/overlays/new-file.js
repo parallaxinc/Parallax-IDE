@@ -20,6 +20,14 @@ class NewFileOverlay extends React.Component {
 
   }
 
+  componentDidMount() {
+    this._setFocus();
+  }
+
+  componentDidUpdate() {
+    this._setFocus();
+  }
+
   render(){
     const { fileName } = this.props;
 
@@ -28,6 +36,7 @@ class NewFileOverlay extends React.Component {
         <h3 style={styles.overlayTitle}>Please name your file.</h3>
         <TextField
           value={fileName}
+          ref="filename"
           placeHolder="filename"
           styles={styles.textField}
           floatingLabel
@@ -40,11 +49,6 @@ class NewFileOverlay extends React.Component {
     );
   }
 
-  _onUpdateName(evt){
-    const { value } = evt.target;
-
-    updateName(value);
-  }
   _onAccept(evt){
     const { onAccept, fileName } = this.props;
 
@@ -61,6 +65,16 @@ class NewFileOverlay extends React.Component {
     if(typeof onCancel === 'function'){
       onCancel(evt);
     }
+  }
+
+  _onUpdateName(evt){
+    const { value } = evt.target;
+
+    updateName(value);
+  }
+
+  _setFocus() {
+    React.findDOMNode(this.refs.filename).getElementsByTagName('input')[0].focus();
   }
 }
 
