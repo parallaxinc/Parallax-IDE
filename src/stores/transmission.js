@@ -15,28 +15,44 @@ class TransmissionStore {
     this.state = {
       flashRx: false,
       flashTx: false,
-      flashDuration: 30
+      timeoutIdRx: null,
+      timeoutIdTx: null,
+      flashDuration: 50
     };
 
   }
 
   onRx() {
-    const { flashDuration } = this.state;
+    const { flashDuration, timeoutIdRx } = this.state;
     this.setState({flashRx: true});
 
-    setTimeout(() => {
-      this.setState({ flashRx: false});
-    }, flashDuration);
+    if(!timeoutIdRx) {
+      const id = setTimeout(() => {
+        this.setState({
+          flashRx: false,
+          timeoutIdRx: null
+        });
+      }, flashDuration);
+
+      this.setState({ timeoutIdRx: id });
+    }
   }
 
   onTx() {
-    const { flashDuration } = this.state;
+    const { flashDuration, timeoutIdTx } = this.state;
 
     this.setState({flashTx: true});
 
-    setTimeout(() => {
-      this.setState({ flashTx: false});
-    }, flashDuration);
+    if(!timeoutIdTx) {
+      const id = setTimeout(() => {
+        this.setState({
+          flashTx: false,
+          timeoutIdTx: null
+        });
+      }, flashDuration);
+
+      this.setState({ timeoutIdTx: id });
+    }
   }
 
 }
