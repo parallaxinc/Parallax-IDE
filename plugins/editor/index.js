@@ -94,9 +94,8 @@ function editor(app, opts, done){
     }
     if(!transmission) {
       transmission = document.createElement('div');
-      transmission.id = 'transmission';
       el.appendChild(transmission);
-      React.render(<TransmissionBar />, document.getElementById('transmission'));
+      React.render(<TransmissionBar />, transmission);
     }
 
     cb();

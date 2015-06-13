@@ -21,19 +21,22 @@ class TransmissionStore {
   }
 
   onRx() {
-      this.setState({flashRx: true});
+    const { flashDuration } = this.state;
+    this.setState({flashRx: true});
 
-      setTimeout(() => {
-        this.setState({ flashRx: false});
-      }, this.state.flashDuration);
+    setTimeout(() => {
+      this.setState({ flashRx: false});
+    }, flashDuration);
   }
 
   onTx() {
+    const { flashDuration } = this.state;
+
     this.setState({flashTx: true});
 
     setTimeout(() => {
       this.setState({ flashTx: false});
-    }, this.state.flashDuration);
+    }, flashDuration);
   }
 
 }
