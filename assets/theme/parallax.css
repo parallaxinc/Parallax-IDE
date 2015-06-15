@@ -29,6 +29,17 @@
   background-color: #000000 !important;
 }
 
+@keyframes searching {
+  from { padding: 5px 0px; }
+  to { padding: 3px 0px; }
+}
+.cm-searching.CodeMirror-selectedtext  {
+  animation-name: searching;
+  animation-duration: 0.2s;
+  animation-timing-function: ease;
+  padding: 3px 0px
+}
+
 /* Editor styling */
 
 .cm-s-parallax pre {
