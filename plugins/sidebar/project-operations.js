@@ -99,10 +99,10 @@ class ProjectOperations extends React.Component {
   componentWillUnmount(){
     if(this.remove_showProjectOverlay) {
      this.remove_showProjectOverlay();
-    }; 
+    };
     if(this.remove_closeDialog) {
      this.remove_closeDialog();
-    }; 
+    };
 
   }
 

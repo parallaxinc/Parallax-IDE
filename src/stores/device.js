@@ -4,6 +4,7 @@ const alt = require('../alt');
 
 const { download, reloadDevices, updateSelected } = require('../actions/device');
 const { clearOutput, output } = require('../actions/console');
+const { rx, tx } = require('../actions/transmission');
 
 class DeviceStore {
   constructor() {
@@ -44,13 +45,16 @@ class DeviceStore {
     const board = getBoard(selectedDevice);
 
     board.removeListener('terminal', output);
+    board.removeListener('terminal', rx);
 
     board.on('progress', updateProgress.bind(this));
+    board.on('progress', tx.bind(this));
 
     board.compile(source)
       .tap(() => clearOutput())
       .then((memory) => board.bootload(memory))
       .then(() => board.on('terminal', output))
+      .then(() => board.on('terminal', rx))
       .tap(() => toast.clear())
       .tap(() => handleSuccess(`'${name}' downloaded successfully`))
       .catch(handleError)
