@@ -86,54 +86,14 @@ class ConsoleStore {
     }
   }
 
-  addLinefeed(){
-    const { lines, pointerLine } = this.state;
-    const newLinePos = pointerLine + 1;
-    if(lines.length === newLinePos){
-      lines[newLinePos] = '';
+  setCursorPosition(line, col){
+    const { lines } = this.state;
+    for(var ix = lines.length; ix <= line; ix++){
+      lines[ix] = '';
     }
     this.setState({
-      pointerLine: newLinePos,
-      pointerColumn: 0
-    });
-  }
-
-  setCursorHome(){
-    this.setState({
-      pointerLine: 0,
-      pointerColumn: 0
-    });
-  }
-
-  setCursorLeft(){
-    const { pointerColumn } = this.state;
-    this.setState({
-      pointerColumn: Math.max(0, pointerColumn - 1)
-    });
-  }
-
-  setCursorRight(){
-    const { pointerColumn } = this.state;
-    this.setState({
-      pointerColumn: Math.min(255, pointerColumn + 1)
-    });
-  }
-
-  setCursorUp(){
-    const { pointerLine } = this.state;
-    this.setState({
-      pointerLine: Math.max(0, pointerLine - 1)
-    });
-  }
-
-  setCursorDown(){
-    const { lines, pointerLine } = this.state;
-    const newLinePos = pointerLine + 1;
-    if(lines.length === newLinePos){
-      lines[newLinePos] = '';
-    }
-    this.setState({
-      pointerLine: newLinePos
+      pointerLine: Math.max(0, line),
+      pointerColumn: Math.min(255, Math.max(0, col))
     });
   }
 
@@ -173,27 +133,37 @@ class ConsoleStore {
   }
 
   processEvent(evt){
+    const { pointerLine, pointerColumn } = this.state;
     switch(evt.type){
       case 'text':
         this.addText(evt.data);
         break;
       case 'linefeed':
-        this.addLinefeed();
+        this.setCursorPosition(pointerLine + 1, 0);
         break;
       case 'cursor-home':
-        this.setCursorHome();
+        this.setCursorPosition(0, 0);
+        break;
+      case 'cursor-position':
+        this.setCursorPosition(evt.data[1], evt.data[0]);
+        break;
+      case 'cursor-position-x':
+        this.setCursorPosition(pointerLine, evt.data[0]);
+        break;
+      case 'cursor-position-y':
+        this.setCursorPosition(evt.data[0], pointerColumn);
         break;
       case 'cursor-left':
-        this.setCursorLeft();
+        this.setCursorPosition(pointerLine, pointerColumn - 1);
         break;
       case 'cursor-right':
-        this.setCursorRight();
+        this.setCursorPosition(pointerLine, pointerColumn + 1);
         break;
       case 'cursor-up':
-        this.setCursorUp();
+        this.setCursorPosition(pointerLine - 1, pointerColumn);
         break;
       case 'cursor-down':
-        this.setCursorDown();
+        this.setCursorPosition(pointerLine + 1, pointerColumn);
         break;
       case 'clear-screen':
         this.clearAll();
