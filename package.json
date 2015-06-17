@@ -10,7 +10,7 @@
     "alt": "^0.16.7",
     "bs2-serial": "^0.8.0",
     "codemirror": "^4.13.0",
-    "frylord": "^0.5.0",
+    "frylord": "^0.6.0",
     "holovisor": "^0.2.0",
     "iggins": "^0.2.1",
     "irken": "^0.6.1",
