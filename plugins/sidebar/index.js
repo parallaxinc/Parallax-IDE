@@ -32,6 +32,12 @@ function sidebar(app, opts, done){
 
   editorStore.workspace = space;
 
+  // TODO: move into frylord?
+  chrome.syncFileSystem.onFileStatusChanged.addListener(function(){
+    // TODO: expose a method to refresh directory without changing it
+    space.changeDir(space.cwd.deref());
+  });
+
   function loadFile(filename, cb = noop){
     if(filename){
       space.loadFile(filename, (err) => {
