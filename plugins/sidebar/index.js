@@ -38,7 +38,11 @@ function sidebar(app, opts, done){
   }
 
   // TODO: move into frylord?
-  chrome.syncFileSystem.onFileStatusChanged.addListener(refreshDirectory);
+  chrome.syncFileSystem.onFileStatusChanged.addListener(function(entry, status, action, direction){
+    if(direction === 'remote_to_local'){
+      refreshDirectory();
+    }
+  });
   chrome.syncFileSystem.onServiceStatusChanged.addListener(refreshDirectory);
 
   function loadFile(filename, cb = noop){
