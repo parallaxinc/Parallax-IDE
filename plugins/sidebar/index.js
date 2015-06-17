@@ -9,9 +9,13 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
+const NewFileOverlay = require('./overlays/new-file');
+
 const deviceStore = require('../../src/stores/device');
 const editorStore = require('../../src/stores/editor');
+const fileStore = require('../../src/stores/file');
 
+const { processCreate, processSave } = require('../../src/actions/file');
 function noop(){}
 
 function sidebar(app, opts, done){
@@ -23,14 +27,6 @@ function sidebar(app, opts, done){
   const irken = app;
   const getBoard = app.getBoard.bind(irken);
   const scanBoards = app.scanBoards.bind(irken);
-
-  deviceStore.workspace = space;
-  deviceStore.toast = toast;
-  deviceStore.overlay = overlay;
-  deviceStore.getBoard = getBoard;
-  deviceStore.scanBoards = scanBoards;
-
-  editorStore.workspace = space;
 
   function refreshDirectory(){
     // TODO: expose a method to refresh directory without changing it
@@ -45,8 +41,15 @@ function sidebar(app, opts, done){
   });
   chrome.syncFileSystem.onServiceStatusChanged.addListener(refreshDirectory);
 
+  // TODO: move to file store
   function loadFile(filename, cb = noop){
-    if(filename){
+    const previousFile = space.filename.deref();
+    let unsaved = false;
+    if(previousFile) {
+      unsaved = _checkUnsaved(previousFile);
+    }
+
+    if(filename && !unsaved){
       space.loadFile(filename, (err) => {
         if(err){
           cb(err);
@@ -84,6 +87,75 @@ function sidebar(app, opts, done){
   const lastFile = userConfig.get('last-file');
 
   space.changeDir(cwd, () => loadFile(lastFile, done));
+
+  // Internal Helpers
+  function _checkUnsaved(file) {
+    const unnamed = space.directory.every(function(x) {
+      if(x.get('name') === file) {
+        return false;
+      }
+      else {
+        return true;
+      }
+    });
+    if(unnamed) {
+      processSave();
+      return true;
+    }
+  }
+
+  function _onChangeFileStore() {
+    const { showSaveOverlay } = fileStore.getState();
+    if (showSaveOverlay) {
+      _showCreateOverlay();
+    }
+  }
+
+  function _hideOverlay() {
+    overlay.hide();
+  }
+
+  function _renderOverlay(component){
+    //const overlay = this.props.overlay;
+
+    function renderer(el){
+      React.render(component, el);
+    }
+
+    overlay.render(renderer, { backdrop: true });
+  }
+
+  function _showCreateOverlay(){
+    //evt.preventDefault();
+
+    const component = (
+      <NewFileOverlay
+        onAccept={processCreate}
+        onCancel={_hideOverlay} />
+    );
+
+    _renderOverlay(component);
+  }
+
+  // Store bindings
+  deviceStore.workspace = space;
+  deviceStore.toast = toast;
+  deviceStore.overlay = overlay;
+  deviceStore.getBoard = getBoard;
+  deviceStore.scanBoards = scanBoards;
+
+  editorStore.workspace = space;
+
+  fileStore.workspace = space;
+  fileStore.userConfig = userConfig;
+
+  fileStore.toast = toast;
+  fileStore.loadFile = loadFile;
+  fileStore.overlay = overlay;
+
+  // Set up listeners
+  fileStore.listen(_onChangeFileStore);
+
 }
 
 module.exports = sidebar;

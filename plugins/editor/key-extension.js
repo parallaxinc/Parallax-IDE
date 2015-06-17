@@ -4,6 +4,7 @@ var { findNext, findPrevious } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
+var { processSave } = require('../../src/actions/file');
 
 const keyExtension = {
   setup: function(app) {
@@ -49,6 +50,13 @@ const keyExtension = {
         exec: (evt) => {
           evt.preventDefault();
           print();
+        }
+      },
+      save: {
+        code: 'CTRL_S',
+        exec: (evt) => {
+          evt.preventDefault();
+          processSave();
         }
       }
     };

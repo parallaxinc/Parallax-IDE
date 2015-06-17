@@ -9,7 +9,7 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 const { reloadDevices } = require('../../src/actions/device.js');
-const { clearName } = require('../../src/actions/file');
+const { clearName, newFile, processSave } = require('../../src/actions/file');
 
 const styles = require('./styles');
 
@@ -25,35 +25,6 @@ const FileOperations = React.createClass({
     const toast = this.props.toast;
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
-  },
-  saveFile: function(evt){
-    if(evt){
-      evt.preventDefault();
-    }
-
-    const space = this.props.workspace;
-
-    const name = space.filename.deref();
-
-    // TODO: these should transparently accept cursors for all non-function params
-    space.saveFile(name, space.current)
-      .tap(() => this.handleSuccess(`'${name}' saved successfully`))
-      .catch(this.handleError);
-  },
-  createFile: function(name){
-    const { workspace, overlay, loadFile } = this.props;
-
-    if(!name){
-      return;
-    }
-
-    workspace.filename.update(() => name);
-    workspace.current.update(() => '');
-    // TODO: these should transparently accept cursors for all non-function params
-    workspace.saveFile(workspace.filename.deref(), workspace.current)
-      .tap(() => loadFile(name, () => this.handleSuccess(`'${name}' created successfully`)))
-      .catch(this.handleError)
-      .finally(overlay.hide);
   },
   deleteFile: function(name){
     const space = this.props.workspace;
@@ -84,35 +55,6 @@ const FileOperations = React.createClass({
   hideOverlay: function(){
     const overlay = this.props.overlay;
     overlay.hide();
-  },
-  newFile: function() {
-    const { workspace } = this.props;
-    workspace.current.update(() => '');
-
-    const directory = workspace.directory.deref();
-    const untitledFiles = directory.filter(x => {
-      return x.get('name').match(/untitled/);
-    });
-
-    console.log(untitledFiles);
-    untitledFiles.takeLast(x => {
-      console.log(x.get('name').match(/\d+/g));
-    });
-
-    const numUntitled = 2;
-
-    workspace.filename.update(() => `untitled${numUntitled}`);
-  },
-  showCreateOverlay: function(evt){
-    evt.preventDefault();
-
-    const component = (
-      <NewFileOverlay
-        onAccept={this.createFile}
-        onCancel={this.hideOverlay} />
-    );
-
-    this.renderOverlay(component);
   },
   showDeleteOverlay: function(evt){
     evt.preventDefault();
@@ -150,13 +92,9 @@ const FileOperations = React.createClass({
     this.renderOverlay(component);
   },
   componentDidMount: function(){
-    this.keySaveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
     this.keyCloseDialog = app.keypress(app.keypress.ESC, this.escapeDialog);
   },
   componentWillUnmount: function(){
-    if(this.keySaveFile) {
-     this.keySaveFile();
-    }
     if(this.keyCloseDialog) {
      this.keyCloseDialog();
     }
@@ -176,11 +114,11 @@ const FileOperations = React.createClass({
           icon="ion-backspace-outline"
           label="Delete File" />
         <ChildButton
-          onClick={this.saveFile}
+          onClick={processSave}
           icon="ion-compose"
           label="Save File" />
         <ChildButton
-          onClick={this.newFile}
+          onClick={newFile}
           icon="ion-document"
           label="New File" />
       </Menu>
