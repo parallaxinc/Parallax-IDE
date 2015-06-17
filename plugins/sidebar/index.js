@@ -32,6 +32,19 @@ function sidebar(app, opts, done){
 
   editorStore.workspace = space;
 
+  function refreshDirectory(){
+    // TODO: expose a method to refresh directory without changing it
+    space.changeDir(space.cwd.deref());
+  }
+
+  // TODO: move into frylord?
+  chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
+    if(detail.direction === 'remote_to_local'){
+      refreshDirectory();
+    }
+  });
+  chrome.syncFileSystem.onServiceStatusChanged.addListener(refreshDirectory);
+
   function loadFile(filename, cb = noop){
     if(filename){
       space.loadFile(filename, (err) => {
