@@ -55,9 +55,9 @@ module.exports = {
     // inside a symlinked subdependency
     root: path.join(__dirname, 'node_modules'),
     alias: {
-      // replacing `fs` with a browser-compatible version
-      fs: 'browserify-fs',
-      'graceful-fs': 'browserify-fs',
+      // replacing `fs` with a Chrome syncFileSystem version
+      fs: 'chrome-sync-fs',
+      'graceful-fs': 'chrome-sync-fs',
       memdown: 'level-js',
       serialport: 'browser-serialport'
     }
