@@ -7,6 +7,14 @@ class FileActions {
     this.dispatch();
   }
 
+  deleteFile(name) {
+    this.dispatch(name);
+  }
+
+  hideOverlay() {
+    this.dispatch();
+  }
+
   newFile() {
     this.dispatch();
   }

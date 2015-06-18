@@ -5,7 +5,7 @@ const _ = require('lodash');
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
-const { clearName, newFile, processCreate,
+const { clearName, deleteFile, hideOverlay, newFile, processCreate,
   processSave, updateName } = require('../actions/file');
 
 class FileStore {
@@ -13,6 +13,8 @@ class FileStore {
 
     this.bindListeners({
       onClearName: clearName,
+      onDeleteFile: deleteFile,
+      onHideOverlay: hideOverlay,
       onNewFile: newFile,
       onProcessCreate: processCreate,
       onProcessSave: processSave,
@@ -32,10 +34,33 @@ class FileStore {
     });
   }
 
+  onDeleteFile(name) {
+    const { overlay, workspace } = this.getInstance();
+
+    if(!name){
+      return;
+    }
+
+    workspace.deleteFile(workspace.filename)
+      .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
+      .catch(this._handleError)
+      .finally(() => {
+        overlay.hide();
+        this.onNewFile();
+      });
+
+  }
+
   onHideSave() {
     this.setState({
       showSaveOverlay: false
     });
+  }
+
+  onHideOverlay() {
+    const { overlay } = this.getInstance();
+    overlay.hide();
+    this.onClearName();
   }
 
   onProcessCreate(name) {
@@ -112,6 +137,7 @@ class FileStore {
     const builtName = `untitled${untitledLast + 1}`;
 
     workspace.filename.update(() => builtName);
+    console.log('here, builtName', builtName);
 
     userConfig.set('last-file', builtName);
   }

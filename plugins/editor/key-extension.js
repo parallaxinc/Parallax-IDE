@@ -4,7 +4,7 @@ var { findNext, findPrevious } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
-var { newFile, processSave } = require('../../src/actions/file');
+var { hideOverlay, newFile, processSave } = require('../../src/actions/file');
 
 const keyExtension = {
   setup: function(app) {
@@ -64,6 +64,13 @@ const keyExtension = {
         exec: (evt) => {
           evt.preventDefault();
           processSave();
+        }
+      },
+      hideOverlay: {
+        code: 'ESC',
+        exec: (evt) => {
+          evt.preventDefault();
+          hideOverlay();
         }
       }
     };
