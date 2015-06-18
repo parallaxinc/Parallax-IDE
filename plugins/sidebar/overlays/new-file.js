@@ -33,7 +33,7 @@ class NewFileOverlay extends React.Component {
 
     return (
       <Card styles={styles.overlay}>
-        <h3 style={styles.overlayTitle}>Please name your file.</h3>
+        <h3 style={styles.overlayTitle}>Do you want to save the changes you made to New file?</h3>
         <TextField
           value={fileName}
           ref="filename"
@@ -42,8 +42,9 @@ class NewFileOverlay extends React.Component {
           floatingLabel
           onChange={this._onUpdateName} />
         <div style={styles.overlayButtonContainer}>
-          <Button onClick={this._onAccept}>Create</Button>
-          <Button onClick={this._onCancel}>Cancel</Button>
+          <Button onClick={this._onAccept}>Save As</Button>
+          <Button onClick={() => this._onCancel({ trash: true })}>Don't Save</Button>
+          <Button onClick={() => this._onCancel({ trash: false })}>Cancel</Button>
         </div>
       </Card>
     );
@@ -54,16 +55,16 @@ class NewFileOverlay extends React.Component {
 
     clearName();
     if(typeof onAccept === 'function'){
-      onAccept(fileName, evt);
+      onAccept(fileName);
     }
   }
 
-  _onCancel(evt){
+  _onCancel(status, evt){
     const { onCancel } = this.props;
 
     clearName();
     if(typeof onCancel === 'function'){
-      onCancel(evt);
+      onCancel(status);
     }
   }
 

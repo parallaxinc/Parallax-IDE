@@ -6,7 +6,7 @@ const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
 const { clearName, deleteFile, hideOverlay, newFile, processCreate,
-  processSave, updateName } = require('../actions/file');
+  processNoCreate, processSave, updateName, loadFile } = require('../actions/file');
 
 class FileStore {
   constructor() {
@@ -16,6 +16,8 @@ class FileStore {
       onDeleteFile: deleteFile,
       onHideOverlay: hideOverlay,
       onNewFile: newFile,
+      onLoadFile: loadFile,
+      onProcessNoCreate: processNoCreate,
       onProcessCreate: processCreate,
       onProcessSave: processSave,
       onUpdateName: updateName
@@ -23,19 +25,28 @@ class FileStore {
 
     this.state = {
       fileName: '',
+      isNewFile: false,
       showSaveOverlay: false
     };
 
+    this.loadQueue = [];
   }
 
   onClearName() {
+    const { workspace } = this.getInstance();
     this.setState({
-      fileName: ''
+      fileName: workspace.filename.deref()
+    });
+  }
+
+  onUpdateName(value) {
+    this.setState({
+      fileName: value
     });
   }
 
   onDeleteFile(name) {
-    const { overlay, workspace } = this.getInstance();
+    const { workspace } = this.getInstance();
 
     if(!name){
       return;
@@ -45,7 +56,7 @@ class FileStore {
       .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
       .catch(this._handleError)
       .finally(() => {
-        overlay.hide();
+        this.setState({ showSaveOverlay: false });
         this.onNewFile();
       });
 
@@ -58,13 +69,12 @@ class FileStore {
   }
 
   onHideOverlay() {
-    const { overlay } = this.getInstance();
-    overlay.hide();
+    this.setState({ showSaveOverlay: false });
     this.onClearName();
   }
 
   onProcessCreate(name) {
-    const { loadFile, overlay, workspace } = this.getInstance();
+    const { loadFile, workspace } = this.getInstance();
 
     if(!name){
       return;
@@ -73,34 +83,36 @@ class FileStore {
     workspace.filename.update(() => name);
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(workspace.filename.deref(), workspace.current)
-      .tap(() => loadFile(name, () => this._handleSuccess(`'${name}' created successfully`)))
+      .tap(() => {
+        this.setState({ isNewFile: false });
+        if(this.loadQueue.length){
+          this.onLoadFile(this.loadQueue.shift());
+        }
+      })
+      .tap(() => this._handleSuccess(`'${name}' created successfully`))
       .catch(this._handleError)
-      .finally(overlay.hide);
+      .finally(() => this.setState({ showSaveOverlay: false }));
 
     this.onHideSave();
   }
 
-  onProcessSave() {
-
-    const { workspace } = this.getInstance();
-
-    // TODO: reuse with checkUnsaved in sidebar index
-    const file = workspace.filename.deref();
-    const unnamed = workspace.directory.every(function(x) {
-      if(x.get('name') === file) {
-        return false;
+  onProcessNoCreate(status){
+    if(status.trash){
+      this.setState({ isNewFile: false, showSaveOverlay: false });
+      if(this.loadQueue.length){
+        this.onLoadFile(this.loadQueue.shift());
       }
-      else {
-        return true;
-      }
-    });
-    if(unnamed) {
-      this.setState({
-        fileName: file,
-        showSaveOverlay: true
-      });
+    } else {
+      this.setState({ showSaveOverlay: false });
     }
-    else {
+  }
+
+  onProcessSave() {
+    const { isNewFile } = this.state;
+
+    if(isNewFile) {
+      this.setState({ showSaveOverlay: true });
+    } else {
       this.setState({ showSaveOverlay: false });
       this._save();
     }
@@ -139,11 +151,41 @@ class FileStore {
     workspace.updateContent('');
 
     userConfig.set('last-file', builtName);
+
+    this.setState({
+      fileName: builtName,
+      isNewFile: true
+    });
   }
 
-  onUpdateName(value) {
-    this.setState({
-      fileName: value
+  _queueLoad(filename){
+    this.loadQueue.push(filename);
+  }
+
+  onLoadFile(filename){
+    const { workspace, userConfig } = this.getInstance();
+    const { isNewFile } = this.state;
+
+    const content = workspace.current.deref();
+
+    if(isNewFile && content.length){
+      this._queueLoad(filename);
+      this.onProcessSave();
+      return;
+    }
+
+    workspace.loadFile(filename, (err) => {
+      if(err){
+        this._handleError(err);
+        return;
+      }
+
+      userConfig.set('last-file', filename);
+
+      this.setState({
+        fileName: filename,
+        isNewFile: false
+      });
     });
   }
 

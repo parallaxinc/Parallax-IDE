@@ -19,8 +19,16 @@ class FileActions {
     this.dispatch();
   }
 
+  loadFile(filename){
+    this.dispatch(filename);
+  }
+
   processCreate(name) {
     this.dispatch(name);
+  }
+
+  processNoCreate(status){
+    this.dispatch(status);
   }
 
   processSave() {
