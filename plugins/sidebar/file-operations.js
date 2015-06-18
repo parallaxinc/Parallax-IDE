@@ -9,7 +9,7 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 const { reloadDevices } = require('../../src/actions/device.js');
-const { clearName } = require('../../src/actions/file');
+const { clearName, deleteFile, newFile, processSave, hideOverlay } = require('../../src/actions/file');
 
 const styles = require('./styles');
 
@@ -26,52 +26,6 @@ const FileOperations = React.createClass({
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   },
-  saveFile: function(evt){
-    if(evt){
-      evt.preventDefault();
-    }
-
-    const space = this.props.workspace;
-
-    const name = space.filename.deref();
-
-    // TODO: these should transparently accept cursors for all non-function params
-    space.saveFile(name, space.current)
-      .tap(() => this.handleSuccess(`'${name}' saved successfully`))
-      .catch(this.handleError);
-  },
-  createFile: function(name){
-    const { workspace, overlay, loadFile } = this.props;
-
-    if(!name){
-      return;
-    }
-
-    workspace.filename.update(() => name);
-    workspace.current.update(() => '');
-    // TODO: these should transparently accept cursors for all non-function params
-    workspace.saveFile(workspace.filename.deref(), workspace.current)
-      .tap(() => loadFile(name, () => this.handleSuccess(`'${name}' created successfully`)))
-      .catch(this.handleError)
-      .finally(overlay.hide);
-  },
-  deleteFile: function(name){
-    const space = this.props.workspace;
-    const overlay = this.props.overlay;
-
-    if(!name){
-      return;
-    }
-
-    space.deleteFile(space.filename)
-      .tap(() => this.handleSuccess(`'${name}' deleted successfully`))
-      .catch(this.handleError)
-      .finally(overlay.hide);
-  },
-  escapeDialog: function() {
-    this.hideOverlay();
-    clearName();
-  },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
 
@@ -80,21 +34,6 @@ const FileOperations = React.createClass({
     }
 
     overlay.render(renderer, { backdrop: true });
-  },
-  hideOverlay: function(){
-    const overlay = this.props.overlay;
-    overlay.hide();
-  },
-  showCreateOverlay: function(evt){
-    evt.preventDefault();
-
-    const component = (
-      <NewFileOverlay
-        onAccept={this.createFile}
-        onCancel={this.hideOverlay} />
-    );
-
-    this.renderOverlay(component);
   },
   showDeleteOverlay: function(evt){
     evt.preventDefault();
@@ -110,8 +49,8 @@ const FileOperations = React.createClass({
     const component = (
       <DeleteConfirmOverlay
         name={name}
-        onAccept={this.deleteFile}
-        onCancel={this.hideOverlay} />
+        onAccept={deleteFile}
+        onCancel={hideOverlay} />
     );
 
     this.renderOverlay(component);
@@ -123,25 +62,13 @@ const FileOperations = React.createClass({
 
     const component = (
       <DownloadOverlay
-        onCancel={this.hideOverlay}
+        onCancel={hideOverlay}
         irken={this.props.irken}
         handleSuccess={this.handleSuccess}
         handleError={this.handleError} />
     );
 
     this.renderOverlay(component);
-  },
-  componentDidMount: function(){
-    this.keySaveFile = app.keypress(app.keypress.CTRL_S, this.saveFile);
-    this.keyCloseDialog = app.keypress(app.keypress.ESC, this.escapeDialog);
-  },
-  componentWillUnmount: function(){
-    if(this.keySaveFile) {
-     this.keySaveFile();
-    }
-    if(this.keyCloseDialog) {
-     this.keyCloseDialog();
-    }
   },
   render: function(){
     return (
@@ -158,11 +85,11 @@ const FileOperations = React.createClass({
           icon="ion-backspace-outline"
           label="Delete File" />
         <ChildButton
-          onClick={this.saveFile}
+          onClick={processSave}
           icon="ion-compose"
           label="Save File" />
         <ChildButton
-          onClick={this.showCreateOverlay}
+          onClick={newFile}
           icon="ion-document"
           label="New File" />
       </Menu>
