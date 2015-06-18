@@ -4,7 +4,7 @@ var { findNext, findPrevious } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
-var { processSave } = require('../../src/actions/file');
+var { newFile, processSave } = require('../../src/actions/file');
 
 const keyExtension = {
   setup: function(app) {
@@ -52,6 +52,13 @@ const keyExtension = {
           print();
         }
       },
+      newFile: {
+        code: 'CTRL_N',
+        exec: (evt) => {
+          evt.preventDefault();
+          newFile();
+        }
+      },
       save: {
         code: 'CTRL_S',
         exec: (evt) => {
@@ -61,10 +68,18 @@ const keyExtension = {
       }
     };
 
+    const customPredicates = {
+      CTRL_N: function({ ctrlKey, metaKey, keyCode }){
+          return ((ctrlKey === true || metaKey === true) && keyCode === 78);
+        }
+    };
+
     function setCodeMirrorCommands() {
       for (let cmd in cmCommands) {
         const code = cmCommands[cmd].code;
-        cmCommands[cmd].removeCode = app.keypress(app.keypress[code], cmCommands[cmd].exec);
+        const predicate = app.keypress[code] || customPredicates[code];
+        console.log(code);
+        cmCommands[cmd].removeCode = app.keypress(predicate, cmCommands[cmd].exec);
       }
     }
 
