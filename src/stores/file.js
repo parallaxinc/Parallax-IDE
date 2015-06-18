@@ -45,7 +45,6 @@ class FileStore {
     }
 
     workspace.filename.update(() => name);
-    //workspace.current.update(() => '');
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(workspace.filename.deref(), workspace.current)
       .tap(() => loadFile(name, () => this._handleSuccess(`'${name}' created successfully`)))
@@ -96,17 +95,19 @@ class FileStore {
     const { workspace, userConfig } = this.getInstance();
     workspace.current.update(() => '');
 
-    const directory = workspace.directory.deref();
-    const untitledNums = directory.filter(x => {
-      return x.get('name').match(/untitled/);
-    }).map(x => {
-      const untitled = x.get('name').match(/\d+/);
-      if (untitled) {
-        return parseInt(untitled[0]);
+    const directory = workspace.directory.toJS();
+    const untitledNums = _.reduce(directory, function(untitled, dirfile) {
+      if(dirfile.name.match(/untitled/)) {
+        const getnum = dirfile.name.match(/\d+/);
+        if (getnum) {
+          untitled.push(_.parseInt(getnum[0]));
+        }
       }
-    });
+      return untitled;
+    }, [0]);
 
-    const untitledLast = untitledNums.max() || 0;
+    const untitledLast = _.max(untitledNums);
+
     const builtName = `untitled${untitledLast + 1}`;
 
     workspace.filename.update(() => builtName);

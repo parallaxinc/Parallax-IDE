@@ -83,11 +83,6 @@ function sidebar(app, opts, done){
     React.render(Component, el, cb);
   });
 
-  const cwd = userConfig.get('cwd') || opts.defaultProject;
-  const lastFile = userConfig.get('last-file');
-
-  space.changeDir(cwd, () => loadFile(lastFile, done));
-
   // Internal Helpers
   function _checkUnsaved(file) {
     const unnamed = space.directory.every(function(x) {
@@ -116,8 +111,6 @@ function sidebar(app, opts, done){
   }
 
   function _renderOverlay(component){
-    //const overlay = this.props.overlay;
-
     function renderer(el){
       React.render(component, el);
     }
@@ -126,8 +119,6 @@ function sidebar(app, opts, done){
   }
 
   function _showCreateOverlay(){
-    //evt.preventDefault();
-
     const component = (
       <NewFileOverlay
         onAccept={processCreate}
@@ -155,6 +146,11 @@ function sidebar(app, opts, done){
 
   // Set up listeners
   fileStore.listen(_onChangeFileStore);
+
+  // Finish Loading Plugin
+  const cwd = userConfig.get('cwd') || opts.defaultProject;
+  const lastFile = userConfig.get('last-file');
+  space.changeDir(cwd, () => loadFile(lastFile, done));
 
 }
 

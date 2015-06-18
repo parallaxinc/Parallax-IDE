@@ -78,7 +78,6 @@ const keyExtension = {
       for (let cmd in cmCommands) {
         const code = cmCommands[cmd].code;
         const predicate = app.keypress[code] || customPredicates[code];
-        console.log(code);
         cmCommands[cmd].removeCode = app.keypress(predicate, cmCommands[cmd].exec);
       }
     }
