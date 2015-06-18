@@ -1,7 +1,8 @@
 'use strict';
 
-const alt = require('../alt');
 const _ = require('lodash');
+
+const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
 const { clearName, newFile, processCreate,
