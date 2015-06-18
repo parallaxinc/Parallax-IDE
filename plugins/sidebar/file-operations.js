@@ -9,7 +9,7 @@ const NewFileOverlay = require('./overlays/new-file');
 const DownloadOverlay = require('./overlays/download');
 const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 const { reloadDevices } = require('../../src/actions/device.js');
-const { clearName, deleteFile, newFile, processSave } = require('../../src/actions/file');
+const { clearName, deleteFile, newFile, processSave, hideOverlay } = require('../../src/actions/file');
 
 const styles = require('./styles');
 
@@ -26,10 +26,6 @@ const FileOperations = React.createClass({
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   },
-  escapeDialog: function() {
-    this.hideOverlay();
-    clearName();
-  },
   renderOverlay: function(component){
     const overlay = this.props.overlay;
 
@@ -38,10 +34,6 @@ const FileOperations = React.createClass({
     }
 
     overlay.render(renderer, { backdrop: true });
-  },
-  hideOverlay: function(){
-    const overlay = this.props.overlay;
-    overlay.hide();
   },
   showDeleteOverlay: function(evt){
     evt.preventDefault();
@@ -58,7 +50,7 @@ const FileOperations = React.createClass({
       <DeleteConfirmOverlay
         name={name}
         onAccept={deleteFile}
-        onCancel={this.hideOverlay} />
+        onCancel={hideOverlay} />
     );
 
     this.renderOverlay(component);
@@ -70,21 +62,13 @@ const FileOperations = React.createClass({
 
     const component = (
       <DownloadOverlay
-        onCancel={this.hideOverlay}
+        onCancel={hideOverlay}
         irken={this.props.irken}
         handleSuccess={this.handleSuccess}
         handleError={this.handleError} />
     );
 
     this.renderOverlay(component);
-  },
-  componentDidMount: function(){
-    //this.keyCloseDialog = app.keypress(app.keypress.ESC, this.escapeDialog);
-  },
-  componentWillUnmount: function(){
-    //if(this.keyCloseDialog) {
-     //this.keyCloseDialog();
-    //}
   },
   render: function(){
     return (

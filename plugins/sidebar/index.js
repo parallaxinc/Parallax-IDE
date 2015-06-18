@@ -15,7 +15,7 @@ const deviceStore = require('../../src/stores/device');
 const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
 
-const { processCreate, processSave } = require('../../src/actions/file');
+const { processCreate, processSave, newFile } = require('../../src/actions/file');
 function noop(){}
 
 function sidebar(app, opts, done){
@@ -150,7 +150,14 @@ function sidebar(app, opts, done){
   // Finish Loading Plugin
   const cwd = userConfig.get('cwd') || opts.defaultProject;
   const lastFile = userConfig.get('last-file');
-  space.changeDir(cwd, () => loadFile(lastFile, done));
+  console.log(lastFile);
+  space.changeDir(cwd, () => loadFile(lastFile, (err) => {
+    if(err){
+      newFile();
+    }
+
+    done();
+  }));
 
 }
 

@@ -119,7 +119,6 @@ class FileStore {
 
   onNewFile() {
     const { workspace, userConfig } = this.getInstance();
-    workspace.current.update(() => '');
 
     const directory = workspace.directory.toJS();
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
@@ -137,7 +136,7 @@ class FileStore {
     const builtName = `untitled${untitledLast + 1}`;
 
     workspace.filename.update(() => builtName);
-    console.log('here, builtName', builtName);
+    workspace.updateContent('');
 
     userConfig.set('last-file', builtName);
   }
