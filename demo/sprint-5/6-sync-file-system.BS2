@@ -1,0 +1,46 @@
+'The following steps will showcase functionality associated with new file system
+
+'#84
+'  replaced the Chrome IndexedDB storage with syncFileSystem
+'  Has Google Drive support
+'  Works offline
+'  Imports data from logged in user
+'  Can work work offline for anonymous user
+
+'#107
+'  Saving upon first opening to the new project directory no longer causes an error
+
+'DEMONSTRATE:
+'  USING WITHOUT BEING LOGGED IN:
+'    SET-UP
+'      Launch application while logged in, add files
+'      Open Chrome
+'      Go to settings
+'      remove user from computer
+'      create new person
+'      Launch application from 'person 1'
+'    DEMO:
+'      OFFLINE
+'      add and save files to session with 'person 1'
+'        Notice there is no error
+'      download to device
+'      -----
+'      SWITCH USER/SYNC
+'      Log into google user with Chrome
+'      Sync files
+'      Add new file, save it
+'      ---
+'      GOOGLE DRIVE
+'      with brwoser go to google drive for user
+'      go to recent files
+'      see newly saved files
+'      ---
+'      APP SYNCRONIZED
+'      remove file in google drive
+'      go back to application see file removed
+'      ---
+'      SWITCH USER/ CLEAN UP
+'      go to Chrome settings
+'      disconnect loggin user
+'      go to application
+'      see content is updated for 'person 1'

@@ -1,0 +1,18 @@
+'Addresses Issue #94
+'Tests to preprocess UTF-8 encoded text pass.
+
+'There were 7 tests added.
+
+'Go to the directory ./PBASIC-Tokenizer
+'`npm test
+
+'The result of the seven tests
+
+'    ✓ #1368 - Not a Test
+'    ✓ #1369 - Should Pass
+'    ✓ #1370 - Should Pass
+'    ✓ #1371 - Test unicode char at end of data
+'    ✓ #1372 - Test unicode char at end of data
+'    ✓ #1373 - Test unicode char at end of data
+'    ✓ #1374 - Test unicode char at end of data
+'    ✓ #1375 - Should Pass

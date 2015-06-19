@@ -1,0 +1,10 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+DO
+  HIGH 1               'turn LED on I/O pin 1 on
+  PAUSE 1000           'keep it on for 1 second
+  LOW 1                'turn it off
+  PAUSE 500            'keep it off for 500 msec
+  DEBUG  "LOOPED", CR
+LOOP                   'repeat forever

@@ -1,0 +1,77 @@
+'This longer file will be used to demonstrate features that resolve the following issues
+
+'#78
+'  Virtual led TX/RX working when data is transmitted
+
+'#75
+'  Support for all control characters except audio beep
+'  Control cursor position
+
+'DEMONSTRATE:
+'  introduce script manipulates cursor position
+'  download program see RX/TX activity
+'  view output.
+
+'#115
+'  Re-architecture data flow with Flux
+'  Preserve functionality in editor and file navigation
+
+'#110
+'  Cycling through find results is animated
+
+'DEMONSTRATE:
+'  typing in editor
+'  saving existing files
+'  test keypresses
+'    F3 - find --NOTICE ANIMATION
+'    Shift-F3 - reverse find
+'    CTRL-UP = viewport transform up
+'    CTRL-DOWN = viewport transform down
+'    TAB - indenting
+'    CTRL-P = call print dialog
+
+'#109
+'  Selected text is white with navy background
+'  Find text is yellow on black
+
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+Delay CON 800
+
+DEBUG "Start",CR,LF
+PAUSE Delay
+DEBUG "Adding ! to above line.",CR,LF
+PAUSE Delay
+DEBUG CRSRXY,5,0,"!",CR,CR,"Done",CR
+PAUSE Delay
+DEBUG "Move Left, add ! here: ><"
+PAUSE Delay
+DEBUG CRSRLF,"!",LF,CR,"Done",CR
+DEBUG "Move column, add !: ><"
+PAUSE Delay
+DEBUG CRSRX,21,"!",CR,"Done",CR
+DEBUG "Move line, add another !"
+PAUSE Delay
+DEBUG CRSRY,5,CRSRX,22,"!",CRSRY,7,CR,"Done",CR
+DEBUG "Move Right, add !, should add space: >>"
+PAUSE Delay
+DEBUG CRSRRT,"!",CR,"Done",CR
+PAUSE Delay
+DEBUG "Backspace!?"
+PAUSE Delay
+DEBUG BKSP,CR,"Done",CR
+PAUSE Delay
+DEBUG "Clear to end of line: !<><>"
+PAUSE Delay
+DEBUG CRSRLF,CRSRLF,CRSRLF,CRSRLF,CLREOL,CR,"Done",CR
+PAUSE Delay
+DEBUG "Clear Lines Below:",LF,CR,"<>",CR,LF,"<>",CR,LF,"<>"
+PAUSE Delay
+DEBUG CRSRUP,CRSRUP,CRSRUP,CLRDN
+PAUSE Delay
+DEBUG CR,"Done",CR
+PAUSE Delay
+DEBUG "Move HOME, insert 'Hello'",CR
+PAUSE Delay
+DEBUG HOME,"Hello, ",CR

@@ -1,0 +1,53 @@
+'This file is used to demonstrate the New File, Saving and Save As features
+
+'#106
+'  New files have auto-incrementing names prefixed with 'untitled'
+
+'#145
+'  Sets focus on the filename field in SAVE AS dialog
+
+
+'DEMONSTRATE
+'  NEW FILE
+'    CTRL-N creates a blank file - no visual indicator
+'    Press CTRL-S save to see dialog with 'untitled#' filename
+'      Notice the focus is on the filename field
+'    Press ESC to cancel save operation
+'    ENTER PROGRAM
+'    Press CTRL-S save to see dialog with 'untitled#' filename
+'    Click 'Save As' and see file added to filesystem
+
+'  MODIFIED FILE
+'    Make additional changes to program
+'    See file indicator turn red
+'    CLick 'SAVE AS' or pres CTRL-S
+'    The file is automatically saved
+
+'  UNTITLED INCREMENTS
+'    CTRL-N creates a blank file - no visual indicator
+'    CLICK SAVE AS to see dialog with 'untitled#' filename
+'    ENTER PROGRAM
+'    Press ESC to cancel save operation
+'    Press CTRL-S save to see dialog with 'untitled#' filename
+'    Rename file
+'    Click 'Save As' and see file added to filesystem
+
+'  UNTITLED SMART INCREMENTING
+'    create new file
+'    press SAVE AS
+'    the filename suggestion increments to untitled2 because  previous file was renamed
+'    rename file to untitled3
+'  ALTERNATE CASE
+'    create new file
+'    press SAVE AS
+'    see filename suggestion increment past the last number.
+
+'  NAVIGATION AWAY PROMPT
+'    with new unsaved file that has content
+'    click another file
+'    notice the save prompt
+
+'  NAVIGATION ON BLANK FILES
+'    create a new blank file
+'    click on another file
+'    there is no prompt

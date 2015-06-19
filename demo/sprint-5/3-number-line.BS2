@@ -1,0 +1,1044 @@
+'#111
+'  The numbers in gutter do not overlap with content even in thousand line applications.
+
+'This file is not designed to be downloaded to the microcontroller.
+
+!'This is a special UTF8-Encoded set of tests for the BASIC Stamp Tokenizer Development Tester interface.
+'It is in addition to the normal tests in the Tests.txt file.
+
+'At the top of each test case, there should be 1 or more specially formatted comment lines that indicate
+'how the test should function.  These lines indicate whether the compilation should pass or fail, what error
+'message, if any, should appear, the selection points, etc. all the way down to the packetized data (if it
+'applies).
+
+'Note that if a test case (source code) does not contain the specially formatted testing comments, the Test
+'and Test All functions will list it as a pass, even if the Compile button reports an error.  A good example of this
+'is this test case you're reading.
+
+
+
+!'PASS - Duplicate test for many strange characters (in the "connect as follows" section)
+'This tests the strange characters the same way as before (in original Tests.txt file) but encoded in UTF8 form
+'DEBUG: No
+'TARGETMODULE: 2
+'LANGUAGE: 200
+'VARIABLES: 24 / 0,0,1,1 / 72,18,9,4
+'EEPROM: @1883 $00 $C0 $82 $54 $71 $C5 $9A $D8 $2F $A1 $B8 $12 $39 $E6 $A4 $8A
+'EEPROM: @1899 $2B $D6 $C4 $7E $19 $C5 $95 $C8 $31 $5F $90 $2A $AE $58 $13 $FB
+'EEPROM: @1915 $25 $14 $57 $22 $C7 $9C $54 $71 $C5 $9A $D8 $2F $A3 $B8 $12 $39
+'EEPROM: @1931 $E6 $80 $28 $2C $A1 $99 $FD $13 $78 $E6 $74 $00 $81 $62 $0E $69
+'EEPROM: @1947 $70 $83 $91 $1C $D2 $09 $C6 $96 $BD $CD $D8 $66 $6C $B3 $B2 $19
+'EEPROM: @1963 $D2 $84 $CC $5C $33 $FB $E0 $02 $31 $1D $30 $A0 $D0 $20 $3D $30
+'EEPROM: @1979 $1D $20 $A0 $D0 $20 $BD $C5 $74 $40 $80 $42 $83 $F4 $3F $26 $55
+'EEPROM: @1995 $0C $AC $89 $BD $31 $A9 $62 $60 $4D $EC $85 $49 $15 $03 $6B $62
+'EEPROM: @2011 $2F $4C $AA $18 $B8 $02 $4C $AA $18 $B8 $A2 $63 $52 $C5 $C0 $9A
+'EEPROM: @2027 $D8 $1F $AE $20 $9F $35 $B2 $FF $CB $9A $D8 $07 $AF $01 $4C $50
+'EEPROM: @2043 $11 $E4 $03 $20 $C0
+'PACKETCOUNT: 11
+'PACKETBUFFER: @0 $F5 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $00 $C0 $82 $54
+'PACKETBUFFER: @16 $71 $04 $F6 $C5 $9A $D8 $2F $A1 $B8 $12 $39 $E6 $A4 $8A $2B $D6
+'PACKETBUFFER: @32 $C4 $7E $19 $90 $F7 $C5 $95 $C8 $31 $5F $90 $2A $AE $58 $13 $FB
+'PACKETBUFFER: @48 $25 $14 $57 $22 $C7 $10 $F8 $9C $54 $71 $C5 $9A $D8 $2F $A3 $B8
+'PACKETBUFFER: @64 $12 $39 $E6 $80 $28 $2C $A1 $40 $F9 $99 $FD $13 $78 $E6 $74 $00
+'PACKETBUFFER: @80 $81 $62 $0E $69 $70 $83 $91 $1C $D2 $C0 $FA $09 $C6 $96 $BD $CD
+'PACKETBUFFER: @96 $D8 $66 $6C $B3 $B2 $19 $D2 $84 $CC $5C $33 $3E $FB $FB $E0 $02
+'PACKETBUFFER: @112 $31 $1D $30 $A0 $D0 $20 $3D $30 $1D $20 $A0 $D0 $20 $E0 $FC $BD
+'PACKETBUFFER: @128 $C5 $74 $40 $80 $42 $83 $F4 $3F $26 $55 $0C $AC $89 $BD $31 $AC
+'PACKETBUFFER: @144 $FD $A9 $62 $60 $4D $EC $85 $49 $15 $03 $6B $62 $2F $4C $AA $18
+'PACKETBUFFER: @160 $B8 $B7 $FE $02 $4C $AA $18 $B8 $A2 $63 $52 $C5 $C0 $9A $D8 $1F
+'PACKETBUFFER: @176 $AE $20 $9F $60 $FF $35 $B2 $FF $CB $9A $D8 $07 $AF $01 $4C $50
+'PACKETBUFFER: @192 $11 $E4 $03 $20 $C0 $B3
+
+
+'{$STAMP BS2}
+
+'***************************************************************************
+'*       Title: LCD4BT2L.BS2    Author: Jeff A Martin    Date: 2/5/98      *
+'*                                                                         *
+'* Description: This BASIC Stamp II program displays text on a 2 line by   *
+'*              16 character LCD display running in 4-bit interface mode.  *
+'*              This was tested on an Optrex DMC-16249 but should work with*
+'*              any LCD display which includes the standard Hitachi 44780  *
+'*              LCD driver chip.                                           *
+'*                                                                         *
+'* Notes: This program can be modified to fit into a smaller code space.   *
+'*        I chose not to write it as compact as possible to make it more   *
+'*        readable and to demonstrate all the useful functions of the LCD. *
+'*        The LCD, and Hitachi driver, features display scrolling, block   *
+'*        and underline cursor, and blinking cursor.                       *
+'***************************************************************************
+
+'Connect as follows (Best viewed in the Stamp editor):
+'
+'       I/O 3ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
+'       I/O 2ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ ³
+'       I/O 1ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ ³ ³
+'       I/O 0ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ ³ ³ ³
+'       I/O 5ÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿         ³ ³ ³ ³
+'       I/O 4ÄÄÄÄÄÄÄÄÄÄ¿   ³         ³ ³ ³ ³  
+'          +5ÄÄÄÄÄÄ¿   ³   ³         ³ ³ ³ ³
+'           ÚÄÄÄÄÄÄ³ÄoÄ³ÄoÄ³ÄoÄoÄoÄo ³ ³ ³ ³
+'           oÄ/\/\Ä³Ä¿ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³
+'           ³ 1.0K ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³
+'       GNDÄoÄÄÄÄ¿ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³ ³
+'              ÉÍØÍØÍØÍØÍØÍØÍØÍØÍØÍØÍØÍØÍØÍØÍÍÍÍÍÍÍÍÍÍÍÍ"
+'              º Û Û Û Û Û Û Û Û Û Û Û Û Û Û            º
+'              º 1 2 3 4 5 6 7 8 9         14           º
+'              º ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ º
+'              º ³        2 line x 16 character       ³ º
+'              º ³             LCD Display            ³ º
+'              º ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ º
+'              ÈÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ1/4
+
+
+'Set up symbols and constants
+E CON 5 'Enable pin, 1 = enabled
+RS  CON 4 'Register select pin, 0 = instruction, 1 = text
+char  VAR BYTE  'Character to send to LCD.
+
+Index VAR WORD  'Character pointer
+
+' Set up the Stamp's I/O lines and initialize the LCD. 
+Initialize:
+  OUTS = %0000000000000000  'Clear the output lines
+  DIRS = %0000000000111111  'Set directions to 6 outputs. 
+  pause 200             'Wait 200 ms for LCD to reset. 
+
+' Initialize the LCD for 4-bit interface. 
+
+InitLCD:
+  OUTS = %0011  'Wake up LCD.
+  pulsout E,1
+  pause 10
+  pulsout E,1   
+  pause 1   
+  pulsout E,1   
+
+  OUTS = %0010  'Set to 4-bit operation. 
+  pulsout E,1    
+
+  OUTS = %0010  'Set to 4-bit again and
+  pulsout E,1
+  OUTS = %1000  'Set to two line display mode (bit3: 1=2 line, 0=1 line)
+  pulsout E,1
+
+  char = %1111    'Set Display Control (bit3=1)
+  gosub SendText    'Display On(bit2=1), Cursor On(bit1=1), Blink(bit0=1)
+
+  char = %0110    'Set Entry Mode (bit2=1)
+  gosub SendText  'Auto Increment(bit1), No Shift(bit0) 
+
+  char = 1    'Clear the display. 
+  gosub SendText
+
+  high  RS    'Prepare to send characters. 
+
+' Main program loop: Display "Hello, My Friend"
+  Index = 0
+Main: LOOKUP Index,["Hello,",0],Char
+  IF Char = 0 THEN EndIt
+        gosub SendText
+  Index = Index + 1
+        GOTO Main  
+EndIt:  END
+
+' Write the ASCII character to LCD. 
+SendText:
+  OUTS = OUTS & %00010000 | char.HIGHNIB
+  pulsout E,5                   'Strobe enable pin. 
+  OUTS = OUTS & %00010000 | char.LOWNIB
+  pulsout E,5       'Strobe enable. 
+return
+
+' Send an instruction to the LCD
+SendInst:
+  OUTS = OUTS & %00010000 | char.HIGHNIB
+  pulsout E,5                   'Strobe enable pin. 
+  OUTS = OUTS & %00010000 | char.LOWNIB
+  pulsout E,5       'Strobe enable. 
+return
+
+
+
+!'PASS - Verify DATA works
+'DEBUG: No
+'TARGETMODULE: 2
+'LANGUAGE: 200
+'VARIABLES: 0 / 0,0,0,0 / 48,12,6,3
+'EEPROM: @10 $63 $58 $4D
+
+'{$STAMP BS2}
+
+Temp  DATA  @10,99,88,77
+
+
+
+!'FAIL / 103-Unrecognized character / 129/1
+'PURPOSE: Test unicode char at end of data
+
+'{$STAMP BS2}
+
+Temp  DATA  @10,99,88,77●
+
+
+
+!'FAIL / 103-Unrecognized character / 130/1
+'PURPOSE: Test unicode char at end of data
+
+'{$STAMP BS2}
+
+Temp  DATA  @10,99,88,77  ●
+
+
+
+!'PASS 
+'DEBUG: No
+'TARGETMODULE: 2
+'LANGUAGE: 200
+'VARIABLES: 0 / 0,0,0,0 / 0,0,0,0
+'PURPOSE: Test unicode char at end of data
+
+'{$STAMP BS2}
+
+Temp  DATA  @10,99,88,77  '●
+
+
+
+!'PASS 
+'DEBUG: No
+'TARGETMODULE: 2
+'LANGUAGE: 200
+'VARIABLES: 0 / 0,0,0,0 / 0,0,0,0
+'PURPOSE: Test unicode char at end of data
+
+'{$STAMP BS2}
+
+Temp  DATA  @10,99,88,77  'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿ
+
+
+
+!'PASS
+'DEBUG: No
+'TARGETMODULE: 2
+'LANGUAGE: 200
+'VARIABLES: 208 / 0,0,8,9 / 0,64,32,12
+'EEPROM: @0 $00 $44 $4B $45 $52 $45 $55 $45 $56 $48 $4E $48 $48 $4C $4E $4D
+'EEPROM: @16 $4E $4E $53 $4F $4F $4F $50 $4D $55 $4B $52 $4B $54 $4A $58 $48
+'EEPROM: @32 $4C $47 $4D $4D $59 $4A $5A $4B $5D $48 $50 $47 $4F $00 $00 $00
+'EEPROM: @48 $00 $82 $43 $61 $6C $63 $75 $6C $61 $74 $69 $6E $67 $C2 $54 $65
+'EEPROM: @64 $6D $70 $65 $72 $61 $74 $75 $72 $65 $00 $43 $75 $72 $72 $65 $6E
+'EEPROM: @80 $74 $20 $54 $65 $6D $70 $20 $69 $73 $3A $C8 $DF $46 $07 $00 $1F
+'EEPROM: @96 $FE $01 $FE $90 $50 $72 $65 $73 $73 $20 $74 $68 $65 $20 $75 $70
+'EEPROM: @112 $20 $61 $6E $64 $FE $D0 $64 $6F $77 $6E $20 $62 $75 $74 $74 $6F
+'EEPROM: @128 $6E $73 $20 $74 $6F $18 $02 $1F $FE $80 $73 $63 $72 $6F $6C $6C
+'EEPROM: @144 $20 $74 $68 $72 $6F $75 $67 $68 $FE $C0 $72 $65 $63 $6F $72 $64
+'EEPROM: @160 $65 $64 $20 $74 $65 $6D $70 $73 $2E $1C $03 $00 $46 $72 $6F $6D
+'EEPROM: @176 $88 $54 $6F $C0 $4C $6F $77 $2F $48 $69 $67 $68 $CB $2F $CE $DF
+'EEPROM: @192 $46 $0A $00 $8E $41 $4D $00 $8E $50 $4D $00 $54 $68 $69 $73 $20
+'EEPROM: @208 $61 $70 $70 $6C $69 $63 $61 $74 $69 $6F $6E $C0 $69 $73 $20 $63
+'EEPROM: @224 $6F $6E $74 $72 $6F $6C $6C $65 $64 $20 $62 $79 $02 $61 $20 $42
+'EEPROM: @240 $41 $53 $49 $43 $20 $53 $74 $61 $6D $70 $20 $49 $49 $C0 $6D $69
+'EEPROM: @256 $63 $72 $6F $63 $6F $6E $74 $72 $6F $6C $6C $65 $72 $02 $86 $66
+'EEPROM: @272 $72 $6F $6D $C1 $50 $61 $72 $61 $6C $6C $61 $78 $2C $20 $49 $6E
+'EEPROM: @288 $63 $2E $03 $54 $68 $65 $20 $42 $41 $53 $49 $43 $20 $53 $74 $61
+'EEPROM: @304 $6D $70 $C0 $69 $73 $20 $70 $72 $6F $67 $72 $61 $6D $6D $61 $62
+'EEPROM: @320 $6C $65 $02 $81 $69 $6E $20 $50 $42 $41 $53 $49 $43 $20 $75 $73
+'EEPROM: @336 $69 $6E $67 $C1 $61 $20 $73 $74 $61 $6E $64 $61 $72 $64 $20 $50
+'EEPROM: @352 $43 $2E $02 $83 $49 $74 $20 $68 $61 $73 $20 $31 $36 $C0 $64 $69
+'EEPROM: @368 $67 $69 $74 $61 $6C $20 $49 $2F $4F $20 $70 $69 $6E $73 $02 $81
+'EEPROM: @384 $68 $6F $6C $64 $73 $20 $61 $70 $78 $2E $20 $35 $30 $30 $C1 $6C
+'EEPROM: @400 $69 $6E $65 $73 $20 $6F $66 $20 $63 $6F $64 $65 $02 $61 $6E $64
+'EEPROM: @416 $20 $65 $78 $65 $63 $75 $74 $65 $73 $20 $61 $70 $78 $C0 $34 $30
+'EEPROM: @432 $30 $30 $20 $6C $69 $6E $65 $73 $2F $73 $65 $63 $21 $03 $54 $68
+'EEPROM: @448 $65 $20 $50 $42 $41 $53 $49 $43 $20 $63 $6F $64 $65 $C0 $69 $73
+'EEPROM: @464 $20 $73 $74 $6F $72 $65 $64 $20 $69 $6E $20 $61 $6E $02 $45 $45
+'EEPROM: @480 $50 $52 $4F $4D $20 $77 $68 $69 $63 $68 $20 $63 $61 $6E $C0 $62
+'EEPROM: @496 $65 $20 $72 $65 $77 $72 $69 $74 $74 $65 $6E $20 $74 $6F $02 $82
+'EEPROM: @512 $61 $74 $20 $6C $65 $61 $73 $74 $20 $31 $30 $C1 $6D $69 $6C $6C
+'EEPROM: @528 $69 $6F $6E $20 $74 $69 $6D $65 $73 $21 $03 $81 $51 $3A $20 $57
+'EEPROM: @544 $68 $61 $74 $20 $63 $61 $6E $20 $69 $74 $C4 $62 $65 $20 $75 $73
+'EEPROM: @560 $65 $64 $20 $66 $6F $72 $3F $03 $81 $41 $3A $20 $41 $6C $6D $6F
+'EEPROM: @576 $73 $74 $20 $61 $6E $79 $C4 $63 $6F $6E $74 $72 $6F $6C $20 $74
+'EEPROM: @592 $61 $73 $6B $02 $73 $75 $63 $68 $20 $61 $73 $3A $20 $72 $65 $6D
+'EEPROM: @608 $6F $74 $65 $C2 $64 $61 $74 $61 $20 $6C $6F $67 $67 $69 $6E $67
+'EEPROM: @624 $2C $02 $83 $4C $43 $44 $20 $61 $6E $64 $20 $4C $45 $44 $C4 $64
+'EEPROM: @640 $69 $73 $70 $6C $61 $79 $73 $2C $02 $73 $65 $72 $76 $6F $20 $26
+'EEPROM: @656 $20 $73 $74 $65 $70 $70 $65 $72 $C1 $6D $6F $74 $6F $72 $20 $63
+'EEPROM: @672 $6F $6E $74 $72 $6F $6C $2C $02 $73 $69 $6D $70 $6C $65 $20 $69
+'EEPROM: @688 $6E $66 $72 $61 $72 $65 $64 $C1 $63 $6F $6D $6D $75 $6E $63 $69
+'EEPROM: @704 $61 $74 $69 $6F $6E $2C $02 $82 $72 $6F $62 $6F $74 $69 $63 $73
+'EEPROM: @720 $20 $61 $6E $64 $C2 $6D $75 $63 $68 $20 $6D $6F $72 $65 $21 $03
+'EEPROM: @736 $00 
+'EEPROM: @742 $00 $2C $16 $E5 $11 $85 $66 $E9 $99 $CF $B0 $EE $50 $4E $9E $C0
+'EEPROM: @758 $5C $0E $51 $24 $34 $58 $7F $E5 $08 $65 $A3 $BB $E5 $5C $BE $28
+'EEPROM: @774 $8B $28 $34 $4B $9F $7C $86 $75 $79 $66 $C2 $E5 $F3 $6C $42 $83
+'EEPROM: @790 $F5 $56 $EE $4E $34 $BA $5B $CE $E5 $C0 $B4 $D9 $01 $CF $EC $50
+'EEPROM: @806 $F2 $27 $B0 $92 $6B $96 $FE $69 $F1 $92 $2F $CA $21 $0A $58 $87
+'EEPROM: @822 $47 $08 $96 $6B $B0 $9E $CA $E3 $99 $6B $66 $AF $E4 $9A $A5 $2F
+'EEPROM: @838 $3C $63 $48 $20 $0A $0D $ED $9F $C3 $67 $29 $71 $95 $C7 $54 $4C
+'EEPROM: @854 $7E $02 $2B $B9 $46 $E9 $9F $4A $5E $15 $86 $02 $73 $39 $A5 $6B
+'EEPROM: @870 $D2 $93 $60 $8D $E0 $43 $01 $1C $78 $28 $34 $7A $3E $D8 $F2 $24
+'EEPROM: @886 $3C $2D $75 $80 $93 $CD $94 $6C $B1 $86 $EB $9F $D2 $07 $38 $54
+'EEPROM: @902 $B8 $79 $98 $CB $A5 $0E $70 $E7 $96 $3F $85 $B9 $FC $A2 $F7 $75
+'EEPROM: @918 $95 $8F $BF $3C $18 $F8 $C7 $C0 $6D $1C $AF $AB $7E $EC $E5 $C0
+'EEPROM: @934 $C0 $3F $06 $5E $68 $3A $F0 $C1 $0B $4D $07 $1E $58 $B3 $F5 $C0
+'EEPROM: @950 $4D $5C $E3 $1B $97 $B7 $5C $B3 $FB $A7 $96 $4B $A1 $B5 $5C $B3
+'EEPROM: @966 $F5 $4F $E1 $2D $AF $61 $29 $4F $E0 $2D $BF $72 $17 $86 $B2 $E5
+'EEPROM: @982 $56 $AE $D9 $7A $E0 $12 $86 $12 $AC $E4 $12 $84 $D9 $09 $CF $EC
+'EEPROM: @998 $00 $7E $CB $17 $04 $65 $E6 $C1 $9A $D9 $03 $A3 $90 $0D $6F $B0
+'EEPROM: @1014 $92 $CB $46 $1D $8A $26 $AE $C1 $05 $EE $80 $4B $11 $0D $6F $B0
+'EEPROM: @1030 $92 $E7 $26 $1C $0A $CD $D5 $37 $AF $1C $CB $35 $56 $EF $B4 $72
+'EEPROM: @1046 $2C $D7 $68 $3D $96 $7F $A7 $1B $0A $4D $ED $9F $4F $FA $68 $29
+'EEPROM: @1062 $F2 $19 $1A $34 $63 $B9 $94 $3E $1A $8A $E5 $5A $AE $B1 $BD $14
+'EEPROM: @1078 $FD $34 $54 $CB $B1 $BC $64 $D5 $50 $C0 $8E $8D $2F $B4 $E2 $AA
+'EEPROM: @1094 $31 $F4 $30 $96 $3B $71 $C3 $30 $43 $A1 $99 $FD $FF $79 $51 $C6
+'EEPROM: @1110 $50 $68 $96 $DE $F8 $AC $11 $5C $28 $AA $22 $0B $05 $70 $50 $A1
+'EEPROM: @1126 $D0 $74 $FD $E1 $B8 $90 $42 $A1 $31 $F2 $16 $4B $8E $0D $E5 $D7
+'EEPROM: @1142 $18 $AA $E4 $54 $EE $AD $18 $AA $E4 $54 $AE $31 $F2 $C1 $F5 $4B
+'EEPROM: @1158 $83 $AB $E5 $58 $6E $19 $4F $28 $16 $86 $A1 $84 $42 $63 $F4 $56
+'EEPROM: @1174 $60 $2C $37 $0C $23 $14 $9A $D9 $3F $01 $AC $B6 $06 $63 $B9 $61
+'EEPROM: @1190 $08 $A1 $D0 $18 $BD $B3 $43 $81 $9D $B8 $C6 $F9 $A1 $C0 $4E $1C
+'EEPROM: @1206 $0A $4C $84 $4A $A1 $C0 $4E $DC $18 $2A $97 $B1 $5C $E3 $E4 $9D
+'EEPROM: @1222 $15 $43 $2B $AE $1A $43 $0F $63 $F9 $D6 $D4 $58 $7A $B5 $66 $2C
+'EEPROM: @1238 $FF $CE $65 $2C $5F $70 $4A $96 $0E $78 $C9 $0E $60 $62 $0D $1C
+'EEPROM: @1254 $1E $13 $AE $B9 $FD $15 $F8 $E6 $1A $40 $FC $1F $5C $83 $FB $2B
+'EEPROM: @1270 $30 $CE $35 $90 $F8 $47 $B8 $26 $F7 $57 $E0 $9C $73 $2C $09 $4D
+'EEPROM: @1286 $EE $B1 $C0 $39 $D7 $3C $E2 $21 $E1 $1A $DC $63 $81 $71 $AE $F9
+'EEPROM: @1302 $C3 $03 $C2 $35 $B7 $C7 $02 $DF $5C $83 $89 $87 $83 $F7 $CB $0D
+'EEPROM: @1318 $6E $30 $07 $9C $74 $18 $98 $9C $1B $AB $D8 $88 $02 $0E $06 $26
+'EEPROM: @1334 $1D $06 $26 $CA $8D $11 $1B $51 $C0 $C1 $C0 $A4 $C3 $C0 $E0 $DC
+'EEPROM: @1350 $D8 $61 $23 $0A $38 $18 $98 $74 $18 $98 $27 $37 $26 $6C $44 $01
+'EEPROM: @1366 $07 $03 $93 $0E $03 $73 $73 $63 $C0 $46 $14 $70 $30 $B0 $66 $E9
+'EEPROM: @1382 $81 $17 $60 $B9 $F9 $69 $4B $CE $FF $04 $55 $4C $05 $74 $2F $34
+'EEPROM: @1398 $B4 $7F $02 $D3 $5C $D6 $07 $F5 $09 $CD $D9 $04 $4B $07 $BC $64
+'EEPROM: @1414 $47 $F0 $8F $2B $9E $4C $96 $F3 $3F $41 $15 $53 $01 $DD $9A $A5
+'EEPROM: @1430 $0F $56 $92 $12 $64 $19 $54 $31 $15 $D0 $8D $A6 $36 $94 $5F $E5
+'EEPROM: @1446 $2C $F7 $02 $67 $B9 $86 $F6 $4F $60 $9A $CB $BA $93 $34 $A1 $F9
+'EEPROM: @1462 $02 $43 $4A $90 $E5 $FC $4F $50 $C5 $54 $40 $37 $86 $94 $20 $CB
+'EEPROM: @1478 $A0 $8A $A9 $80 $6E $1F $A9 $A1 $EC $7E $9F $B3 $DC $FB $37 $67
+'EEPROM: @1494 $79 $92 $D6 $F8 $2A $67 $B9 $86 $F6 $4F $60 $9A $CB $3A $87 $34
+'EEPROM: @1510 $A1 $F9 $88 $94 $00 $98 $FF $09 $AA $98 $0A $E8 $56 $92 $1A $DC
+'EEPROM: @1526 $4F $CE $72 $0D $ED $9F $C0 $34 $97 $75 $00 $65 $42 $F3 $C5 $78
+'EEPROM: @1542 $64 $76 $C8 $E7 $99 $1D $35 $7F $D6 $DC $E6 $97 $27 $FA $E9 $99
+'EEPROM: @1558 $CF $5C $AA $63 $23 $6E $B1 $66 $F6 $35 $5F $68 $94 $FE $49 $C5
+'EEPROM: @1574 $A5 $3A $AE $E2 $07 $62 $94 $2E $D8 $78 $02 $0E $06 $86 $C9 $8D
+'EEPROM: @1590 $28 $E0 $E0 $E0 $02 $B1 $86 $E9 $03 $CF $C4 $51 $42 $C3 $F4 $83
+'EEPROM: @1606 $67 $E2 $28 $A1 $61 $FA $C2 $F3 $42 $83 $F5 $4F $E5 $E8 $F9 $19
+'EEPROM: @1622 $CB $0F $C2 $60 $5D $B0 $F1 $04 $1C $0C $8C $EA $D9 $88 $02 $0E
+'EEPROM: @1638 $0E $2E $08 $2F $34 $4E $FE $09 $EC $C4 $49 $87 $81 $99 $39 $12
+'EEPROM: @1654 $05 $1C $0C $BC $A0 $8B $1B $5F $8B $9D $B8 $61 $F8 $A0 $D0 $38
+'EEPROM: @1670 $3F $14 $D8 $89 $07 $6B $66 $0F $BD $C0 $D4 $1D $14 $70 $69 $83
+'EEPROM: @1686 $1B $BC $C7 $35 $55 $4F $DD $CB $4F $25 $87 $4A $85 $F7 $78 $8E
+'EEPROM: @1702 $35 $1C $78 $76 $B8 $66 $CF $03 $57 $45 $8D $6F $C5 $7B $5C $B3
+'EEPROM: @1718 $E7 $9F $C0 $7B $DC $2C $6F $7C $B1 $FF $DF $50 $25 $AF $72 $E0
+'EEPROM: @1734 $A0 $41 $21 $EB $36 $C1 $84 $E6 $1A $AA $A7 $EE $E5 $A7 $92 $67
+'EEPROM: @1750 $39 $7F $C2 $A0 $40 $3B $4A $B3 $E5 $B3 $AF $19 $EB $09 $D1 $E3
+'EEPROM: @1766 $25 $69 $C3 $1B $9C $E5 $1A $3D $0F $4C $11 $34 $BE $87 $F5 $B8
+'EEPROM: @1782 $46 $CF $3F $81 $F5 $38 $45 $D0 $F0 $06 $67 $F9 $4D $D8 $F8 $62
+'EEPROM: @1798 $FF $BF $A1 $4A $4E $E5 $C0 $C1 $82 $42 $1C $4F $C0 $63 $0A $0A
+'EEPROM: @1814 $2B $36 $41 $11 $B7 $23 $28 $98 $11 $58 $07 $8C $65 $47 $B0 $96
+'EEPROM: @1830 $7F $A7 $07 $0A $4D $ED $A5 $64 $33 $96 $97 $AC $06 $0A $0D $D6
+'EEPROM: @1846 $07 $6B $B4 $1E $0A $8C $E5 $96 $71 $81 $42 $63 $E4 $81 $35 $B6
+'EEPROM: @1862 $A7 $8F $E6 $4F $08 $14 $1A $DA $C7 $E5 $0A $C8 $E9 $83 $30 $EE
+'EEPROM: @1878 $67 $23 $0A $38 $38 $B8 $20 $5C $91 $CB $07 $61 $7C $6C $44 $01
+'EEPROM: @1894 $07 $07 $17 $84 $F5 $60 $58 $07 $8C $65 $47 $F0 $C5 $86 $E1 $80
+'EEPROM: @1910 $82 $D1 $09 $06 $CC $62 $C6 $C0 $66 $C1 $7E $EC $47 $08 $96 $6B
+'EEPROM: @1926 $B0 $3E $38 $2E $14 $50 $68 $76 $4F $36 $6B $B8 $1E $98 $0D $A3
+'EEPROM: @1942 $04 $43 $AB $C2 $5B $AE $E4 $4B $40 $43 $F9 $55 $F2 $AA $F0 $96
+'EEPROM: @1958 $7B $83 $B1 $1C $D6 $A9 $F0 $C9 $96 $6B $B6 $FE $29 $BC $E5 $B2
+'EEPROM: @1974 $51 $80 $42 $B3 $F5 $FF $67 $0D $D1 $FF $CD $17 $FD $3E $F9 $4C
+'EEPROM: @1990 $E3 $D2 $97 $CC $24 $89 $40 $E3 $CF $E4 $33 $F1 $46 $BB $B0 $6E
+'EEPROM: @2006 $A4 $23 $E8 $DE $39 $59 $2E $75 $63 $DC $70 $B6 $6E $4D $7F $11
+'EEPROM: @2022 $5C $BA $93 $A4 $44 $F4 $40 $3B $AC $8E $98 $83 $D9 $F0 $33 $3C
+'EEPROM: @2038 $0C $DC $A2 $8D $C0 $1D $B6 $04 $FC $00
+'PACKETCOUNT: 128
+'PACKETBUFFER: @0 $80 $00 $44 $4B $45 $52 $45 $55 $45 $56 $48 $4E $48 $48 $4C $4E
+'PACKETBUFFER: @16 $4D $18 $81 $4E $4E $53 $4F $4F $4F $50 $4D $55 $4B $52 $4B $54
+'PACKETBUFFER: @32 $4A $58 $48 $8B $82 $4C $47 $4D $4D $59 $4A $5A $4B $5D $48 $50
+'PACKETBUFFER: @48 $47 $4F $00 $00 $00 $7E $83 $00 $82 $43 $61 $6C $63 $75 $6C $61
+'PACKETBUFFER: @64 $74 $69 $6E $67 $C2 $54 $65 $19 $84 $6D $70 $65 $72 $61 $74 $75
+'PACKETBUFFER: @80 $72 $65 $00 $43 $75 $72 $72 $65 $6E $38 $85 $74 $20 $54 $65 $6D
+'PACKETBUFFER: @96 $70 $20 $69 $73 $3A $C8 $DF $46 $07 $00 $1F $08 $86 $FE $01 $FE
+'PACKETBUFFER: @112 $90 $50 $72 $65 $73 $73 $20 $74 $68 $65 $20 $75 $70 $7A $87 $20
+'PACKETBUFFER: @128 $61 $6E $64 $FE $D0 $64 $6F $77 $6E $20 $62 $75 $74 $74 $6F $52
+'PACKETBUFFER: @144 $88 $6E $73 $20 $74 $6F $18 $02 $1F $FE $80 $73 $63 $72 $6F $6C
+'PACKETBUFFER: @160 $6C $4E $89 $20 $74 $68 $72 $6F $75 $67 $68 $FE $C0 $72 $65 $63
+'PACKETBUFFER: @176 $6F $72 $64 $19 $8A $65 $64 $20 $74 $65 $6D $70 $73 $2E $1C $03
+'PACKETBUFFER: @192 $00 $46 $72 $6F $6D $83 $8B $88 $54 $6F $C0 $4C $6F $77 $2F $48
+'PACKETBUFFER: @208 $69 $67 $68 $CB $2F $CE $DF $E2 $8C $46 $0A $00 $8E $41 $4D $00
+'PACKETBUFFER: @224 $8E $50 $4D $00 $54 $68 $69 $73 $20 $25 $8D $61 $70 $70 $6C $69
+'PACKETBUFFER: @240 $63 $61 $74 $69 $6F $6E $C0 $69 $73 $20 $63 $C0 $8E $6F $6E $74
+'PACKETBUFFER: @256 $72 $6F $6C $6C $65 $64 $20 $62 $79 $02 $61 $20 $42 $DF $8F $41
+'PACKETBUFFER: @272 $53 $49 $43 $20 $53 $74 $61 $6D $70 $20 $49 $49 $C0 $6D $69 $E4
+'PACKETBUFFER: @288 $90 $63 $72 $6F $63 $6F $6E $74 $72 $6F $6C $6C $65 $72 $02 $86
+'PACKETBUFFER: @304 $66 $FA $91 $72 $6F $6D $C1 $50 $61 $72 $61 $6C $6C $61 $78 $2C
+'PACKETBUFFER: @320 $20 $49 $6E $28 $92 $63 $2E $03 $54 $68 $65 $20 $42 $41 $53 $49
+'PACKETBUFFER: @336 $43 $20 $53 $74 $61 $EF $93 $6D $70 $C0 $69 $73 $20 $70 $72 $6F
+'PACKETBUFFER: @352 $67 $72 $61 $6D $6D $61 $62 $AC $94 $6C $65 $02 $81 $69 $6E $20
+'PACKETBUFFER: @368 $50 $42 $41 $53 $49 $43 $20 $75 $73 $67 $95 $69 $6E $67 $C1 $61
+'PACKETBUFFER: @384 $20 $73 $74 $61 $6E $64 $61 $72 $64 $20 $50 $2A $96 $43 $2E $02
+'PACKETBUFFER: @400 $83 $49 $74 $20 $68 $61 $73 $20 $31 $36 $C0 $64 $69 $47 $97 $67
+'PACKETBUFFER: @416 $69 $74 $61 $6C $20 $49 $2F $4F $20 $70 $69 $6E $73 $02 $81 $14
+'PACKETBUFFER: @432 $98 $68 $6F $6C $64 $73 $20 $61 $70 $78 $2E $20 $35 $30 $30 $C1
+'PACKETBUFFER: @448 $6C $D5 $99 $69 $6E $65 $73 $20 $6F $66 $20 $63 $6F $64 $65 $02
+'PACKETBUFFER: @464 $61 $6E $64 $D3 $9A $20 $65 $78 $65 $63 $75 $74 $65 $73 $20 $61
+'PACKETBUFFER: @480 $70 $78 $C0 $34 $30 $53 $9B $30 $30 $20 $6C $69 $6E $65 $73 $2F
+'PACKETBUFFER: @496 $73 $65 $63 $21 $03 $54 $68 $80 $9C $65 $20 $50 $42 $41 $53 $49
+'PACKETBUFFER: @512 $43 $20 $63 $6F $64 $65 $C0 $69 $73 $D6 $9D $20 $73 $74 $6F $72
+'PACKETBUFFER: @528 $65 $64 $20 $69 $6E $20 $61 $6E $02 $45 $45 $40 $9E $50 $52 $4F
+'PACKETBUFFER: @544 $4D $20 $77 $68 $69 $63 $68 $20 $63 $61 $6E $C0 $62 $7D $9F $65
+'PACKETBUFFER: @560 $20 $72 $65 $77 $72 $69 $74 $74 $65 $6E $20 $74 $6F $02 $82 $71
+'PACKETBUFFER: @576 $A0 $61 $74 $20 $6C $65 $61 $73 $74 $20 $31 $30 $C1 $6D $69 $6C
+'PACKETBUFFER: @592 $6C $62 $A1 $69 $6F $6E $20 $74 $69 $6D $65 $73 $21 $03 $81 $51
+'PACKETBUFFER: @608 $3A $20 $57 $30 $A2 $68 $61 $74 $20 $63 $61 $6E $20 $69 $74 $C4
+'PACKETBUFFER: @624 $62 $65 $20 $75 $73 $3F $A3 $65 $64 $20 $66 $6F $72 $3F $03 $81
+'PACKETBUFFER: @640 $41 $3A $20 $41 $6C $6D $6F $46 $A4 $73 $74 $20 $61 $6E $79 $C4
+'PACKETBUFFER: @656 $63 $6F $6E $74 $72 $6F $6C $20 $74 $B4 $A5 $61 $73 $6B $02 $73
+'PACKETBUFFER: @672 $75 $63 $68 $20 $61 $73 $3A $20 $72 $65 $6D $D5 $A6 $6F $74 $65
+'PACKETBUFFER: @688 $C2 $64 $61 $74 $61 $20 $6C $6F $67 $67 $69 $6E $67 $AF $A7 $2C
+'PACKETBUFFER: @704 $02 $83 $4C $43 $44 $20 $61 $6E $64 $20 $4C $45 $44 $C4 $64 $65
+'PACKETBUFFER: @720 $A8 $69 $73 $70 $6C $61 $79 $73 $2C $02 $73 $65 $72 $76 $6F $20
+'PACKETBUFFER: @736 $26 $B0 $A9 $20 $73 $74 $65 $70 $70 $65 $72 $C1 $6D $6F $74 $6F
+'PACKETBUFFER: @752 $72 $20 $63 $BF $AA $6F $6E $74 $72 $6F $6C $2C $02 $73 $69 $6D
+'PACKETBUFFER: @768 $70 $6C $65 $20 $69 $77 $AB $6E $66 $72 $61 $72 $65 $64 $C1 $63
+'PACKETBUFFER: @784 $6F $6D $6D $75 $6E $63 $69 $57 $AC $61 $74 $69 $6F $6E $2C $02
+'PACKETBUFFER: @800 $82 $72 $6F $62 $6F $74 $69 $63 $73 $24 $AD $20 $61 $6E $64 $C2
+'PACKETBUFFER: @816 $6D $75 $63 $68 $20 $6D $6F $72 $65 $21 $03 $9A $AE $00 $00 $00
+'PACKETBUFFER: @832 $00 $00 $00 $00 $2C $16 $E5 $11 $85 $66 $E9 $99 $CF $DE $AF $B0
+'PACKETBUFFER: @848 $EE $50 $4E $9E $C0 $5C $0E $51 $24 $34 $58 $7F $E5 $08 $65 $7B
+'PACKETBUFFER: @864 $B0 $A3 $BB $E5 $5C $BE $28 $8B $28 $34 $4B $9F $7C $86 $75 $79
+'PACKETBUFFER: @880 $66 $A4 $B1 $C2 $E5 $F3 $6C $42 $83 $F5 $56 $EE $4E $34 $BA $5B
+'PACKETBUFFER: @896 $CE $E5 $C0 $41 $B2 $B4 $D9 $01 $CF $EC $50 $F2 $27 $B0 $92 $6B
+'PACKETBUFFER: @912 $96 $FE $69 $F1 $92 $6F $B3 $2F $CA $21 $0A $58 $87 $47 $08 $96
+'PACKETBUFFER: @928 $6B $B0 $9E $CA $E3 $99 $6B $FB $B4 $66 $AF $E4 $9A $A5 $2F $3C
+'PACKETBUFFER: @944 $63 $48 $20 $0A $0D $ED $9F $C3 $67 $11 $B5 $29 $71 $95 $C7 $54
+'PACKETBUFFER: @960 $4C $7E $02 $2B $B9 $46 $E9 $9F $4A $5E $15 $C6 $B6 $86 $02 $73
+'PACKETBUFFER: @976 $39 $A5 $6B $D2 $93 $60 $8D $E0 $43 $01 $1C $78 $28 $D4 $B7 $34
+'PACKETBUFFER: @992 $7A $3E $D8 $F2 $24 $3C $2D $75 $80 $93 $CD $94 $6C $B1 $86 $7A
+'PACKETBUFFER: @1008 $B8 $EB $9F $D2 $07 $38 $54 $B8 $79 $98 $CB $A5 $0E $70 $E7 $96
+'PACKETBUFFER: @1024 $3F $E6 $B9 $85 $B9 $FC $A2 $F7 $75 $95 $8F $BF $3C $18 $F8 $C7
+'PACKETBUFFER: @1040 $C0 $6D $1C $C0 $BA $AF $AB $7E $EC $E5 $C0 $C0 $3F $06 $5E $68
+'PACKETBUFFER: @1056 $3A $F0 $C1 $0B $4D $CF $BB $07 $1E $58 $B3 $F5 $C0 $4D $5C $E3
+'PACKETBUFFER: @1072 $1B $97 $B7 $5C $B3 $FB $A7 $BA $BC $96 $4B $A1 $B5 $5C $B3 $F5
+'PACKETBUFFER: @1088 $4F $E1 $2D $AF $61 $29 $4F $E0 $2D $17 $BD $BF $72 $17 $86 $B2
+'PACKETBUFFER: @1104 $E5 $56 $AE $D9 $7A $E0 $12 $86 $12 $AC $E4 $6D $BE $12 $84 $D9
+'PACKETBUFFER: @1120 $09 $CF $EC $00 $7E $CB $17 $04 $65 $E6 $C1 $9A $D9 $2C $BF $03
+'PACKETBUFFER: @1136 $A3 $90 $0D $6F $B0 $92 $CB $46 $1D $8A $26 $AE $C1 $05 $EE $0D
+'PACKETBUFFER: @1152 $C0 $80 $4B $11 $0D $6F $B0 $92 $E7 $26 $1C $0A $CD $D5 $37 $AF
+'PACKETBUFFER: @1168 $1C $CF $C1 $CB $35 $56 $EF $B4 $72 $2C $D7 $68 $3D $96 $7F $A7
+'PACKETBUFFER: @1184 $1B $0A $4D $FE $C2 $ED $9F $4F $FA $68 $29 $F2 $19 $1A $34 $63
+'PACKETBUFFER: @1200 $B9 $94 $3E $1A $8A $ED $C3 $E5 $5A $AE $B1 $BD $14 $FD $34 $54
+'PACKETBUFFER: @1216 $CB $B1 $BC $64 $D5 $50 $C0 $C8 $C4 $8E $8D $2F $B4 $E2 $AA $31
+'PACKETBUFFER: @1232 $F4 $30 $96 $3B $71 $C3 $30 $43 $A1 $44 $C5 $99 $FD $FF $79 $51
+'PACKETBUFFER: @1248 $C6 $50 $68 $96 $DE $F8 $AC $11 $5C $28 $AA $07 $C6 $22 $0B $05
+'PACKETBUFFER: @1264 $70 $50 $A1 $D0 $74 $FD $E1 $B8 $90 $42 $A1 $31 $F2 $37 $C7 $16
+'PACKETBUFFER: @1280 $4B $8E $0D $E5 $D7 $18 $AA $E4 $54 $EE $AD $18 $AA $E4 $54 $F2
+'PACKETBUFFER: @1296 $C8 $AE $31 $F2 $C1 $F5 $4B $83 $AB $E5 $58 $6E $19 $4F $28 $16
+'PACKETBUFFER: @1312 $86 $61 $C9 $A1 $84 $42 $63 $F4 $56 $60 $2C $37 $0C $23 $14 $9A
+'PACKETBUFFER: @1328 $D9 $3F $01 $6A $CA $AC $B6 $06 $63 $B9 $61 $08 $A1 $D0 $18 $BD
+'PACKETBUFFER: @1344 $B3 $43 $81 $9D $B8 $37 $CB $C6 $F9 $A1 $C0 $4E $1C $0A $4C $84
+'PACKETBUFFER: @1360 $4A $A1 $C0 $4E $DC $18 $2A $BA $CC $97 $B1 $5C $E3 $E4 $9D $15
+'PACKETBUFFER: @1376 $43 $2B $AE $1A $43 $0F $63 $F9 $D6 $5D $CD $D4 $58 $7A $B5 $66
+'PACKETBUFFER: @1392 $2C $FF $CE $65 $2C $5F $70 $4A $96 $0E $78 $B3 $CE $C9 $0E $60
+'PACKETBUFFER: @1408 $62 $0D $1C $1E $13 $AE $B9 $FD $15 $F8 $E6 $1A $40 $8E $CF $FC
+'PACKETBUFFER: @1424 $1F $5C $83 $FB $2B $30 $CE $35 $90 $F8 $47 $B8 $26 $F7 $57 $E3
+'PACKETBUFFER: @1440 $D0 $E0 $9C $73 $2C $09 $4D $EE $B1 $C0 $39 $D7 $3C $E2 $21 $E1
+'PACKETBUFFER: @1456 $1A $16 $D1 $DC $63 $81 $71 $AE $F9 $C3 $03 $C2 $35 $B7 $C7 $02
+'PACKETBUFFER: @1472 $DF $5C $83 $5C $D2 $89 $87 $83 $F7 $CB $0D $6E $30 $07 $9C $74
+'PACKETBUFFER: @1488 $18 $98 $9C $1B $AB $05 $D3 $D8 $88 $02 $0E $06 $26 $1D $06 $26
+'PACKETBUFFER: @1504 $CA $8D $11 $1B $51 $C0 $C1 $F3 $D4 $C0 $A4 $C3 $C0 $E0 $DC $D8
+'PACKETBUFFER: @1520 $61 $23 $0A $38 $18 $98 $74 $18 $98 $17 $D5 $27 $37 $26 $6C $44
+'PACKETBUFFER: @1536 $01 $07 $03 $93 $0E $03 $73 $73 $63 $C0 $46 $F9 $D6 $14 $70 $30
+'PACKETBUFFER: @1552 $B0 $66 $E9 $81 $17 $60 $B9 $F9 $69 $4B $CE $FF $04 $48 $D7 $55
+'PACKETBUFFER: @1568 $4C $05 $74 $2F $34 $B4 $7F $02 $D3 $5C $D6 $07 $F5 $09 $CD $A0
+'PACKETBUFFER: @1584 $D8 $D9 $04 $4B $07 $BC $64 $47 $F0 $8F $2B $9E $4C $96 $F3 $3F
+'PACKETBUFFER: @1600 $41 $F5 $D9 $15 $53 $01 $DD $9A $A5 $0F $56 $92 $12 $64 $19 $54
+'PACKETBUFFER: @1616 $31 $15 $D0 $B2 $DA $8D $A6 $36 $94 $5F $E5 $2C $F7 $02 $67 $B9
+'PACKETBUFFER: @1632 $86 $F6 $4F $60 $9A $DB $DB $CB $BA $93 $34 $A1 $F9 $02 $43 $4A
+'PACKETBUFFER: @1648 $90 $E5 $FC $4F $50 $C5 $54 $87 $DC $40 $37 $86 $94 $20 $CB $A0
+'PACKETBUFFER: @1664 $8A $A9 $80 $6E $1F $A9 $A1 $EC $7E $14 $DD $9F $B3 $DC $FB $37
+'PACKETBUFFER: @1680 $67 $79 $92 $D6 $F8 $2A $67 $B9 $86 $F6 $4F $6E $DE $60 $9A $CB
+'PACKETBUFFER: @1696 $3A $87 $34 $A1 $F9 $88 $94 $00 $98 $FF $09 $AA $98 $D0 $DF $0A
+'PACKETBUFFER: @1712 $E8 $56 $92 $1A $DC $4F $CE $72 $0D $ED $9F $C0 $34 $97 $75 $29
+'PACKETBUFFER: @1728 $E0 $00 $65 $42 $F3 $C5 $78 $64 $76 $C8 $E7 $99 $1D $35 $7F $D6
+'PACKETBUFFER: @1744 $DC $A4 $E1 $E6 $97 $27 $FA $E9 $99 $CF $5C $AA $63 $23 $6E $B1
+'PACKETBUFFER: @1760 $66 $F6 $35 $F4 $E2 $5F $68 $94 $FE $49 $C5 $A5 $3A $AE $E2 $07
+'PACKETBUFFER: @1776 $62 $94 $2E $D8 $78 $CD $E3 $02 $0E $06 $86 $C9 $8D $28 $E0 $E0
+'PACKETBUFFER: @1792 $E0 $02 $B1 $86 $E9 $03 $CF $6F $E4 $C4 $51 $42 $C3 $F4 $83 $67
+'PACKETBUFFER: @1808 $E2 $28 $A1 $61 $FA $C2 $F3 $42 $83 $A4 $E5 $F5 $4F $E5 $E8 $F9
+'PACKETBUFFER: @1824 $19 $CB $0F $C2 $60 $5D $B0 $F1 $04 $1C $0C $D2 $E6 $8C $EA $D9
+'PACKETBUFFER: @1840 $88 $02 $0E $0E $2E $08 $2F $34 $4E $FE $09 $EC $C4 $87 $E7 $49
+'PACKETBUFFER: @1856 $87 $81 $99 $39 $12 $05 $1C $0C $BC $A0 $8B $1B $5F $8B $9D $2E
+'PACKETBUFFER: @1872 $E8 $B8 $61 $F8 $A0 $D0 $38 $3F $14 $D8 $89 $07 $6B $66 $0F $BD
+'PACKETBUFFER: @1888 $C0 $47 $E9 $D4 $1D $14 $70 $69 $83 $1B $BC $C7 $35 $55 $4F $DD
+'PACKETBUFFER: @1904 $CB $4F $25 $23 $EA $87 $4A $85 $F7 $78 $8E $35 $1C $78 $76 $B8
+'PACKETBUFFER: @1920 $66 $CF $03 $57 $45 $F8 $EB $8D $6F $C5 $7B $5C $B3 $E7 $9F $C0
+'PACKETBUFFER: @1936 $7B $DC $2C $6F $7C $B1 $FF $66 $EC $DF $50 $25 $AF $72 $E0 $A0
+'PACKETBUFFER: @1952 $41 $21 $EB $36 $C1 $84 $E6 $1A $AA $AD $ED $A7 $EE $E5 $A7 $92
+'PACKETBUFFER: @1968 $67 $39 $7F $C2 $A0 $40 $3B $4A $B3 $E5 $B3 $CF $EE $AF $19 $EB
+'PACKETBUFFER: @1984 $09 $D1 $E3 $25 $69 $C3 $1B $9C $E5 $1A $3D $0F $4C $03 $EF $11
+'PACKETBUFFER: @2000 $34 $BE $87 $F5 $B8 $46 $CF $3F $81 $F5 $38 $45 $D0 $F0 $06 $CD
+'PACKETBUFFER: @2016 $F0 $67 $F9 $4D $D8 $F8 $62 $FF $BF $A1 $4A $4E $E5 $C0 $C1 $82
+'PACKETBUFFER: @2032 $42 $10 $F1 $1C $4F $C0 $63 $0A $0A $2B $36 $41 $11 $B7 $23 $28
+'PACKETBUFFER: @2048 $98 $11 $58 $B7 $F2 $07 $8C $65 $47 $B0 $96 $7F $A7 $07 $0A $4D
+'PACKETBUFFER: @2064 $ED $A5 $64 $33 $96 $46 $F3 $97 $AC $06 $0A $0D $D6 $07 $6B $B4
+'PACKETBUFFER: @2080 $1E $0A $8C $E5 $96 $71 $81 $90 $F4 $42 $63 $E4 $81 $35 $B6 $A7
+'PACKETBUFFER: @2096 $8F $E6 $4F $08 $14 $1A $DA $C7 $E5 $F0 $F5 $0A $C8 $E9 $83 $30
+'PACKETBUFFER: @2112 $EE $67 $23 $0A $38 $38 $B8 $20 $5C $91 $CB $1B $F6 $07 $61 $7C
+'PACKETBUFFER: @2128 $6C $44 $01 $07 $07 $17 $84 $F5 $60 $58 $07 $8C $65 $27 $F7 $47
+'PACKETBUFFER: @2144 $F0 $C5 $86 $E1 $80 $82 $D1 $09 $06 $CC $62 $C6 $C0 $66 $C1 $E9
+'PACKETBUFFER: @2160 $F8 $7E $EC $47 $08 $96 $6B $B0 $3E $38 $2E $14 $50 $68 $76 $4F
+'PACKETBUFFER: @2176 $36 $33 $F9 $6B $B8 $1E $98 $0D $A3 $04 $43 $AB $C2 $5B $AE $E4
+'PACKETBUFFER: @2192 $4B $40 $43 $0F $FA $F9 $55 $F2 $AA $F0 $96 $7B $83 $B1 $1C $D6
+'PACKETBUFFER: @2208 $A9 $F0 $C9 $96 $6B $92 $FB $B6 $FE $29 $BC $E5 $B2 $51 $80 $42
+'PACKETBUFFER: @2224 $B3 $F5 $FF $67 $0D $D1 $FF $D7 $FC $CD $17 $FD $3E $F9 $4C $E3
+'PACKETBUFFER: @2240 $D2 $97 $CC $24 $89 $40 $E3 $CF $E4 $05 $FD $33 $F1 $46 $BB $B0
+'PACKETBUFFER: @2256 $6E $A4 $23 $E8 $DE $39 $59 $2E $75 $63 $DC $BF $FE $70 $B6 $6E
+'PACKETBUFFER: @2272 $4D $7F $11 $5C $BA $93 $A4 $44 $F4 $40 $3B $AC $8E $57 $FF $98
+'PACKETBUFFER: @2288 $83 $D9 $F0 $33 $3C $0C $DC $A2 $8D $C0 $1D $B6 $04 $FC $00 $04
+
+'{$STAMP BS2}
+
+'Demo.BS2               Create by Jeff Martin             6/14/97 - 6/28/97
+'This BS2-IC program was created for the Parallax Retail Demo Board.
+'The Demo Board include the MAX7219 8-Digit LED Driver App Kit, the DS1620
+'Temperature Sensor App Kit, the 2x16 Serial LCD Backback, a DS1202 Real
+'Time Clock, a 0.1F Super Capacitor (for RTC backup), a 32ohm speaker, a
+'5-volt regulator, 2 7-segment digits, 40 LEDs, three momentary buttons and
+'lots of wire!
+'It takes temperature measurements, presents them on the LED and LCD
+'displays, generates sounds and animation and allows the user to scroll
+'through up to the last 24 temperature readings.
+
+'Unicode Char Test
+'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŉŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿ
+
+'//////////////////////////////////////////////////////////////////////////
+'                            I/O pin constants
+'//////////////////////////////////////////////////////////////////////////
+DTA       CON 0     'Data pin for DS1620 and MAX7219
+CLK     CON 1     'Clock pin for DS1620 and MAX7219
+TmpReset  CON 2     'Reset pin for DS1620
+LEDLoad   CON 3     'Data Load pin for the MAX7219
+RTCReset  CON 4     'Reset pin for the DS1202 RTC
+LCD     CON 5     'Serial output for LCD
+Speaker   CON 6     'Frequency output for speaker
+UpBtn     CON 15      'Browse Up Button
+DownBtn   CON 14      'Browse Down Button
+
+'Unicode Char Test
+'̴̵̶̷̸̡̢̧̨̛̖̗̘̙̜̝̞̟̠̣̤̥̦̩̪̫̬̭̮̯̰̱̲̳̹̺̻̼͇͈͉͍͎̀́̂̃̄̅̆̇̈̉̊̋̌̍̎̏̐̑̒̓̔̽̾̿̀́͂̓̈́͆͊͋͌̕̚ͅ͏͓͔͕͖͙͚͐͑͒͗͛ͣͤͥͦͧͨͩͪͫͬͭͮͯ͘͜͟͢͝͞͠͡ʹ͵ͺͻͼͽ;΄΅Ά·ΈΉΊΌΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώϐϑϒϓϔϕϖϗϘϙϚϛϜϝϞϟϠϡϢϣϤϥϦϧϨϩϪϫϬϭϮϯϰϱϲϳϴϵ϶ϷϸϹϺϻϼϽϾϿ
+
+'//////////////////////////////////////////////////////////////////////////
+'                            Program constants
+'//////////////////////////////////////////////////////////////////////////
+ContConv    CON %00001110   'DS1620 command for cont. temp. conversions
+StartC  CON %11101110   'DS1620 command to start conversion
+RTemp       CON %10101010   'DS1620 command to read current temperature
+Baud        CON $4054     '2x16 Serial LCD baudmode (9600 baud, N,8,1)
+SecReg  CON %10000001   'DS1202 seconds register read command
+MinReg      CON %10000011   'DS1202 minutes register read command
+HrsReg  CON %10000101   'DS1202 hours register read command
+InitMinMax  CON 100     'Init value for min and max temperatures
+Browse      CON   0     'LCD and LED modes...
+PressBtns   CON 1
+Demo        CON   2
+CurrentTemp CON   3
+LEDTempRing CON   0
+LEDAnim1    CON   1
+LEDAnimLast CON   5
+
+'Unicode Char Test
+'؀؁؂؃؋،؍؎؏ؐؑؒؓؔؕ؛؞؟ءآأؤإئابةتثجحخدذرزسشصضطظعغـفقكلمنهوىيًٌٍَُِّْٕٖٜٓٔٗ٘ٙٚٛٝٞ٠١٢٣٤٥٦٧٨٩٪٫٬٭ٮٯٰٱٲٳٴٵٶٷٸٹٺٻټٽپٿڀځڂڃڄڅچڇڈډڊڋڌڍڎڏڐڑڒړڔڕږڗژڙښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿۀہۂۃۄۅۆۇۈۉۊۋیۍێۏېۑےۓ۔ەۖۗۘۙۚۛۜ۝۞ۣ۟۠ۡۢۤۥۦۧۨ۩۪ۭ۫۬ۮۯ۰۱۲۳۴۵۶۷۸۹ۺۻۼ۽۾ۿ
+
+'//////////////////////////////////////////////////////////////////////////
+'              Variables; ()'s indicate life of stored values
+'//////////////////////////////////////////////////////////////////////////
+Index       VAR WORD        'General Purpose Index variable (Temp)
+PhraseIndex   VAR WORD        'Memory location of next phrase (Perm)
+Temp      VAR BYTE        'General Purpose Temporary variable (Temp)
+Number    VAR Temp        '[Overlaps Temp]
+Temperature   VAR Temp        'Current Temp, [Overlaps Temp]
+Char      VAR BYTE        'Char. to print, code for print routine (Perm)
+PrevTemperature   VAR BYTE        'Previous recorded temperature (Perm)
+SoundOffset   VAR WORD        '(Temp)
+RTCData   VAR SoundOffset.LOWBYTE   'DS1620 Data, [Overlaps SoundOffset]
+Hour      VAR SoundOffset.LOWBYTE   'Hour value, [Overlaps SoundOffset]
+CurPos    VAR SoundOffset.HIGHBYTE  'Cursor position on LCD, [Overlaps SoundOffset]
+Scroll    VAR SoundOffset.HIGHBYTE  'For scrolling the LCD, [Overlaps SoundOffset]
+SoundDiff   VAR WORD        '(Temp)
+RTCReg    VAR SoundDiff.LOWBYTE     'DS1620 Register, [Overlaps SoundDiff]
+LEDRing0    VAR WORD        'LED Ring array and start and end
+LEDRing1    VAR WORD              'bit for use in LED animations
+LEDRing2    VAR WORD
+LedRing0FrstBit VAR LedRing0.BIT0
+LedRing0LastBit VAR LedRing0.BIT15
+LedRing1FrstBit VAR LedRing1.BIT0
+LedRing1LastBit VAR LedRing1.BIT15
+LedRing2FrstBit VAR LEDRing2.BIT0
+LedRing2LastBit VAR LedRing2.BIT8
+LEDRingByte   VAR LedRing0.LOWBYTE
+Delay     VAR WORD        '(Perm)
+LCDDelay    VAR Delay.LOWBYTE
+LEDDelay    VAR Delay.HIGHBYTE
+MinMaxTemp    VAR WORD        '(Perm)
+NextMemLoc    VAR BYTE        '(Perm)
+LogIndex    VAR BYTE        'Index into temp. history log (Perm)
+Mode      VAR BYTE        '(Perm)
+LCDMode   VAR Mode.LOWNIB
+LEDMode   VAR Mode.HIGHNIB
+Btn1      VAR BYTE        'Workspace for first button (Perm)
+Btn2      VAR BYTE        'Workspace for second button (Perm)
+LoggedFlag    VAR OUT13       'Prevents duplicate temperature readings (Perm)
+Direction   VAR OUT12         'Direction of LED Anim (Temp)
+SoundPeriod   VAR OUTC        'Sound routine variables (Perm)
+
+'Unicode Char Test
+'ᴀᴁᴂᴃᴄᴅᴆᴇᴈᴉᴊᴋᴌᴍᴎᴏᴐᴑᴒᴓᴔᴕᴖᴗᴘᴙᴚᴛᴜᴝᴞᴟᴠᴡᴢᴣᴤᴥᴦᴧᴨᴩᴪᴫᴬᴭᴮᴯᴰᴱᴲᴳᴴᴵᴶᴷᴸᴹᴺᴻᴼᴽᴾᴿᵀᵁᵂᵃᵄᵅᵆᵇᵈᵉᵊᵋᵌᵍᵎᵏᵐᵑᵒᵓᵔᵕᵖᵗᵘᵙᵚᵛᵜᵝᵞᵟᵠᵡᵢᵣᵤᵥᵦᵧᵨᵩᵪᵫᵬᵭᵮᵯᵰᵱᵲᵳᵴᵵᵶᵷᵸᵹᵺᵻᵼᵽᵾᵿᶀᶁᶂᶃᶄᶅᶆᶇᶈᶉᶊᶋᶌᶍᶎᶏᶐᶑᶒᶓᶔᶕᶖᶗᶘᶙᶚᶛᶜᶝᶞᶟᶠᶡᶢᶣᶤᶥᶦᶧᶨᶩᶪᶫᶬᶭᶮᶯᶰᶱᶲᶳᶴᶵᶶᶷᶸᶹᶺᶻᶼᶽᶾᶿ᷂᷊᷿᷀᷁᷃᷄᷅᷆᷇᷈᷉᷾
+
+'//////////////////////////////////////////////////////////////////////////
+'                   Temperature and LCD Data For Display
+'//////////////////////////////////////////////////////////////////////////
+TempData DATA 0,68,75,69,82,69,85,69,86,72,78,72,72,76,78,77,78,78,83,79,79,79,80,77,85,75,82,75,84,74,88,72,76,71,77,77,89,74,90,75,93,72,80,71,79,0,0,(2)  'Reserve Temperature Log data area
+
+'The following LCD data is in this format:
+'First byte can be a character or a command.  Command can be an LCD cursor
+'location (>= 128) or the ScrollPrint command (=31).
+'
+'If not scroll print (first byte is <> 31) then following bytes are chars or
+'LCD cursor locations (>= 128) except the last 1 or 2 bytes which must be
+'less than 32.  A last byte of 0 means (switch LCD mode).  A last byte of
+'>0 and <32 is the delay in seconds before updating the LCD again.  Up to
+'2 bytes of <32 my be included to indicate a delay and switch modes.
+'
+'If scroll print (first byte is = 31) then following bytes are chars and LCD
+'commands sent directly to LCD except last two or three bytes which must be
+'<32.  First byte of <32 is the scroll command (24=left, 28=right).  Second
+'byte of <32 is the delay in seconds before updating the LCD again.  Last
+'byte of <32 may be 0 to indicate to switch the LCD mode after the delay.
+
+'Only exception to LCD cursor location values is 223 (which is the degree
+'symbol used in displaying temperature).
+
+CalcTemp  DATA 130,"Calculating",194,"Temperature",0
+CurrTemp  DATA "Current Temp is:",200,223,"F",7,0
+PressBtn  DATA 31,254,1,254,144,"Press the up and",254,208,"down buttons to",24,2
+    DATA 31,254,128,"scroll through",254,192,"recorded temps.",28,3,0
+BrowseTmp   DATA "From",136,"To",192,"Low/High",203,"/",206,223,"F",10,0
+AM    DATA 142,"AM",0
+PM    DATA 142,"PM",0
+DemoText  DATA "This application",192,"is controlled by",2
+          DATA "a BASIC Stamp II",192,"microcontroller",2
+          DATA 134,"from",193,"Parallax, Inc.",3
+          DATA "The BASIC Stamp",192,"is programmable",2
+          DATA 129,"in PBASIC using",193,"a standard PC.",2
+          DATA 131,"It has 16",192,"digital I/O pins",2
+          DATA 129,"holds apx. 500",193,"lines of code",2
+          DATA "and executes apx",192,"4000 lines/sec!",3
+          DATA "The PBASIC code",192,"is stored in an",2
+          DATA "EEPROM which can",192,"be rewritten to",2
+          DATA 130,"at least 10",193,"million times!",3
+          DATA 129,"Q: What can it",196,"be used for?",3
+          DATA 129,"A: Almost any",196,"control task",2
+          DATA "such as: remote",194,"data logging,",2
+          DATA 131,"LCD and LED",196,"displays,",2
+          DATA "servo & stepper",193,"motor control,",2
+          DATA "simple infrared",193,"communciation,",2
+          DATA 130,"robotics and",194,"much more!",3,0
+
+'Unicode Char Test
+'ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏἐἑἒἓἔἕἘἙἚἛἜἝἠἡἢἣἤἥἦἧἨἩἪἫἬἭἮἯἰἱἲἳἴἵἶἷἸἹἺἻἼἽἾἿὀὁὂὃὄὅὈὉὊὋὌὍὐὑὒὓὔὕὖὗὙὛὝὟὠὡὢὣὤὥὦὧὨὩὪὫὬὭὮὯὰάὲέὴήὶίὸόὺύὼώᾀᾁᾂᾃᾄᾅᾆᾇᾈᾉᾊᾋᾌᾍᾎᾏᾐᾑᾒᾓᾔᾕᾖᾗᾘᾙᾚᾛᾜᾝᾞᾟᾠᾡᾢᾣᾤᾥᾦᾧᾨᾩᾪᾫᾬᾭᾮᾯᾰᾱᾲᾳᾴᾶᾷᾸᾹᾺΆᾼ᾽ι᾿῀῁ῂῃῄῆῇῈΈῊΉῌ῍῎῏ῐῑῒΐῖῗῘῙῚΊ῝῞῟ῠῡῢΰῤῥῦῧῨῩῪΎῬ῭΅`ῲῳῴῶῷῸΌῺΏῼ´῾
+
+'//////////////////////////////////////////////////////////////////////////
+'                        Initialization Routine
+'//////////////////////////////////////////////////////////////////////////
+'Define the I/O pins states
+DIRL = %0000000001111111  'Set I/O pins 0 - 6 to outputs
+
+Initialize:
+  'Reset the temperature log pointer and update the time of first measurement
+  NextMemLoc = 255
+  GOSUB ReadRTCHrs
+FindLastTemperatureMeasurement:
+  NextMemLoc = NextMemLoc + 2
+  Read NextMemLoc,Temp
+  IF Temp > 0 AND NextMemLoc/2 < RTCData THEN FindLastTemperatureMeasurement
+  WRITE 0,RTCData-(NextMemLoc/2)
+  'Initialize LogIndex and MinMaxTemp values
+  LogIndex = 1
+  MinMaxTemp = InitMinMax
+
+  'Set up MAX7219.  Clear the three 7-segment registers (only two of which
+  'are used), set BCD decoding on those displays, set scan limit to 7
+  'digits, brightness to 10 and turn on the display.
+  'Clear the power-bar leds
+  GOSUB ClearLEDRing
+  FOR Temp = 0 to 7
+    '             Seg0  Seg1  Seg2 Decode,6&7  Brite,10    Scan,6    Switch,1   Test,0
+    LOOKUP Temp,[%1111,%1111,%0000,%01100000, %00001000, %00000110, %00000001,%00000000],Index.LOWBYTE
+    GOSUB ShiftItOut
+  NEXT      'Get next item from table. 
+
+  'Set the DS1620 for continuous temperature conversions
+  HIGH TmpReset
+  SHIFTOUT DTA, CLK, LSBFIRST,[ContConv]
+  LOW TmpReset
+  PAUSE 50    'Pause to allow the DS1620 time to write to EEPROM
+  HIGH TmpReset
+  SHIFTOUT DTA, CLK, LSBFIRST,[StartC]
+  LOW TmpReset
+  PAUSE 800   'Pause to allow the DS1620 time to write to EEPROM
+      'and to allow the 2x16 LCD to reset properly
+
+  'The first time we display the temperature, we will start the display off
+  'at 0 degrees and move up, along with sounds of increasing pitch until we
+  'reach the actual temperature.
+  'Display the "calculating" text on the LCD 
+  PhraseIndex = CalcTemp
+  GOSUB Print
+  SoundDiff = 500 'Set up sound variables
+  SoundPeriod = 1
+  GOSUB ReadTemp
+  PrevTemperature = Temperature-1
+  FOR Temperature = 0 TO PrevTemperature
+    GOSUB DisplayTemp
+    SoundOffset = Temperature*100
+    GOSUB GenerateTempSound
+  NEXT
+
+'Unicode Char Test
+'─│┌┐└┘├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬▀▄█▌▐░▒▓■□▪▫▬▲►▼◄◊○◌●◘◙◦☺☻☼♀♂♠♣♥♦♪♫♯ⱠⱡⱢⱣⱤⱥⱦⱧⱨⱩⱪⱫⱬⱭⱱⱲⱳⱴⱵⱶⱷ
+
+'//////////////////////////////////////////////////////////////////////////
+'                               Main Program
+'//////////////////////////////////////////////////////////////////////////
+
+Main:
+  'If we're in "current temperature" mode and it was just set, or updated, 
+  'don't bother checking the temperature until 1 second later.
+'  IF LCDMode = CurrentTemp AND LCDDelay-RTCData>6 THEN SkipCheckTemperature
+  'Check the temperature
+  GOSUB CheckTemperature
+'SkipCheckTemperature:
+  'Check the state of the buttons
+  GOSUB CheckButtons
+  GOSUB CheckModeState
+GOTO Main
+
+CheckModeState:
+  GOSUB ReadRTCSec
+  'If it's not time to change the mode, skip the mode change
+  IF LCDDelay-RTCData<65496 THEN NoLCDModeChange
+LCDModeChange:
+  IF Char>0 THEN LCDModeChanged  'If char>0, don't change the mode yet
+  LCDMode = LCDMode+1      'Switch to the next mode
+  IF LCDMode < CurrentTemp THEN LCDModeChanged
+  LCDMode = PressBtns 'If reached last mode, reset to first mode
+LCDModeChanged:
+  IF Char>0 THEN PrintIt
+ForceLCDMode:
+  LOOKUP LCDMode,[BrowseTmp,PressBtn,DemoText,CurrTemp],PhraseIndex
+PrintIt:
+  GOSUB Print
+  'Set LCDDelay to delay the amount of the last value read in Char
+  LCDDelay = Char+RTCData//59
+  READ PhraseIndex,Char 'Read next byte in preparation for next iteration
+NoLCDModeChange:
+  GOSUB ReadRTCSec
+  'If it's not time to change the mode, skip the mode change
+  IF LEDDelay-RTCData<65496 THEN NoLEDModeChange
+LEDModeChange:
+  LEDMode = LEDMode + 1
+  IF LEDMode < LEDAnimLast THEN LEDModeChanged
+  LEDMode = LEDAnim1
+LEDModeChanged:
+ForceLEDMode:
+  Direction = LEDMode.BIT0
+  LEDDelay = 9-(LEDMode*2)+RTCData//59
+NoLEDModeChange:
+  IF LEDMode = LEDTempRing THEN EndCheckModeState
+  GOSUB Race
+EndCheckModeState:
+RETURN
+
+'Unicode Char Test
+'ﰈﰉﰎﰒﰱﰲﰿﱀﱁﱂﱃﱄﱎﱏﱘﱙﱞﱟﱠﱡﱢﱪﱭﱮﱯﱰﱳﱴﱵﲎﲏﲑﲔﲜﲝﲞﲟﲠﲡﲢﲣﲤﲥﲦﲨﲪﲬﲰﳉﳊﳋﳌﳍﳎﳏﳐﳑﳒﳓﳔﳕﳖﳘﳚﳛﳜ
+
+'//////////////////////////////////////////////////////////////////////////
+'                               Subroutines
+'//////////////////////////////////////////////////////////////////////////
+
+ClearLEDRing:
+  Index = $0100  'Set LOWBYTE to 0 and NIB2 to 1
+ClearNextGroup:
+  LEDRingByte(Index.NIB2-1)=0
+  GOSUB ShiftItOut
+  IF Index.NIB2 < 6 THEN ClearNextGroup
+RETURN
+
+'--------------------------------------------------------------------------
+
+ShiftItOut:
+  SHIFTOUT DTA,CLK,msbfirst,[Index\16]
+  PULSOUT LEDLoad,1
+  Index.NIB2 = Index.NIB2 + 1
+RETURN
+
+'--------------------------------------------------------------------------
+
+ReadTemp:
+  HIGH TmpReset
+  SHIFTOUT DTA, CLK, LSBFirst, [RTemp]
+  SHIFTIN  DTA, CLK, LSBPRE, [Temperature]
+  LOW TmpReset
+  'Convert the 1/2 degree Celcius readings to Ferienheit 
+  '(multiply by .9 and add 32)
+  Temperature = Temperature */ $00E7 + 32
+RETURN
+
+'--------------------------------------------------------------------------
+ReadRTCHrs:
+  RTCReg = HrsReg
+  GOTO ReadRTC
+ReadRTCMin:
+  RTCReg = MinReg
+  GOTO ReadRTC
+ReadRTCSec:
+  RTCReg = SecReg
+ReadRTC:
+  HIGH RTCReset
+  'Send out Read command, Address, Clock indicator & Start Bit
+  SHIFTOUT Dta, Clk, LSBFIRST, [RTCReg]
+  'Then read in the data
+  SHIFTIN Dta, Clk, LSBPRE, [RTCData]
+  LOW RTCReset
+  'We'll convert the time format from 2-nibble,BCD to 1-byte, 24-hour time
+  RTCData=RTCData.HIGHNIB*10+RTCData.LOWNIB
+RETURN
+
+'--------------------------------------------------------------------------
+
+GenerateTempSound:
+  FOR Index = SoundOffset TO SoundDiff+SoundOffset STEP 200
+    FREQOUT Speaker,SoundPeriod*10,Index,Index+1000
+  NEXT
+RETURN
+
+'--------------------------------------------------------------------------
+
+Print:
+  READ PhraseIndex,Char
+  PhraseIndex = PhraseIndex + 1     
+  IF Char=31 THEN ScrollPrint
+  SEROUT LCD,BAUD,[254,1]
+  GOTO StartPrinting
+PrintText:
+  READ PhraseIndex,Char   'Read one byte
+  PhraseIndex = PhraseIndex + 1     
+StartPrinting:
+  IF Char < 32 THEN EndPrint  'Exit if the last byte
+  IF Char > 127 AND Char <> 223 THEN PrintInst
+  SEROUT LCD,BAUD,[Char]  'Send it to LCD
+  GOTO PrintText    'Loop again
+PrintInst:
+  SEROUT LCD,BAUD,[254,Char]
+  GOTO PrintText  
+EndPrint:
+RETURN
+
+'--------------------------------------------------------------------------
+
+ScrollPrint:
+  READ PhraseIndex,Char       'Read one byte
+  PhraseIndex = PhraseIndex + 1
+  IF Char > 1 AND Char < 32 THEN EndScrollPrint 'Exit if the last byte
+  SEROUT LCD,BAUD,[Char]      'Send it to LCD
+  GOTO ScrollPrint        'Loop again
+EndScrollPrint:
+  FOR Scroll = 0 TO 15
+    SEROUT LCD,BAUD,[254,Char]
+    PAUSE 30
+  NEXT
+  READ PhraseIndex,Char
+  PhraseIndex = PhraseIndex + 1
+RETURN
+
+'--------------------------------------------------------------------------
+
+PrintNum:
+  SEROUT LCD,BAUD,[254,CurPos,DEC2 Number]   'Send value of Temp to the LCD
+RETURN
+
+'--------------------------------------------------------------------------
+
+Race:
+  FOR Scroll = 1 TO 4
+    'Shift out the 5 bytes of data to the LED ring.  For speed reasons, we
+    'will use a line of shiftout commands to accomplish this.
+    SHIFTOUT DTA,CLK,msbfirst,[1,LedRING0]
+    PULSOUT LEDLoad,1
+    SHIFTOUT DTA,CLK,msbfirst,[2,LedRING0.HIGHBYTE]
+    PULSOUT LEDLoad,1
+    SHIFTOUT DTA,CLK,msbfirst,[3,LedRING1]
+    PULSOUT LEDLoad,1
+    SHIFTOUT DTA,CLK,msbfirst,[4,LedRING1.HIGHBYTE]
+    PULSOUT LEDLoad,1
+    SHIFTOUT DTA,CLK,msbfirst,[5,LedRING2]
+    PULSOUT LEDLoad,1
+    IF Direction = 0 THEN BounceCW
+  BounceCCW:
+    'Shift all bits counter-clockwise
+    LedRing2LastBit = LedRing0FrstBit
+    LedRing0 = LedRing0 >> 1
+    LedRing0LastBit = LedRing1FrstBit
+    LedRing1 = LedRing1 >> 1
+    LedRing1LastBit = LedRing2FrstBit
+    LedRing2 = LedRing2 >> 1
+    GOTO ContinueBounce
+  BounceCW:
+    'Shift all bits clockwise
+    LedRing2 = LedRing2 << 1
+    LedRing2FrstBit = LedRing1LastBit
+    LedRing1 = LedRing1 << 1
+    LedRing1FrstBit = LedRing0LastBit
+    LedRing0 = LedRing0 << 1
+    LedRing0FrstBit = LedRing2LastBit
+  ContinueBounce:
+  NEXT
+RETURN
+
+'--------------------------------------------------------------------------
+
+DisplayTemp:
+  'If temperature falls within the LED Ring array, then update it
+  IF Temperature < 51 OR Temperature > 90 THEN DisplayDigits
+  Index.NIB2 = Temperature-3/8-5 MAX 5 'Set index to proper group of 8 leds
+  LEDRingByte(Index.NIB2-1) = DCD (Temperature-50-(8*(Index.Nib2-1)))-1
+  Index.LOWBYTE = LEDRingByte(Index.NIB2-1) 'Shift them out
+  GOSUB ShiftItOut
+DisplayDigits:
+  'Display the temperature digits
+  Index = Temperature DIG 0 + %11000000000 'Display on ones place digit
+  GOSUB ShiftItOut
+  Index.LOWBYTE = Temperature DIG 1    'Display on tenths place digit
+  GOSUB ShiftItOut
+RETURN
+
+'Unicode Char Test
+'︠︡︢︣ﺀﺁﺂﺃﺄﺅﺆﺇﺈﺉﺊﺋﺌﺍﺎﺏﺐﺑﺒﺓﺔﺕﺖﺗﺘﺙﺚﺛﺜﺝﺞﺟﺠﺡﺢﺣﺤﺥﺦﺧﺨﺩﺪﺫﺬﺭﺮﺯﺰﺱﺲﺳﺴﺵﺶﺷﺸﺹﺺﺻﺼﺽﺾﺿﻀﻁﻂﻃﻄﻅﻆﻇﻈﻉﻊﻋﻌﻍﻎﻏﻐﻑﻒﻓﻔﻕﻖﻗﻘﻙﻚﻛﻜﻝﻞﻟﻠﻡﻢﻣﻤﻥﻦﻧﻨﻩﻪﻫﻬﻭﻮﻯﻰﻱﻲﻳﻴﻵﻶﻷﻸﻹﻺﻻﻼ﻿
+
+'--------------------------------------------------------------------------
+
+CheckTemperature:
+  'Read Current Temp
+  GOSUB ReadTemp
+  'If no temperature change has occured, don't bother with the updating 
+  'the LED display or generating sounds
+  IF Temperature = PrevTemperature THEN EndCheckTemperature
+  SoundPeriod = 0
+  'IF Temperature has changed more than once/second turn off sound effects 
+  IF LCDDelay-RTCData>5 AND LCDDelay-RTCData<8 THEN NoSoundEffects
+  SoundPeriod = 6
+NoSoundEffects:
+  GOSUB ClearLEDRing
+  Mode = CurrentTemp 'This sets LCDMode to CurrentTemp and LEDMode to
+                     'LEDTempRing since LEDTempRing = 0
+  GOSUB ReadRTCSec
+  GOSUB ForceLEDMode
+  GOSUB ForceLCDMode
+  'Display Farenheit on LCD
+  CurPos = 198
+  'Note: Number equals Temperature since they share the same memory space
+  GOSUB PrintNum
+FillLowerGroups:   'Light up all lower groups leading up to current temp
+  Index = 255
+FillMore:
+  GOSUB ShiftItOut
+  IF Index.NIB2 < Temperature-3/8-5 THEN FillMore
+  'Display Farenheit on LED
+  GOSUB DisplayTemp
+  'Generate TempChange sound
+  SoundDiff = Temperature-PrevTemperature*1000
+  SoundOffset = PrevTemperature-Temperature*500+(Temperature-65*200+500)
+  GOSUB GenerateTempSound
+  PrevTemperature = Temperature
+  'Update Min and Max Temps
+  MinMaxTemp.LOWBYTE = Temperature MAX MinMaxTemp.LOWBYTE
+  MinMaxTemp.HIGHBYTE = Temperature MIN MinMaxTemp.HIGHBYTE
+EndCheckTemperature:
+  'Check Minute value to determine if data should be logged
+  GOSUB ReadRTCMin
+  IF RTCData > 0 THEN NoLogNeeded
+  IF LoggedFlag = 1 THEN AlreadyLogged
+  'Get Hour value
+  GOSUB ReadRTCHrs
+  'If it isn't midnight, log current day
+  IF RTCData > 0 THEN LogCurrentDay
+LogNewDay:
+  'Clear the Temperature Log EEPROM and record the current hour
+  FOR Index = 1 TO 47 STEP 2 'First reading is actually stored at location 1
+    WRITE Index,0      'but we won't clear that since we'll be writing
+  NEXT           'to it soon after this routine is called
+  'We'll convert the time format from 2-nibble,BCD to 1-byte, 24-hour time
+  WRITE 0,RTCData
+  NextMemLoc = 1  'Reset memory pointer to first logging location
+LogCurrentDay:
+  WRITE NextMemLoc,MinMaxTemp.LOWBYTE
+  WRITE NextMemLoc+1,MinMaxTemp.HIGHBYTE
+  NextMemLoc = NextMemLoc + 2
+  'Initialize Min and Max Temps with current temp
+  MinMaxTemp = PrevTemperature*256+PrevTemperature
+  IF NextMemLoc < 49 THEN AlreadyLogged
+  NextMemLoc = 1
+AlreadyLogged:
+  LoggedFlag = 1    'Set "Logged" flag to avoid duplicate logs
+RETURN
+NoLogNeeded:
+  LoggedFlag = 0    'Set "Logged" flag to avoid duplicate logs
+RETURN
+
+'--------------------------------------------------------------------------
+
+CheckButtons:
+  BUTTON UpBtn,1,15,1,Btn1,1,ButtonPressed
+  BUTTON DownBtn,1,15,1,Btn2,0,NoButtonsPressed
+ButtonPressed:
+  LogIndex = LogIndex+2 MAX NextMemLoc*IN14+((LogIndex MIN 3-2)*IN15)
+  FREQOUT Speaker,20,100*IN14+900
+  'Set to browse mode and display browse screen on LCD
+  LCDMode = Browse
+  GOSUB ReadRTCSec
+  GOSUB ForceLCDMode
+  'Determine the hour in which the following data was taken
+  Read 0,Hour
+  Hour = LogIndex-1/2 + Hour
+  'Print AM/PM designation and time on LCD
+  PhraseIndex = Hour+1//24/12*4+AM
+  GOSUB PrintText
+  'Print the timeframe on the LCD
+  CurPos = 133
+  FOR Index = Hour To Hour+1
+    Number = Index//12  'Convert to 12-hour time
+    LOOKUP Number,[12],Number
+    GOSUB PrintNum
+    CurPos = CurPos + 6
+  NEXT
+  'Read low and high temperatures and display them on LCD
+  IF LogIndex <> NextMemLoc THEN ReadLow
+  Number = MinMaxTemp.LOWBYTE
+  GOTO PrintLow
+ReadLow:
+  Read LogIndex, Number
+PrintLow:
+  CurPos = 201
+  GOSUB PrintNum
+  IF LogIndex <> NextMemLoc THEN ReadHigh
+  Number = MinMaxTemp.HIGHBYTE
+  GOTO PrintHigh
+ReadHigh:
+  Read LogIndex+1, Number
+PrintHigh:
+  CurPos = 204
+  GOSUB PrintNum
+NoButtonsPressed:
+RETURN

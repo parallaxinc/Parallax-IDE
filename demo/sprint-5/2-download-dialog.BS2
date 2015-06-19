@@ -1,0 +1,40 @@
+'UI changes address issues:
+
+'#119
+'  'Reload Devices' -> 'Refresh'
+'  'Name' -> 'Device'
+'  'Path' -> 'Port'
+
+'#116
+'  'cu' ports are filtered
+'  phantom bluetooth ports are filtered
+'  legitimate bluetooth ports remain
+
+'#117
+'  version column added
+'  device version populates
+
+'#118
+'  When download dialog opens ports are automatically scanned.
+
+'#114
+'  application properly closes serial port on close
+
+'  DEMONSTRATE:
+'    Download a test program
+'    close the main window
+'    and relaunch it
+
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+
+counter VAR Byte       'sets variable "counter
+FOR counter = 1 to 1000
+  HIGH 1               'make pin 1 logic level high (5 V)
+  PAUSE 100            'keep it on for 100 msec
+  LOW 1                'turn it off
+  PAUSE 150            'keep it off for 150 msec
+  DEBUG "The is counter value is: ", DEC counter, CR
+NEXT                   'redirects to beginning four more times
+END                    'end program
