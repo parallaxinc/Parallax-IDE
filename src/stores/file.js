@@ -163,6 +163,10 @@ class FileStore {
   }
 
   onLoadFile(filename){
+    if(!filename){
+      return;
+    }
+
     const { workspace, userConfig } = this.getInstance();
     const { isNewFile } = this.state;
 
