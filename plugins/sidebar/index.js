@@ -110,7 +110,11 @@ function sidebar(app, opts, done){
   const lastFile = userConfig.get('last-file');
   console.log(lastFile);
   space.changeDir(cwd, () => {
-    loadFile(lastFile);
+    if(lastFile){
+      loadFile(lastFile);
+    } else {
+      newFile();
+    }
     done();
   });
 
