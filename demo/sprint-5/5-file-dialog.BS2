@@ -1,11 +1,10 @@
 'This file is used to demonstrate the New File, Saving and Save As features
 
 '#106
-'  New files have auto-incrementing names prefixed with 'untitled'
-
-'#145
 '  Sets focus on the filename field in SAVE AS dialog
 
+'#107
+'  New files have auto-incrementing names prefixed with 'untitled'
 
 'DEMONSTRATE
 '  NEW FILE
