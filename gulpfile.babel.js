@@ -31,7 +31,7 @@ function js(cb){
 
 function release(){
   return gulp.src(files.release, { base: __dirname })
-    .pipe(zip('chromeide.zip'))
+    .pipe(zip('parallax-ide.zip'))
     .pipe(gulp.dest('dist'));
 }
 

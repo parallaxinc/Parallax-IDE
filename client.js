@@ -29,7 +29,7 @@ var plugins = [
   {
     register: require('./plugins/appbar'),
     options: {
-      title: 'Parallax Chrome IDE'
+      title: 'Parallax IDE'
     }
   },
   {

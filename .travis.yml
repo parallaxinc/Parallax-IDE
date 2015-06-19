@@ -15,7 +15,7 @@ before_deploy: npm run release
 deploy:
   provider: releases
   api_key: $GH_TOKEN
-  file: "dist/chromeide.zip"
+  file: "dist/parallax-ide.zip"
   skip_cleanup: true
   on:
     tags: true

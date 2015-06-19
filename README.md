@@ -3,13 +3,13 @@ Parallax microcontroller development environment based on Chrome applications.
 
 ## Quickstart
 
-1. Visit our [github releases](https://github.com/parallaxinc/ParallaxIDE/releases) and download the desired release or download the latest release [here](https://github.com/parallaxinc/ParallaxIDE/releases/latest).
+1. Visit our [github releases](https://github.com/parallaxinc/Parallax-IDE/releases) and download the desired release or download the latest release [here](https://github.com/parallaxinc/Parallax-IDE/releases/latest).
 
 1. Go to your downloads folder and unzip the archive.
 
   _*Note:* for use on Chromebook you will need to unzip the archive and copy the unzipped directory onto the Chromebook._
 
-1. Open Chrome and follow the [Installing in Chrome](https://github.com/parallaxinc/ParallaxIDE#user-content-installing-in-chrome) instructions.
+1. Open Chrome and follow the [Installing in Chrome](https://github.com/parallaxinc/Parallax-IDE#user-content-installing-in-chrome) instructions.
 
 ## Building from Source/Developing
 
@@ -25,13 +25,13 @@ Most of below is a one-time procedure needed to build the application, unless ot
 
 1. Clone this respository.  Assuming you have `git` installed (if not, [go here](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git)), choose your file destination from the command-line (CLI like Terminal), and
 
-  ` git clone git@github.com:parallaxinc/ParallaxIDE `
+  ` git clone git@github.com:parallaxinc/Parallax-IDE `
 
   ![clone repo](readme-images/clone-ParallaxIDE.png)
 
 1. Go to the project root directory with
 
-  ` cd  ParallaxIDE/ `
+  ` cd Parallax-IDE/ `
 
 1. Get all the project dependencies.  At the root of the project you will find `package.json`.  This manifest file includes a list of project dependencies needed to build the application. To learn more, [see this post on dependency installation](https://github.com/iceddev/getting-started/blob/master/environments/nodejs-and-npm.md#user-content-dependency-installation). __This step must be run each time you update the repository (including pulling updates from GitHub).__
 
@@ -58,16 +58,16 @@ Most of below is a one-time procedure needed to build the application, unless ot
 
 1. Before you install your extension must be built and bundled.  If you haven't done so follow the instructions in the [Build from Source](#user-content-build-from-source) section first.
 
-1. Click on __'Load unpacked extensions...'__, go to the directory where ParallaxIDE was built, highlight the *'ParallaxIDE'* folder and and click select.
+1. Click on __'Load unpacked extensions...'__, go to the directory where Parallax IDE was built, highlight the *'Parallax-IDE'* folder and and click select.
 
 	![load extension](readme-images/load-unpacked-extensions.png)
 	![select folder](readme-images/select-extension-folder.png)
 
-1. Return to the ` chrome://extensions ` page and you should see __'Parallax Chrome IDE'__ listed in available extensions.
+1. Return to the ` chrome://extensions ` page and you should see __'Parallax IDE'__ listed in available extensions.
 
-	![ParallaxIDE listed](readme-images/ParallaxIDE-listed.png)
+	![Parallax IDE listed](readme-images/ParallaxIDE-listed.png)
 1. Ensure the checkbox is *'enabled'* and click __'launch'__.
-1. __Congratulations!__ You just launched ParallaxIDE which will look something like this:
+1. __Congratulations!__ You just launched Parallax IDE which will look something like this:
 
 	![app launched](readme-images/ParallaxIDE-launched.png)
 
@@ -84,5 +84,5 @@ or
 
   ![chrome app launcher](readme-images/chrome-app-launcher.png)
 
-  ![click ParallaxIDE](readme-images/search-chrome-app-launcher.png)
+  ![click Parallax IDE](readme-images/search-chrome-app-launcher.png)
 
