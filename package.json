@@ -1,5 +1,5 @@
 {
-  "name": "parallax-chrome-ide",
+  "name": "parallax-ide",
   "version": "0.3.0",
   "description": "Parallax microcontroller development environment based on Chrome applications.",
   "main": "index.js",
@@ -61,11 +61,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/parallaxinc/ChromeIDE"
+    "url": "https://github.com/parallaxinc/Parallax-IDE"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/parallaxinc/ChromeIDE/issues"
+    "url": "https://github.com/parallaxinc/Parallax-IDE/issues"
   },
-  "homepage": "https://github.com/parallaxinc/ChromeIDE"
+  "homepage": "https://github.com/parallaxinc/Parallax-IDE"
 }
