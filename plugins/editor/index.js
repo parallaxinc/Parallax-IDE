@@ -65,7 +65,8 @@ function editor(app, opts, done){
       codeEditor.setOption('extraKeys', {
         'Ctrl-Up': false,
         'Ctrl-Down': false,
-        Tab: false
+        'Tab': false,
+        'Shift-Tab': false
       });
       keyExtension.setup(app);
       editorStore.cm = codeEditor;

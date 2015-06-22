@@ -5,7 +5,7 @@ const alt = require('../alt');
 const { findNext, findPrevious } = require('../actions/find');
 const { handleInput } = require('../actions/editor');
 const { moveByScrollUpLine, moveByScrollDownLine } = require('../actions/editor-move');
-const { indent } = require('../actions/text-move');
+const { dedent, indent } = require('../actions/text-move');
 const { print } = require('../actions/system');
 
 class EditorStore {
@@ -17,6 +17,7 @@ class EditorStore {
       onHandleInput: handleInput,
       onMoveByScrollUpLine: moveByScrollUpLine,
       onMoveByScrollDownLine: moveByScrollDownLine,
+      onDedent: dedent,
       onIndent: indent,
       onPrint: print
     });
@@ -53,7 +54,12 @@ class EditorStore {
   onIndent() {
     const { cm } = this.getInstance();
 
-    cm.execCommand('insertSoftTab');
+    cm.execCommand('indentMore');
+  }
+  onDedent() {
+    const { cm } = this.getInstance();
+
+    cm.execCommand('indentLess');
   }
   onPrint() {
     window.print();
