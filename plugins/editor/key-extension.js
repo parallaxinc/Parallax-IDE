@@ -4,7 +4,7 @@ var { findNext, findPrevious } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
-var { hideOverlay, newFile, processSave } = require('../../src/actions/file');
+var { hideOverlay, newFile, processSave, processSaveAs } = require('../../src/actions/file');
 
 const keyExtension = {
   setup: function(app) {
@@ -66,6 +66,13 @@ const keyExtension = {
           processSave();
         }
       },
+      saveAs: {
+        code: 'CTRL_SHIFT_S',
+        exec: (evt) => {
+          evt.preventDefault();
+          processSaveAs();
+        }
+      },
       hideOverlay: {
         code: 'ESC',
         exec: (evt) => {
@@ -77,14 +84,21 @@ const keyExtension = {
 
     const customPredicates = {
       CTRL_N: function({ ctrlKey, metaKey, keyCode }){
-          return ((ctrlKey === true || metaKey === true) && keyCode === 78);
-        }
+        return ((ctrlKey === true || metaKey === true) && keyCode === 78);
+      },
+      CTRL_SHIFT_S: function({ ctrlKey, metaKey, keyCode, shiftKey }){
+        return ((ctrlKey === true || metaKey === true) && shiftKey === true && keyCode === 83);
+      },
+      CTRL_S: function({ ctrlKey, metaKey, keyCode, shiftKey }){
+        return ((ctrlKey === true || metaKey === true) && shiftKey === false && keyCode === 83);
+      }
+
     };
 
     function setCodeMirrorCommands() {
       for (let cmd in cmCommands) {
         const code = cmCommands[cmd].code;
-        const predicate = app.keypress[code] || customPredicates[code];
+        const predicate = customPredicates[code] || app.keypress[code];
         cmCommands[cmd].removeCode = app.keypress(predicate, cmCommands[cmd].exec);
       }
     }

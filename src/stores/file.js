@@ -5,8 +5,9 @@ const _ = require('lodash');
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
-const { clearName, deleteFile, hideOverlay, newFile, processCreate,
-  processNoCreate, processSave, updateName, loadFile } = require('../actions/file');
+const { clearName, deleteFile, hideOverlay, loadFile, newFile,
+  processCreate, processNoCreate, processSave, processSaveAs,
+  updateName } = require('../actions/file');
 
 class FileStore {
   constructor() {
@@ -17,9 +18,10 @@ class FileStore {
       onHideOverlay: hideOverlay,
       onNewFile: newFile,
       onLoadFile: loadFile,
-      onProcessNoCreate: processNoCreate,
       onProcessCreate: processCreate,
+      onProcessNoCreate: processNoCreate,
       onProcessSave: processSave,
+      onProcessSaveAs: processSaveAs,
       onUpdateName: updateName
     });
 
@@ -116,6 +118,10 @@ class FileStore {
       this.setState({ showSaveOverlay: false });
       this._save();
     }
+  }
+
+  onProcessSaveAs() {
+    this.setState({ showSaveOverlay: true });
   }
 
   _save() {
