@@ -175,7 +175,6 @@ class FileStore {
   }
 
   _selectBuffer(editor, name) {
-    console.log('BUFFERS: ', this.buffers);
     const buf = this.buffers[name];
     if(editor) {
       editor.swapDoc(buf);
@@ -200,7 +199,6 @@ class FileStore {
     }
 
     this._docSwap(filename);
-
 
     const { workspace, userConfig } = this.getInstance();
     const { isNewFile } = this.state;

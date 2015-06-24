@@ -76,7 +76,8 @@ function editor(app, opts, done){
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
         var current = space.current.deref();
-        if(current !== codeEditor.getValue()){
+        console.log('SWAP: ', current);
+        if(current !== codeEditor.getValue() && !delayUpdate){
           codeEditor.setValue(current);
           codeEditor.setCursor(editorCursor);
         }
