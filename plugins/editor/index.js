@@ -84,6 +84,8 @@ function editor(app, opts, done){
     }
 
 
+    console.log(codeEditor.getDoc());
+
     if(!outputConsole){
       outputConsole = document.createElement('pre');
       outputConsole.style.height = '200px';
