@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
+var CodeMirror = require('codemirror');
 
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
@@ -31,6 +32,7 @@ class FileStore {
       showSaveOverlay: false
     };
 
+    this.buffers = {};
     this.loadQueue = [];
   }
 
@@ -168,15 +170,40 @@ class FileStore {
     this.loadQueue.push(filename);
   }
 
+  _openBuffer(name, text, mode) {
+    this.buffers[name] = CodeMirror.Doc(text, mode);
+  }
+
+  _selectBuffer(editor, name) {
+    console.log('BUFFERS: ', this.buffers);
+    const buf = this.buffers[name];
+    if(editor) {
+      editor.swapDoc(buf);
+    }
+  }
+
+  _docSwap(filename) {
+
+    const { cm } = this.getInstance();
+    const mode = 'pbasic';
+
+    if(!this.buffers.hasOwnProperty(filename)) {
+      this._openBuffer(filename, '', mode);
+    }
+
+    this._selectBuffer(cm, filename);
+  }
+
   onLoadFile(filename){
     if(!filename){
       return;
     }
 
+    this._docSwap(filename);
+
+
     const { workspace, userConfig } = this.getInstance();
     const { isNewFile } = this.state;
-
-    const content = workspace.current.deref();
 
     if(isNewFile && content.length){
       this._queueLoad(filename);

@@ -15,6 +15,7 @@ require('./pbasic')(CodeMirror);
 var keyExtension = require('./key-extension');
 const consoleStore = require('../../src/stores/console');
 var editorStore = require('../../src/stores/editor');
+var fileStore = require('../../src/stores/file');
 var { handleInput } = require('../../src/actions/editor');
 
 const React = require('react');
@@ -70,7 +71,7 @@ function editor(app, opts, done){
       });
       keyExtension.setup(app);
       editorStore.cm = codeEditor;
-
+      fileStore.cm = codeEditor;
 
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
@@ -81,6 +82,7 @@ function editor(app, opts, done){
         }
       });
     }
+
 
     if(!outputConsole){
       outputConsole = document.createElement('pre');
