@@ -15,7 +15,19 @@ class FileActions {
     this.dispatch();
   }
 
+  handleError(err) {
+    this.dispatch(err);
+  }
+
+  handleSuccess(err) {
+    this.dispatch(err);
+  }
+
   newFile() {
+    this.dispatch();
+  }
+
+  noDelete() {
     this.dispatch();
   }
 
@@ -36,6 +48,10 @@ class FileActions {
   }
 
   processSaveAs() {
+    this.dispatch();
+  }
+
+  showDelete() {
     this.dispatch();
   }
 

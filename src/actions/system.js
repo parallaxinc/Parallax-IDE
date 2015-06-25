@@ -8,6 +8,10 @@ class SystemActions {
     this.dispatch();
   }
 
+  identify() {
+    this.dispatch();
+  }
+
 }
 
 module.exports = alt.createActions(SystemActions);

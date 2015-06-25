@@ -11,6 +11,14 @@ class DeviceActions {
     this.dispatch();
   }
 
+  noDownload() {
+    this.dispatch();
+  }
+
+  showDownload() {
+    this.dispatch();
+  }
+
   updateSelected(device) {
     this.dispatch(device);
   }

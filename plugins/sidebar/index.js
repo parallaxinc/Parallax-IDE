@@ -10,13 +10,16 @@ const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
 const NewFileOverlay = require('./overlays/new-file');
+const DownloadOverlay = require('./overlays/download');
+const DeleteConfirmOverlay = require('./overlays/delete-confirm');
 
 const deviceStore = require('../../src/stores/device');
 const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
 
-const { processCreate, processNoCreate, processSave, newFile, loadFile } = require('../../src/actions/file');
-function noop(){}
+const { handleError, handleSuccess, deleteFile, loadFile, newFile, noDelete,
+  processCreate, processNoCreate, processSave, showDelete } = require('../../src/actions/file');
+const { noDownload, showDownload } = require('../../src/actions/device.js');
 
 function sidebar(app, opts, done){
 
@@ -52,7 +55,8 @@ function sidebar(app, opts, done){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} loadFile={loadFile} />
+        <FileOperations irken={irken} loadFile={loadFile} newFile={newFile} overlay={overlay} processSave={processSave}
+                    showDelete={showDelete} showDownload={showDownload} toast={toast} workspace={space} />
       </Sidebar>
     );
 
@@ -62,9 +66,21 @@ function sidebar(app, opts, done){
   // Internal Helpers
 
   function _onChangeFileStore() {
-    const { showSaveOverlay } = fileStore.getState();
+    const { showDeleteOverlay, showSaveOverlay } = fileStore.getState();
     if (showSaveOverlay) {
-      _showCreateOverlay();
+      _showSaveOverlay();
+    }
+    else if (showDeleteOverlay) {
+      _showDeleteOverlay();
+    }
+    else {
+      overlay.hide();
+    }
+  }
+  function _onChangeDeviceStore() {
+    const { showDownloadOverlay } = deviceStore.getState();
+    if (showDownloadOverlay) {
+      _showDownloadOverlay();
     } else {
       overlay.hide();
     }
@@ -78,11 +94,39 @@ function sidebar(app, opts, done){
     overlay.render(renderer, { backdrop: true });
   }
 
-  function _showCreateOverlay(){
+  function _showSaveOverlay(){
     const component = (
       <NewFileOverlay
         onAccept={processCreate}
         onCancel={processNoCreate} />
+    );
+
+    _renderOverlay(component);
+  }
+
+  function _showDownloadOverlay(){
+    const component = (
+      <DownloadOverlay
+        onCancel={noDownload}
+        irken={irken}
+        handleSuccess={handleSuccess}
+        handleError={handleError} />
+    );
+
+    _renderOverlay(component);
+  }
+
+  function _showDeleteOverlay(){
+    const name = space.filename.deref();
+    if(!name){
+      return;
+    }
+
+    const component = (
+      <DeleteConfirmOverlay
+        name={name}
+        onAccept={deleteFile}
+        onCancel={noDelete} />
     );
 
     _renderOverlay(component);
@@ -104,6 +148,7 @@ function sidebar(app, opts, done){
 
   // Set up listeners
   fileStore.listen(_onChangeFileStore);
+  deviceStore.listen(_onChangeDeviceStore);
 
   done();
 }

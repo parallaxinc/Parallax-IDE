@@ -1,10 +1,11 @@
 'use strict';
 
-var { findNext, findPrevious } = require('../../src/actions/find');
+var { findNext, findPrevious, replace } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { dedent, indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
 var { hideOverlay, newFile, processSave, processSaveAs } = require('../../src/actions/file');
+var { showDownload } = require('../../src/actions/device');
 
 const keyExtension = {
   setup: function(app) {
@@ -24,6 +25,20 @@ const keyExtension = {
           findPrevious();
         }
       },
+      identify1: {
+        code: 'F6',
+        exec: (evt) => {
+          evt.preventDefault();
+          showDownload();
+        }
+      },
+      identify2: {
+        code: 'CTRL_I',
+        exec: (evt) => {
+          evt.preventDefault();
+          showDownload();
+        }
+      },
       moveByScrollUpLine: {
         code: 'CTRL_UP',
         exec: (evt) => {
@@ -36,6 +51,13 @@ const keyExtension = {
         exec: (evt) => {
           evt.preventDefault();
           moveByScrollDownLine();
+        }
+      },
+      replace: {
+        code: 'CTRL_F4',
+        exec: (evt) => {
+          evt.preventDefault();
+          replace();
         }
       },
       tab: {

@@ -7,8 +7,8 @@ const _ = require('lodash');
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
-const { clearName, deleteFile, hideOverlay, loadFile, newFile,
-  processCreate, processNoCreate, processSave, processSaveAs,
+const { clearName, deleteFile, hideOverlay, handleError, handleSuccess, loadFile,
+  noDelete, newFile, processCreate, processNoCreate, processSave, processSaveAs, showDelete,
   updateName } = require('../actions/file');
 
 class FileStore {
@@ -17,20 +17,25 @@ class FileStore {
     this.bindListeners({
       onClearName: clearName,
       onDeleteFile: deleteFile,
+      onHandleError: handleError,
+      onHandleSuccess: handleSuccess,
       onHideOverlay: hideOverlay,
+      onNoDelete: noDelete,
       onNewFile: newFile,
       onLoadFile: loadFile,
       onProcessCreate: processCreate,
       onProcessNoCreate: processNoCreate,
       onProcessSave: processSave,
       onProcessSaveAs: processSaveAs,
+      onShowDelete: showDelete,
       onUpdateName: updateName
     });
 
     this.state = {
       fileName: '',
       isNewFile: false,
-      showSaveOverlay: false
+      showSaveOverlay: false,
+      showDeleteOverlay: false
     };
 
     this.loadQueue = [];
@@ -57,10 +62,11 @@ class FileStore {
     }
 
     workspace.deleteFile(workspace.filename)
-      .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
-      .catch(this._handleError)
+      .tap(() => this.onHandleSuccess(`'${name}' deleted successfully`))
+      .catch(this.onHandleError)
       .finally(() => {
         this.setState({ showSaveOverlay: false });
+        this.setState({ showDeleteOverlay: false });
         this.onNewFile();
       });
 
@@ -74,6 +80,7 @@ class FileStore {
 
   onHideOverlay() {
     this.setState({ showSaveOverlay: false });
+    this.setState({ showDeleteOverlay: false });
     this.onClearName();
   }
 
@@ -93,8 +100,8 @@ class FileStore {
           this.onLoadFile(this.loadQueue.shift());
         }
       })
-      .tap(() => this._handleSuccess(`'${name}' created successfully`))
-      .catch(this._handleError)
+      .tap(() => this.onHandleSuccess(`'${name}' created successfully`))
+      .catch(this.onHandleError)
       .finally(() => this.setState({ showSaveOverlay: false }));
 
     this.onHideSave();
@@ -133,8 +140,8 @@ class FileStore {
 
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(name, workspace.current)
-      .tap(() => this._handleSuccess(`'${name}' saved successfully`))
-      .catch(this._handleError);
+      .tap(() => this.onHandleSuccess(`'${name}' saved successfully`))
+      .catch(this.onHandleError);
   }
 
   onNewFile() {
@@ -201,7 +208,7 @@ class FileStore {
 
     workspace.loadFile(filename, (err) => {
       if(err){
-        this._handleError(err);
+        this.onHandleError(err);
         return;
       }
 
@@ -217,7 +224,11 @@ class FileStore {
     });
   }
 
-  _handleError(err){
+  onNoDelete() {
+    this.setState({ showDeleteOverlay: false });
+  }
+
+  onHandleError(err){
     // leaving this in for better debugging of errors
     console.log(err);
     const { toast } = this.getInstance();
@@ -225,10 +236,14 @@ class FileStore {
     toast.show(err.message, { style: styles.errorToast });
   }
 
-  _handleSuccess(msg){
+  onHandleSuccess(msg){
     const { toast } = this.getInstance();
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
+  }
+
+  onShowDelete() {
+    this.setState({ showDeleteOverlay: true });
   }
 
 

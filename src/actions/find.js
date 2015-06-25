@@ -7,7 +7,12 @@ class FindActions {
   findNext() {
     this.dispatch();
   }
+
   findPrevious() {
+    this.dispatch();
+  }
+
+  replace() {
     this.dispatch();
   }
 

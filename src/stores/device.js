@@ -2,7 +2,8 @@
 
 const alt = require('../alt');
 
-const { download, reloadDevices, updateSelected } = require('../actions/device');
+const { hideOverlay } = require('../actions/file');
+const { download, noDownload, reloadDevices, showDownload, updateSelected } = require('../actions/device');
 const { clearOutput, output } = require('../actions/console');
 const { rx, tx } = require('../actions/transmission');
 
@@ -11,8 +12,11 @@ class DeviceStore {
 
     this.bindListeners({
       onDownload: download,
+      onHideOverlay: hideOverlay,
+      onNoDownload: noDownload,
       onReloadDevices: reloadDevices,
-      onUpdateSelected: updateSelected
+      onUpdateSelected: updateSelected,
+      onShowDownload: showDownload
     });
 
     this.state = {
@@ -20,7 +24,8 @@ class DeviceStore {
       devicePath: null,
       searching: true,
       selectedDevice: null,
-      progress: 0
+      progress: 0,
+      showDownloadOverlay: false
     };
 
   }
@@ -66,6 +71,14 @@ class DeviceStore {
 
   }
 
+  onHideOverlay() {
+    this.onNoDownload();
+  }
+
+  onNoDownload() {
+    this.setState({ showDownloadOverlay: false });
+  }
+
   onReloadDevices(){
 
     const { scanBoards } = this.getInstance();
@@ -80,6 +93,11 @@ class DeviceStore {
     this.setState({ devicePath: null, searching: true });
     scanBoards(scanOpts)
       .then((devices) => this.setState({ devices: devices, searching: false }));
+  }
+
+  onShowDownload() {
+    this.onReloadDevices();
+    this.setState({ showDownloadOverlay: true });
   }
 
   onUpdateSelected(device) {
