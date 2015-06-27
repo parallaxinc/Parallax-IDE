@@ -1,7 +1,6 @@
 'use strict';
 
 var { findNext, findPrevious } = require('../../src/actions/find');
-var { undo } = require('../../src/actions/editor');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 var { dedent, indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
@@ -88,13 +87,6 @@ const keyExtension = {
           hideOverlay();
         }
       }
-      //undo: {
-        //code: 'CTRL_Z',
-        //exec: (evt) => {
-          //evt.preventDefault();
-          //undo();
-        //}
-      //}
     };
 
     const customPredicates = {

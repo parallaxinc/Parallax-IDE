@@ -3,7 +3,7 @@
 const alt = require('../alt');
 
 const { findNext, findPrevious } = require('../actions/find');
-const { handleInput, undo } = require('../actions/editor');
+const { handleInput } = require('../actions/editor');
 const { moveByScrollUpLine, moveByScrollDownLine } = require('../actions/editor-move');
 const { dedent, indent } = require('../actions/text-move');
 const { print } = require('../actions/system');
@@ -19,8 +19,7 @@ class EditorStore {
       onMoveByScrollDownLine: moveByScrollDownLine,
       onDedent: dedent,
       onIndent: indent,
-      onPrint: print,
-      onUndo: undo
+      onPrint: print
     });
 
   }
@@ -64,13 +63,6 @@ class EditorStore {
   }
   onPrint() {
     window.print();
-  }
-  onUndo() {
-    console.log('UNDOING');
-    const { cm } = this.getInstance();
-    const doc = cm.getDoc();
-    //doc.undo();
-    cm.execCommand('undo');
   }
 
 }
