@@ -108,7 +108,6 @@ function sidebar(app, opts, done){
   // Finish Loading Plugin
   const cwd = userConfig.get('cwd') || opts.defaultProject;
   const lastFile = userConfig.get('last-file');
-  console.log(lastFile);
   space.changeDir(cwd, () => {
     if(lastFile){
       loadFile(lastFile);

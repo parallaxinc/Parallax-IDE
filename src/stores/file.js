@@ -28,8 +28,10 @@ class FileStore {
 
     this.state = {
       fileName: '',
+      initialLoad: true,
       isNewFile: false,
-      showSaveOverlay: false
+      showSaveOverlay: false,
+      allowUpdate: 0
     };
 
     this.buffers = {};
@@ -78,7 +80,7 @@ class FileStore {
   }
 
   onProcessCreate(name) {
-    const { loadFile, workspace } = this.getInstance();
+    const { workspace } = this.getInstance();
 
     if(!name){
       return;
@@ -160,6 +162,8 @@ class FileStore {
 
     userConfig.set('last-file', builtName);
 
+    this._docSwap(builtName, true);
+
     this.setState({
       fileName: builtName,
       isNewFile: true
@@ -181,16 +185,19 @@ class FileStore {
     }
   }
 
-  _docSwap(filename) {
+  _docSwap(filename, overwrite) {
 
     const { cm } = this.getInstance();
     const mode = 'pbasic';
+    let fresh = false;
 
-    if(!this.buffers.hasOwnProperty(filename)) {
+    if(!this.buffers.hasOwnProperty(filename) || overwrite) {
       this._openBuffer(filename, '', mode);
+      fresh = true;
     }
 
     this._selectBuffer(cm, filename);
+    return fresh;
   }
 
   onLoadFile(filename){
@@ -198,16 +205,23 @@ class FileStore {
       return;
     }
 
-    this._docSwap(filename);
-
     const { workspace, userConfig } = this.getInstance();
+    let { cm } = this.getInstance();
     const { isNewFile } = this.state;
+
+    const content = workspace.current.deref();
 
     if(isNewFile && content.length){
       this._queueLoad(filename);
       this.onProcessSave();
       return;
     }
+    else if(isNewFile && !content.length) {
+      cm.getDoc().clearHistory();
+    }
+
+    this.setState({ allowUpdate: 1 });
+    let fresh = this._docSwap(filename);
 
     workspace.loadFile(filename, (err) => {
       if(err){
@@ -215,11 +229,25 @@ class FileStore {
         return;
       }
 
+      cm = this.getInstance().cm;
       userConfig.set('last-file', filename);
+
+      if(fresh && cm) {
+        const doc = cm.getDoc();
+        doc.clearHistory();
+      }
+
+      if(this.state.initialLoad) {
+        const currentDoc = cm.getDoc();
+        this.buffers[filename] = currentDoc;
+        this.setState({ initialLoad: false });
+      }
+
 
       this.setState({
         fileName: filename,
-        isNewFile: false
+        isNewFile: false,
+        allowUpdate: 0
       });
     });
   }

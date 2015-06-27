@@ -87,14 +87,14 @@ const keyExtension = {
           evt.preventDefault();
           hideOverlay();
         }
-      },
-      undo: {
-        code: 'CTRL_Z',
-        exec: (evt) => {
-          evt.preventDefault();
-          undo();
-        }
       }
+      //undo: {
+        //code: 'CTRL_Z',
+        //exec: (evt) => {
+          //evt.preventDefault();
+          //undo();
+        //}
+      //}
     };
 
     const customPredicates = {

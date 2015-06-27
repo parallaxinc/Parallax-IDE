@@ -26,6 +26,7 @@ function editor(app, opts, done){
   var codeEditor;
   var outputConsole;
   var transmission;
+  let allowUpdate = 0;
 
   function refreshConsole(){
     const { text } = consoleStore.getState();
@@ -36,7 +37,13 @@ function editor(app, opts, done){
     }
   }
 
+  function onChangeFileStore() {
+    const storeState = fileStore.getState();
+    allowUpdate = storeState.allowUpdate;
+  }
+
   consoleStore.listen(refreshConsole);
+  fileStore.listen(onChangeFileStore);
 
   var space = app.workspace;
 
@@ -76,16 +83,16 @@ function editor(app, opts, done){
       space._structure.on('swap', function(){
         var editorCursor = codeEditor.getCursor();
         var current = space.current.deref();
-        console.log('SWAP: ', current);
-        if(current !== codeEditor.getValue() && !delayUpdate){
+        if(current !== codeEditor.getValue() && allowUpdate !== 1){
           codeEditor.setValue(current);
           codeEditor.setCursor(editorCursor);
         }
+
+        if(allowUpdate === 1) {
+          allowUpdate++;
+        }
       });
     }
-
-
-    console.log(codeEditor.getDoc());
 
     if(!outputConsole){
       outputConsole = document.createElement('pre');
