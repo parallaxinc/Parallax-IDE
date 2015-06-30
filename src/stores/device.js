@@ -19,6 +19,7 @@ class DeviceStore {
     this.state = {
       devices: [],
       devicePath: null,
+      message: 'Device not found',
       searching: true,
       selectedDevice: null,
       progress: 0

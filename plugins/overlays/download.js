@@ -35,10 +35,23 @@ class DownloadOverlay extends React.Component {
       );
   }
 
+  componentizeUserMessage(message){
+    let messageBox;
+    if(message) {
+      messageBox = <div style={styles.overlayUserMessage}>{message}</div>;
+    }
+    else {
+      messageBox = null;
+    }
+
+    return messageBox;
+  }
+
   render(){
-    const { devices, devicePath, progress, searching } = this.props;
+    const { devices, devicePath, message, progress, searching } = this.props;
 
     const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
+    const userMessage = this.componentizeUserMessage(message);
 
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
@@ -65,6 +78,9 @@ class DownloadOverlay extends React.Component {
         </div>
         <div>
         </div>
+
+        {userMessage}
+
         <div style={styles.overlayDevicesBottom}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this._onReloadDevices}>Refresh</Button>
