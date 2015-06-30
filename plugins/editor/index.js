@@ -53,7 +53,6 @@ function editor(app, opts, done){
       el.appendChild(editorContainer);
 
       codeEditor = CodeMirror(editorContainer, {
-        value: space.current.deref() || '',
         mode: 'pbasic',
         theme: 'parallax',
         lineNumbers: true
