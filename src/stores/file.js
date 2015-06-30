@@ -28,10 +28,8 @@ class FileStore {
 
     this.state = {
       fileName: '',
-      initialLoad: true,
       isNewFile: false,
-      showSaveOverlay: false,
-      allowUpdate: 0
+      showSaveOverlay: false
     };
 
     this.buffers = {};
@@ -162,7 +160,7 @@ class FileStore {
 
     userConfig.set('last-file', builtName);
 
-    this._docSwap(builtName, true);
+    this._createDoc(builtName, '');
 
     this.setState({
       fileName: builtName,
@@ -174,30 +172,25 @@ class FileStore {
     this.loadQueue.push(filename);
   }
 
-  _openBuffer(name, text, mode) {
-    this.buffers[name] = CodeMirror.Doc(text, mode);
-  }
-
-  _selectBuffer(editor, name) {
-    const buf = this.buffers[name];
-    if(editor) {
-      editor.swapDoc(buf);
-    }
-  }
-
-  _docSwap(filename, overwrite) {
-
-    const { cm } = this.getInstance();
+  _createDoc(filename, text){
     const mode = 'pbasic';
-    let fresh = false;
 
-    if(!this.buffers.hasOwnProperty(filename) || overwrite) {
-      this._openBuffer(filename, '', mode);
-      fresh = true;
+    this.buffers[filename] = CodeMirror.Doc(text, mode);
+
+    return this._swapDoc(filename);
+  }
+
+  _swapDoc(filename) {
+    const { cm } = this.getInstance();
+
+    let doc = this.buffers[filename];
+
+    if(!doc){
+      return;
     }
 
-    this._selectBuffer(cm, filename);
-    return fresh;
+    cm.swapDoc(doc);
+    return doc;
   }
 
   onLoadFile(filename){
@@ -206,8 +199,8 @@ class FileStore {
     }
 
     const { workspace, userConfig } = this.getInstance();
-    let { cm } = this.getInstance();
     const { isNewFile } = this.state;
+    const { cm } = this.getInstance();
 
     const content = workspace.current.deref();
 
@@ -216,12 +209,15 @@ class FileStore {
       this.onProcessSave();
       return;
     }
-    else if(isNewFile && !content.length) {
-      cm.getDoc().clearHistory();
-    }
 
-    this.setState({ allowUpdate: 1 });
-    let fresh = this._docSwap(filename);
+    const doc = this._swapDoc(filename);
+    if(doc){
+      workspace.current.update(() => doc.getValue());
+      if(cm){
+        cm.focus();
+      }
+      return;
+    }
 
     workspace.loadFile(filename, (err) => {
       if(err){
@@ -229,25 +225,16 @@ class FileStore {
         return;
       }
 
-      cm = this.getInstance().cm;
+      const { cm } = this.getInstance();
       userConfig.set('last-file', filename);
 
-      if(fresh && cm) {
-        const doc = cm.getDoc();
-        doc.clearHistory();
-      }
+      this._createDoc(filename, workspace.current.deref());
 
-      if(this.state.initialLoad) {
-        const currentDoc = cm.getDoc();
-        this.buffers[filename] = currentDoc;
-        this.setState({ initialLoad: false });
-      }
-
+      cm.focus();
 
       this.setState({
         fileName: filename,
-        isNewFile: false,
-        allowUpdate: 0
+        isNewFile: false
       });
     });
   }
