@@ -105,18 +105,7 @@ function sidebar(app, opts, done){
   // Set up listeners
   fileStore.listen(_onChangeFileStore);
 
-  // Finish Loading Plugin
-  const cwd = userConfig.get('cwd') || opts.defaultProject;
-  const lastFile = userConfig.get('last-file');
-  space.changeDir(cwd, () => {
-    if(lastFile){
-      loadFile(lastFile);
-    } else {
-      newFile();
-    }
-    done();
-  });
-
+  done();
 }
 
 module.exports = sidebar;

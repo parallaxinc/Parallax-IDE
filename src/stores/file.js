@@ -32,7 +32,6 @@ class FileStore {
       showSaveOverlay: false
     };
 
-    this.buffers = {};
     this.loadQueue = [];
   }
 
@@ -138,7 +137,7 @@ class FileStore {
   }
 
   onNewFile() {
-    const { workspace, userConfig } = this.getInstance();
+    const { workspace, userConfig, documents } = this.getInstance();
 
     const directory = workspace.directory.toJS();
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
@@ -160,7 +159,7 @@ class FileStore {
 
     userConfig.set('last-file', builtName);
 
-    this._createDoc(builtName, '');
+    documents.create(builtName, '');
 
     this.setState({
       fileName: builtName,
@@ -172,33 +171,14 @@ class FileStore {
     this.loadQueue.push(filename);
   }
 
-  _createDoc(filename, text){
-    const mode = 'pbasic';
 
-    this.buffers[filename] = CodeMirror.Doc(text, mode);
-
-    return this._swapDoc(filename);
-  }
-
-  _swapDoc(filename) {
-    const { cm } = this.getInstance();
-
-    let doc = this.buffers[filename];
-
-    if(!doc){
-      return;
-    }
-
-    cm.swapDoc(doc);
-    return doc;
-  }
 
   onLoadFile(filename){
     if(!filename){
       return;
     }
 
-    const { workspace, userConfig } = this.getInstance();
+    const { workspace, userConfig, documents } = this.getInstance();
     const { isNewFile } = this.state;
     const { cm } = this.getInstance();
 
@@ -210,12 +190,11 @@ class FileStore {
       return;
     }
 
-    const doc = this._swapDoc(filename);
+    const doc = documents.swap(filename);
     if(doc){
       workspace.current.update(() => doc.getValue());
-      if(cm){
-        cm.focus();
-      }
+      workspace.filename.update(() => filename);
+      documents.focus();
       return;
     }
 
@@ -228,9 +207,8 @@ class FileStore {
       const { cm } = this.getInstance();
       userConfig.set('last-file', filename);
 
-      this._createDoc(filename, workspace.current.deref());
-
-      cm.focus();
+      documents.create(filename, workspace.current.deref());
+      documents.focus();
 
       this.setState({
         fileName: filename,
