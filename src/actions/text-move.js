@@ -7,6 +7,9 @@ class TextMoveActions {
   indent() {
     this.dispatch();
   }
+  dedent() {
+    this.dispatch();
+  }
 
 }
 

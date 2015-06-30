@@ -1,26 +1,26 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
-"use strict";
+'use strict';
 
 module.exports = function(CodeMirror){
 
-  CodeMirror.defineMode("pbasic", function(conf, parserConf) {
+  CodeMirror.defineMode('pbasic', function(conf, parserConf) {
     var ERRORCLASS = 'error';
 
     function wordRegexp(words) {
-      return new RegExp("^((" + words.join(")|(") + "))\\b", "i");
+      return new RegExp('^((' + words.join(')|(') + '))\\b', 'i');
     }
 
     function getWordRange(word, start, end, base){
       var words = [];
 
       if (base) {
-        words.push(word)
-      };
+        words.push(word);
+      }
 
       for (var i = start; i < end + 1; i++) {
         words.push(word + i);
-      };
+      }
       return words;
     }
 
@@ -30,10 +30,6 @@ module.exports = function(CodeMirror){
     var doubleDelimiters = new RegExp("^((\\+=)|(\\-=)|(\\*=)|(%=)|(/=)|(&=)|(\\|=)|(\\^=))");
     var tripleDelimiters = new RegExp("^((//=)|(>>=)|(<<=)|(\\*\\*=))");
     var identifiers = new RegExp("^[_A-Za-z][_A-Za-z0-9]*");
-
-    var openingKeywords = ['select','#select','while','if','#if'];
-    var middleKeywords = ['else','#else','elseif','case', '#case'];
-    var endKeywords = ['next','loop','endselect','#endselect', 'endif', '#endif'];
 
     var etInstruction = ['DATA','FOR','NEXT','GOTO','GOSUB','RETURN','IF','BRANCH','LOOKUP','LOOKDOWN',
       'RANDOM','READ','WRITE','PAUSE','INPUT','OUTPUT','LOW','HIGH','TOGGLE','REVERSE','SEROUT','SERIN',
@@ -76,9 +72,6 @@ module.exports = function(CodeMirror){
 
     var stringPrefixes = '"';
 
-    var opening = wordRegexp(openingKeywords);
-    var middle = wordRegexp(middleKeywords);
-    var closing = wordRegexp(endKeywords);
     var etdirective = wordRegexp(etDirective);
     var ettargetmodule = wordRegexp(etTargetModule);
     var etioformatter = wordRegexp(etIOFormatter);
@@ -86,18 +79,7 @@ module.exports = function(CodeMirror){
     var etccdirective = wordRegexp(etCCDirective);
     var etconstant = wordRegexp(etConstant);
     var etinstruction = wordRegexp(etInstruction);
-    var doubleClosing = wordRegexp(['END']);
-    var doOpening = wordRegexp(['DO']);
 
-    var indentInfo = null;
-
-    function indent(_stream, state) {
-      state.currentIndent++;
-    }
-
-    function dedent(_stream, state) {
-      state.currentIndent--;
-    }
     // tokenizers
     function tokenBase(stream, state) {
       if (stream.eatSpace()) {
@@ -106,7 +88,7 @@ module.exports = function(CodeMirror){
 
       var ch = stream.peek();
 
-      // Handle Comments
+       //Handle Comments
       if (ch === "'") {
         stream.skipToEnd();
         return 'comment';
@@ -190,32 +172,6 @@ module.exports = function(CodeMirror){
       if (stream.match(etinstruction)) {
         return 'etInstruction';
       }
-      if (stream.match(doOpening)) {
-        indent(stream,state);
-        state.doInCurrentLine = true;
-        return 'keyword';
-      }
-      if (stream.match(opening)) {
-        if (! state.doInCurrentLine)
-          indent(stream,state);
-        else
-          state.doInCurrentLine = false;
-        return 'keyword';
-      }
-      if (stream.match(middle)) {
-        return 'keyword';
-      }
-
-      if (stream.match(doubleClosing)) {
-        dedent(stream,state);
-        dedent(stream,state);
-        return 'keyword';
-      }
-      if (stream.match(closing)) {
-        dedent(stream,state);
-        return 'keyword';
-      }
-
       if (stream.match(identifiers)) {
         return 'variable';
       }
@@ -228,7 +184,7 @@ module.exports = function(CodeMirror){
     }
 
     function tokenStringFactory(delimiter) {
-      var singleline = delimiter.length == 1;
+      var singleline = delimiter.length === 1;
       var OUTCLASS = 'string';
 
       return function(stream, state) {
@@ -268,62 +224,29 @@ module.exports = function(CodeMirror){
       }
 
 
-      var delimiter_index = '[({'.indexOf(current);
-      if (delimiter_index !== -1) {
-        indent(stream, state );
-      }
-      if (indentInfo === 'dedent') {
-        if (dedent(stream, state)) {
-          return ERRORCLASS;
-        }
-      }
-      delimiter_index = '])}'.indexOf(current);
-      if (delimiter_index !== -1) {
-        if (dedent(stream, state)) {
-          return ERRORCLASS;
-        }
-      }
-
       return style;
     }
 
     var external = {
-      electricChars:"dDpPtTfFeE ",
       startState: function() {
         return {
           tokenize: tokenBase,
-          lastToken: null,
-          currentIndent: 0,
-          nextLineIndent: 0,
-          doInCurrentLine: false
+          lastToken: null
         };
       },
 
       token: function(stream, state) {
-        if (stream.sol()) {
-          state.currentIndent += state.nextLineIndent;
-          state.nextLineIndent = 0;
-          state.doInCurrentLine = 0;
-        }
         var style = tokenLexer(stream, state);
 
-        state.lastToken = {style:style, content: stream.current()};
+        state.lastToken = {style: style, content: stream.current()};
 
         return style;
-      },
-
-      indent: function(state, textAfter) {
-        var trueText = textAfter.replace(/^\s+|\s+$/g, '') ;
-        if (trueText.match(closing) || trueText.match(doubleClosing) || trueText.match(middle)) return conf.indentUnit*(state.currentIndent-1);
-        if(state.currentIndent < 0) return 0;
-        return state.currentIndent * conf.indentUnit;
       }
-
     };
     return external;
   });
 
-  CodeMirror.defineMIME("text/pbasic", "pbasic");
+  CodeMirror.defineMIME('text/pbasic', 'pbasic');
 
-}
+};
 

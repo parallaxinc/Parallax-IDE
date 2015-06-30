@@ -2,7 +2,7 @@
 
 var { findNext, findPrevious } = require('../../src/actions/find');
 var { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
-var { indent } = require('../../src/actions/text-move');
+var { dedent, indent } = require('../../src/actions/text-move');
 var { print } = require('../../src/actions/system');
 var { hideOverlay, newFile, processSave } = require('../../src/actions/file');
 
@@ -43,6 +43,13 @@ const keyExtension = {
         exec: (evt) => {
           evt.preventDefault();
           indent();
+        }
+      },
+      shiftTab: {
+        code: 'SHIFT_TAB',
+        exec: (evt) => {
+          evt.preventDefault();
+          dedent();
         }
       },
       print: {
