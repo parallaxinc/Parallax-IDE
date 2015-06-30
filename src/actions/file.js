@@ -35,6 +35,10 @@ class FileActions {
     this.dispatch();
   }
 
+  processSaveAs() {
+    this.dispatch();
+  }
+
   updateName(value) {
     this.dispatch(value);
   }
