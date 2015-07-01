@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-var CodeMirror = require('codemirror');
 
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
