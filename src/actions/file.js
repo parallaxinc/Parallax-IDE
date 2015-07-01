@@ -19,8 +19,8 @@ class FileActions {
     this.dispatch(err);
   }
 
-  handleSuccess(err) {
-    this.dispatch(err);
+  handleSuccess(msg) {
+    this.dispatch(msg);
   }
 
   newFile() {

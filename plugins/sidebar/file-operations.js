@@ -2,12 +2,13 @@
 
 const React = require('react');
 const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
+const { newFile, processSave, showDelete } = require('../../src/actions/file');
+const { showDownload } = require('../../src/actions/device');
 
 require('react-mfb-iceddev/mfb.css');
 
 const FileOperations = React.createClass({
   render: function(){
-    const { newFile, processSave, showDelete, showDownload } = this.props;
 
     return (
       <Menu effect="zoomin" method="click" position="bl">

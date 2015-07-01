@@ -17,9 +17,9 @@ const deviceStore = require('../../src/stores/device');
 const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
 
-const { handleError, handleSuccess, deleteFile, loadFile, newFile, noDelete,
-  processCreate, processNoCreate, processSave, showDelete } = require('../../src/actions/file');
-const { noDownload, showDownload } = require('../../src/actions/device.js');
+const { handleError, handleSuccess, deleteFile, loadFile, noDelete,
+  processCreate, processNoCreate } = require('../../src/actions/file');
+const { noDownload } = require('../../src/actions/device.js');
 
 function sidebar(app, opts, done){
 
@@ -55,8 +55,8 @@ function sidebar(app, opts, done){
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
         </FileList>
-        <FileOperations irken={irken} loadFile={loadFile} newFile={newFile} overlay={overlay} processSave={processSave}
-                    showDelete={showDelete} showDownload={showDownload} toast={toast} workspace={space} />
+        <FileOperations irken={irken} loadFile={loadFile} overlay={overlay}
+                    toast={toast} workspace={space} />
       </Sidebar>
     );
 

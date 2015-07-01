@@ -37,7 +37,7 @@ class DeviceStore {
     }
 
     const { handleSuccess, handleError } = handlers;
-    const { workspace, toast, overlay, getBoard } = this.getInstance();
+    const { workspace, toast, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
     const name = workspace.filename.deref();
@@ -64,9 +64,11 @@ class DeviceStore {
       .tap(() => handleSuccess(`'${name}' downloaded successfully`))
       .catch(handleError)
       .finally(() => {
-        overlay.hide();
         board.removeListener('progress', updateProgress);
-        this.setState({ progress: 0 });
+        this.setState({
+          progress: 0,
+          showDownloadOverlay: false
+        });
       });
 
   }
