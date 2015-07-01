@@ -2,9 +2,9 @@
 
 const React = require('react');
 
-const SaveOverlay = require('../sidebar/overlays/save');
-const DownloadOverlay = require('../sidebar/overlays/download');
-const DeleteConfirmOverlay = require('../sidebar/overlays/delete-confirm');
+const SaveOverlay = require('./save');
+const DownloadOverlay = require('./download');
+const DeleteConfirmOverlay = require('./delete-confirm');
 
 const overlayStore = require('../../src/stores/overlay');
 

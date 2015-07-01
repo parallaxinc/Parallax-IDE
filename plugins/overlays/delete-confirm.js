@@ -4,7 +4,7 @@ const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
 
-const styles = require('../styles');
+const styles = require('./styles');
 
 class DeleteConfirmOverlay extends React.Component {
   constructor(){

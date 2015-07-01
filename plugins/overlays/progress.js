@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-var styles = require('../styles.js');
+var styles = require('./styles.js');
 
 class Progress extends React.Component {
 

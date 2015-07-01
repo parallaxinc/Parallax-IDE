@@ -6,10 +6,10 @@ const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
 const { createContainer } = require('sovereign');
 
-const fileStore = require('../../../src/stores/file');
-const { clearName, updateName } = require('../../../src/actions/file');
+const fileStore = require('../../src/stores/file');
+const { clearName, updateName } = require('../../src/actions/file');
 
-const styles = require('../styles');
+const styles = require('./styles');
 
 class SaveOverlay extends React.Component {
   constructor(){

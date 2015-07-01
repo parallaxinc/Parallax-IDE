@@ -8,10 +8,10 @@ const Loader = require('react-loader');
 const { createContainer } = require('sovereign');
 
 const Progress = require('./progress');
-const deviceStore = require('../../../src/stores/device');
-const { download, reloadDevices, updateSelected } = require('../../../src/actions/device');
+const deviceStore = require('../../src/stores/device');
+const { download, reloadDevices, updateSelected } = require('../../src/actions/device');
 
-const styles = require('../styles');
+const styles = require('./styles');
 
 class DownloadOverlay extends React.Component {
 

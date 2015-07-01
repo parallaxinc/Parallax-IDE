@@ -4,7 +4,7 @@ const React = require('react');
 const { MainButton } = require('react-mfb-iceddev');
 
 const ProjectOverlay = require('./overlays/project');
-const DeleteConfirmOverlay = require('./overlays/delete-confirm');
+const DeleteConfirmOverlay = require('../overlays/delete-confirm');
 
 const styles = require('./styles');
 
