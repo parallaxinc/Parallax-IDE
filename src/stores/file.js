@@ -171,8 +171,6 @@ class FileStore {
     this.loadQueue.push(filename);
   }
 
-
-
   onLoadFile(filename){
     if(!filename){
       return;
@@ -180,7 +178,6 @@ class FileStore {
 
     const { workspace, userConfig, documents } = this.getInstance();
     const { isNewFile } = this.state;
-    const { cm } = this.getInstance();
 
     const content = workspace.current.deref();
 
@@ -204,7 +201,6 @@ class FileStore {
         return;
       }
 
-      const { cm } = this.getInstance();
       userConfig.set('last-file', filename);
 
       documents.create(filename, workspace.current.deref());
