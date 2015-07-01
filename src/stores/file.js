@@ -188,6 +188,7 @@ class FileStore {
 
     const doc = documents.swap(filename);
     if(doc){
+      this.state.fileName = filename;
       workspace.current.update(() => doc.getValue());
       workspace.filename.update(() => filename);
       documents.focus();
