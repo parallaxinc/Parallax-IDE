@@ -1,10 +1,12 @@
 'use strict';
 
-var Irken = require('irken');
+const Irken = require('irken');
 
-var app = new Irken();
+const { loadFile, newFile } = require('./src/actions/file');
 
-var plugins = [
+const app = new Irken();
+
+const plugins = [
   {
     register: require('bs2-serial')
   },
@@ -27,31 +29,53 @@ var plugins = [
     register: require('iggins')
   },
   {
-    register: require('./plugins/appbar'),
-    options: {
-      title: 'Parallax IDE'
-    }
+    register: require('./plugins/appbar')
   },
   {
-    register: require('./plugins/editor'),
-    options: {
-      initial: ''
-    }
+    register: require('./plugins/editor')
   },
   {
-    register: require('./plugins/sidebar'),
-    options: {
-      defaultProject: 'new-project'
-    }
+    register: require('./plugins/sidebar')
   }
 ];
 
-app.register(plugins, function(err){
-  console.log('registered', err, app);
-  app.render(function(err){
-    console.log('rendered', err);
+const defaultProject = 'new-project';
+
+function onRender(err){
+  console.log('rendered', err);
+
+  if(err){
+    return;
+  }
+
+  const { userConfig, workspace } = app;
+
+  // Finish Loading Plugin
+  const cwd = userConfig.get('cwd') || defaultProject;
+  const lastFile = userConfig.get('last-file');
+  workspace.changeDir(cwd, (err) => {
+    console.log(err);
+    if(lastFile){
+      loadFile(lastFile);
+    } else {
+      newFile();
+    }
+
+    console.log('file loaded');
   });
-});
+}
+
+function onRegister(err){
+  console.log('registered', err, app);
+
+  if(err){
+    return;
+  }
+
+  app.render(onRender);
+}
+
+app.register(plugins, onRegister);
 
 // for debugging purposes
 window.app = app;

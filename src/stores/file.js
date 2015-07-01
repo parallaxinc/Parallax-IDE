@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const _ = require('lodash');
 
 const alt = require('../alt');
@@ -76,7 +78,7 @@ class FileStore {
   }
 
   onProcessCreate(name) {
-    const { loadFile, workspace } = this.getInstance();
+    const { workspace } = this.getInstance();
 
     if(!name){
       return;
@@ -136,8 +138,9 @@ class FileStore {
   }
 
   onNewFile() {
-    const { workspace, userConfig } = this.getInstance();
+    const { workspace, userConfig, documents } = this.getInstance();
 
+    const cwd = workspace.cwd.deref();
     const directory = workspace.directory.toJS();
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
       if(dirfile.name.match(/untitled/)) {
@@ -158,6 +161,8 @@ class FileStore {
 
     userConfig.set('last-file', builtName);
 
+    documents.create(path.join(cwd, builtName), '');
+
     this.setState({
       fileName: builtName,
       isNewFile: true
@@ -173,14 +178,24 @@ class FileStore {
       return;
     }
 
-    const { workspace, userConfig } = this.getInstance();
+    const { workspace, userConfig, documents } = this.getInstance();
     const { isNewFile } = this.state;
 
+    const cwd = workspace.cwd.deref();
     const content = workspace.current.deref();
 
     if(isNewFile && content.length){
       this._queueLoad(filename);
       this.onProcessSave();
+      return;
+    }
+
+    const doc = documents.swap(path.join(cwd, filename));
+    if(doc){
+      this.state.fileName = filename;
+      workspace.current.update(() => doc.getValue());
+      workspace.filename.update(() => filename);
+      documents.focus();
       return;
     }
 
@@ -191,6 +206,9 @@ class FileStore {
       }
 
       userConfig.set('last-file', filename);
+
+      documents.create(path.join(cwd, filename), workspace.current.deref());
+      documents.focus();
 
       this.setState({
         fileName: filename,

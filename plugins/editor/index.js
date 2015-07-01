@@ -9,13 +9,15 @@ require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
 require('../../assets/theme/parallax.css');
 
-var CodeMirror = require('codemirror');
+const CodeMirror = require('codemirror');
 require('./pbasic')(CodeMirror);
 
-var keyExtension = require('./key-extension');
+const keyExtension = require('./key-extension');
 const consoleStore = require('../../src/stores/console');
-var editorStore = require('../../src/stores/editor');
-var { handleInput } = require('../../src/actions/editor');
+const editorStore = require('../../src/stores/editor');
+const fileStore = require('../../src/stores/file');
+const { handleInput } = require('../../src/actions/editor');
+const DocumentsStore = require('../../src/stores/documents');
 
 const React = require('react');
 const TransmissionBar = require('./transmission-bar');
@@ -51,7 +53,6 @@ function editor(app, opts, done){
       el.appendChild(editorContainer);
 
       codeEditor = CodeMirror(editorContainer, {
-        value: space.current.deref(),
         mode: 'pbasic',
         theme: 'parallax',
         lineNumbers: true
@@ -70,16 +71,7 @@ function editor(app, opts, done){
       });
       keyExtension.setup(app);
       editorStore.cm = codeEditor;
-
-
-      space._structure.on('swap', function(){
-        var editorCursor = codeEditor.getCursor();
-        var current = space.current.deref();
-        if(current !== codeEditor.getValue()){
-          codeEditor.setValue(current);
-          codeEditor.setCursor(editorCursor);
-        }
-      });
+      fileStore.documents = new DocumentsStore(codeEditor);
     }
 
     if(!outputConsole){
