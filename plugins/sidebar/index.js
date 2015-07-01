@@ -44,7 +44,7 @@ function sidebar(app, opts, done){
 
     const Component = (
       <Sidebar>
-        <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
+        <ProjectOperations />
         <FileList workspace={space} loadFile={loadFile}>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
@@ -67,7 +67,6 @@ function sidebar(app, opts, done){
 
   fileStore.workspace = space;
   fileStore.userConfig = userConfig;
-
   fileStore.toast = toast;
 
   done();
