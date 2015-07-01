@@ -6,12 +6,12 @@ const Button = require('react-material/components/Button');
 const TextField = require('react-material/components/TextField');
 const { createContainer } = require('sovereign');
 
-const Project = require('../project');
-const ProjectList = require('../project-list');
-const projectStore = require('../../../src/stores/project');
-const { clearName, updateName } = require('../../../src/actions/project');
+const ProjectList = require('./project-list');
+const ProjectItem = require('./project-item');
+const projectStore = require('../../src/stores/project');
+const { clearName, updateName } = require('../../src/actions/project');
 
-const styles = require('../styles');
+const styles = require('./styles');
 
 class ProjectOverlay extends React.Component {
   constructor(){
@@ -33,7 +33,7 @@ class ProjectOverlay extends React.Component {
       <Card styles={[styles.overlay, styles.overlayLarge]}>
         <h3 style={styles.overlayTitle}>Open an existing project.</h3>
         <ProjectList>
-          {projects.map((name) => <Project
+          {projects.map((name) => <ProjectItem
             key={name}
             onSelect={this._onAccept}
             onDelete={this._onDelete}

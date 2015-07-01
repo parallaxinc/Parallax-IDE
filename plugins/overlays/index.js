@@ -3,17 +3,23 @@
 const React = require('react');
 
 const SaveOverlay = require('./save');
+const ProjectOverlay = require('./project');
 const DownloadOverlay = require('./download');
 const DeleteConfirmOverlay = require('./delete-confirm');
 
 const overlayStore = require('../../src/stores/overlay');
+const projectStore = require('../../src/stores/project');
 
-const { handleError, handleSuccess, deleteFile, saveFile } = require('../../src/actions/file');
-const { hideSave, hideDelete, hideDownload } = require('../../src/actions/overlay');
+const { confirmDelete, changeProject, deleteProject } = require('../../src/actions/project');
+const { handleError, handleSuccess, deleteFile, saveFileAs } = require('../../src/actions/file');
+const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
 
 function overlays(app, opts, done){
 
-  const { overlay, workspace } = app;
+  const { overlay, workspace, userConfig } = app;
+
+  projectStore.config = userConfig;
+  projectStore.workspace = workspace;
 
   function renderOverlay(component){
     function renderer(el){
@@ -24,14 +30,18 @@ function overlays(app, opts, done){
   }
 
   function onOverlayChange(){
-    const { showSaveOverlay, showDeleteOverlay, showDownloadOverlay } = overlayStore.getState();
+    const {
+      showSaveOverlay,
+      showDeleteOverlay,
+      showDownloadOverlay,
+      showProjectsOverlay,
+      showProjectDeleteOverlay } = overlayStore.getState();
 
-    console.log(overlayStore.getState());
     let component;
     if(showSaveOverlay){
       component = (
         <SaveOverlay
-          onAccept={saveFile}
+          onAccept={saveFileAs}
           onCancel={hideSave} />
       );
     }
@@ -54,6 +64,26 @@ function overlays(app, opts, done){
           onCancel={hideDownload}
           handleSuccess={handleSuccess}
           handleError={handleError} />
+      );
+    }
+
+    if(showProjectsOverlay){
+      component = (
+        <ProjectOverlay
+          workspace={workspace}
+          onAccept={changeProject}
+          onDelete={confirmDelete}
+          onCancel={hideProjects} />
+      );
+    }
+
+    if(showProjectDeleteOverlay){
+      const { deleteProjectName } = projectStore.getState();
+      component = (
+        <DeleteConfirmOverlay
+          name={deleteProjectName}
+          onAccept={deleteProject}
+          onCancel={showProjects} />
       );
     }
 

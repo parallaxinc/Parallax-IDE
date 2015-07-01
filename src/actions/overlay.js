@@ -30,6 +30,22 @@ class OverlayActions {
   hideDownload(){
     this.dispatch();
   }
+
+  showProjects(){
+    this.dispatch();
+  }
+
+  hideProjects(){
+    this.dispatch();
+  }
+
+  showProjectDelete(){
+    this.dispatch();
+  }
+
+  hideProjectDelete(){
+    this.dispatch();
+  }
 }
 
 module.exports = alt.createActions(OverlayActions);

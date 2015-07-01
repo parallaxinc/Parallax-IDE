@@ -5,6 +5,7 @@ const alt = require('../alt');
 const fileStore = require('./file');
 const { download } = require('../actions/device');
 const { deleteFile, saveFile, saveFileAs, loadFile } = require('../actions/file');
+const { confirmDelete, changeProject, deleteProject } = require('../actions/project');
 const {
   hideOverlays,
   showSave,
@@ -12,7 +13,10 @@ const {
   showDelete,
   hideDelete,
   showDownload,
-  hideDownload } = require('../actions/overlay');
+  hideDownload,
+  showProjects,
+  hideProjects,
+  showProjectDelete } = require('../actions/overlay');
 
 class OverlayStore {
   constructor(){
@@ -25,13 +29,18 @@ class OverlayStore {
       onShowDelete: showDelete,
       onHideDelete: [hideDelete, deleteFile],
       onShowDownload: showDownload,
-      onHideDownload: [download, hideDownload]
+      onHideDownload: [download, hideDownload],
+      onShowProjects: [deleteProject, showProjects],
+      onHideProjects: [changeProject, hideProjects],
+      onShowProjectDelete: [confirmDelete, showProjectDelete]
     });
 
     this.state = {
       showSaveOverlay: false,
       showDeleteOverlay: false,
-      showDownloadOverlay: false
+      showDownloadOverlay: false,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
     };
   }
 
@@ -39,7 +48,9 @@ class OverlayStore {
     this.setState({
       showSaveOverlay: false,
       showDeleteOverlay: false,
-      showDownloadOverlay: false
+      showDownloadOverlay: false,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
     });
   }
 
@@ -55,7 +66,9 @@ class OverlayStore {
     this.setState({
       showSaveOverlay: true,
       showDeleteOverlay: false,
-      showDownloadOverlay: false
+      showDownloadOverlay: false,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
     });
   }
 
@@ -69,7 +82,9 @@ class OverlayStore {
     this.setState({
       showSaveOverlay: false,
       showDeleteOverlay: true,
-      showDownloadOverlay: false
+      showDownloadOverlay: false,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
     });
   }
 
@@ -83,13 +98,42 @@ class OverlayStore {
     this.setState({
       showSaveOverlay: false,
       showDeleteOverlay: false,
-      showDownloadOverlay: true
+      showDownloadOverlay: true,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
     });
   }
 
   onHideDownload(){
     this.setState({
       showDownloadOverlay: false
+    });
+  }
+
+  onShowProjects(){
+    this.setState({
+      showSaveOverlay: false,
+      showDeleteOverlay: false,
+      showDownloadOverlay: false,
+      showProjectsOverlay: true,
+      showProjectDeleteOverlay: false
+    });
+  }
+
+  onHideProjects(){
+    // TODO: don't close on empty project name
+    this.setState({
+      showProjectsOverlay: false
+    });
+  }
+
+  onShowProjectDelete(){
+    this.setState({
+      showSaveOverlay: false,
+      showDeleteOverlay: false,
+      showDownloadOverlay: false,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: true
     });
   }
 }

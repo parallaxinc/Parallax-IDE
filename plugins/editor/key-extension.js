@@ -7,7 +7,7 @@ const { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/
 const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
 const { newFile, saveFile } = require('../../src/actions/file');
-const { hideOverlays, showSave, showDownload } = require('../../src/actions/overlay');
+const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
 
 const keyExtension = {
   setup: function(app) {
@@ -102,6 +102,13 @@ const keyExtension = {
         exec: (evt) => {
           evt.preventDefault();
           hideOverlays();
+        }
+      },
+      projects: {
+        code: 'CTRL_O',
+        exec(evt){
+          evt.preventDefault();
+          showProjects();
         }
       }
     };

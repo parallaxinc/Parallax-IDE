@@ -2,34 +2,62 @@
 
 const alt = require('../alt');
 
-const { clearName, updateName } = require('../actions/project');
+const { clearName, updateName, changeProject, deleteProject, confirmDelete } = require('../actions/project');
 
 class ProjectStore {
   constructor() {
 
     this.bindListeners({
       onClearName: clearName,
-      onUpdateName: updateName
+      onUpdateName: updateName,
+      onChangeProject: changeProject,
+      onDeleteProject: deleteProject,
+      onConfirmDelete: confirmDelete
     });
 
     this.state = {
-      projectName: ''
+      projectName: '',
+      deleteProjectName: ''
     };
-
   }
 
   onClearName() {
-    this.setState({
-      projectName: ''
-    });
+    this.setState({ projectName: '' });
   }
 
   onUpdateName(value) {
-    this.setState({
-      projectName: value
+    this.setState({ projectName: value });
+  }
+
+  onConfirmDelete(projectName){
+    this.setState({ deleteProjectName: projectName });
+  }
+
+  onChangeProject(projectName){
+    const { workspace, config } = this.getInstance();
+
+    if(!projectName){
+      return;
+    }
+
+    workspace.changeDir(projectName, () => {
+      config.set('cwd', projectName);
+      this.onClearName();
     });
   }
 
+  onDeleteProject(projectName){
+    const { workspace } = this.getInstance();
+
+    if(!projectName){
+      return;
+    }
+
+    workspace.deleteDir(projectName, () => {
+      // TODO: handle error
+      this.onClearName();
+    });
+  }
 }
 
 ProjectStore.config = {

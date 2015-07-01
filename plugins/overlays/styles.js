@@ -53,7 +53,7 @@ const styles = {
     maxWidth: '100%',
     borderCollapse: 'collapse',
     borderSpacing: 0,
-    display: 'table',
+    display: 'table'
   },
   deviceTableWrapper: {
     position: 'relative'
@@ -87,7 +87,26 @@ const styles = {
   progressBar: {
     height: '50px',
     width: '50px'
-  }
+  },
+  deleteButton: {
+    border: 0,
+    background: 'none',
+    padding: 0,
+    float: 'right',
+    position: 'relative',
+    zIndex: 7
+  },
+  buttonIcon: StyleSheet.create({
+    display: 'inline-block',
+    padding: 0,
+    width: '30px',
+    verticalAlign: 'middle',
+    pointerEvents: 'none'
+  }),
+  projectList: StyleSheet.create({
+    flex: 1,
+    marginTop: 10
+  })
 };
 
 module.exports = styles;
