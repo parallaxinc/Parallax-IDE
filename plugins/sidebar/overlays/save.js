@@ -11,7 +11,7 @@ const { clearName, updateName } = require('../../../src/actions/file');
 
 const styles = require('../styles');
 
-class NewFileOverlay extends React.Component {
+class SaveOverlay extends React.Component {
   constructor(){
 
     this._onAccept = this._onAccept.bind(this);
@@ -50,7 +50,7 @@ class NewFileOverlay extends React.Component {
     );
   }
 
-  _onAccept(evt){
+  _onAccept(){
     const { onAccept, fileName } = this.props;
 
     clearName();
@@ -59,7 +59,7 @@ class NewFileOverlay extends React.Component {
     }
   }
 
-  _onCancel(status, evt){
+  _onCancel(status){
     const { onCancel } = this.props;
 
     clearName();
@@ -79,7 +79,7 @@ class NewFileOverlay extends React.Component {
   }
 }
 
-module.exports = createContainer(NewFileOverlay, {
+module.exports = createContainer(SaveOverlay, {
   getStores(){
     return {
       fileStore: fileStore

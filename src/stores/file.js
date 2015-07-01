@@ -7,9 +7,17 @@ const _ = require('lodash');
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
-const { clearName, deleteFile, hideOverlay, handleError, handleSuccess, loadFile,
-  noDelete, newFile, processCreate, processNoCreate, processSave, processSaveAs, showDelete,
-  updateName } = require('../actions/file');
+const { hideOverlays, hideSave } = require('../actions/overlay');
+const {
+  clearName,
+  updateName,
+  newFile,
+  loadFile,
+  saveFile,
+  saveFileAs,
+  deleteFile,
+  handleError,
+  handleSuccess } = require('../actions/file');
 
 class FileStore {
   constructor() {
@@ -19,23 +27,18 @@ class FileStore {
       onDeleteFile: deleteFile,
       onHandleError: handleError,
       onHandleSuccess: handleSuccess,
-      onHideOverlay: hideOverlay,
-      onNoDelete: noDelete,
+      onHideOverlay: hideOverlays,
       onNewFile: newFile,
       onLoadFile: loadFile,
-      onProcessCreate: processCreate,
-      onProcessNoCreate: processNoCreate,
-      onProcessSave: processSave,
-      onProcessSaveAs: processSaveAs,
-      onShowDelete: showDelete,
+      onSaveFileAs: saveFileAs,
+      onCancelSave: hideSave,
+      onSaveFile: saveFile,
       onUpdateName: updateName
     });
 
     this.state = {
       fileName: '',
-      isNewFile: false,
-      showSaveOverlay: false,
-      showDeleteOverlay: false
+      isNewFile: false
     };
 
     this.loadQueue = [];
@@ -64,27 +67,14 @@ class FileStore {
     workspace.deleteFile(workspace.filename)
       .tap(() => this.onHandleSuccess(`'${name}' deleted successfully`))
       .catch(this.onHandleError)
-      .finally(() => {
-        this.setState({ showSaveOverlay: false });
-        this.setState({ showDeleteOverlay: false });
-        this.onNewFile();
-      });
-
-  }
-
-  onHideSave() {
-    this.setState({
-      showSaveOverlay: false
-    });
+      .finally(() => this.onNewFile());
   }
 
   onHideOverlay() {
-    this.setState({ showSaveOverlay: false });
-    this.setState({ showDeleteOverlay: false });
     this.onClearName();
   }
 
-  onProcessCreate(name) {
+  onSaveFileAs(name) {
     const { workspace } = this.getInstance();
 
     if(!name){
@@ -101,39 +91,27 @@ class FileStore {
         }
       })
       .tap(() => this.onHandleSuccess(`'${name}' created successfully`))
-      .catch(this.onHandleError)
-      .finally(() => this.setState({ showSaveOverlay: false }));
-
-    this.onHideSave();
+      .catch(this.onHandleError);
   }
 
-  onProcessNoCreate(status){
-    if(status.trash){
-      this.setState({ isNewFile: false, showSaveOverlay: false });
-      if(this.loadQueue.length){
-        this.onLoadFile(this.loadQueue.shift());
-      }
-    } else {
-      this.setState({ showSaveOverlay: false });
+  onCancelSave(status){
+    if(!status.trash){
+      return;
+    }
+
+    this.setState({ isNewFile: false });
+    if(this.loadQueue.length){
+      this.onLoadFile(this.loadQueue.shift());
     }
   }
 
-  onProcessSave() {
+  onSaveFile() {
     const { isNewFile } = this.state;
 
     if(isNewFile) {
-      this.setState({ showSaveOverlay: true });
-    } else {
-      this.setState({ showSaveOverlay: false });
-      this._save();
+      return;
     }
-  }
 
-  onProcessSaveAs() {
-    this.setState({ showSaveOverlay: true });
-  }
-
-  _save() {
     const { workspace } = this.getInstance();
 
     const name = workspace.filename.deref();
@@ -193,7 +171,6 @@ class FileStore {
 
     if(isNewFile && content.length){
       this._queueLoad(filename);
-      this.onProcessSave();
       return;
     }
 
@@ -224,10 +201,6 @@ class FileStore {
     });
   }
 
-  onNoDelete() {
-    this.setState({ showDeleteOverlay: false });
-  }
-
   onHandleError(err){
     // leaving this in for better debugging of errors
     console.log(err);
@@ -241,12 +214,6 @@ class FileStore {
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   }
-
-  onShowDelete() {
-    this.setState({ showDeleteOverlay: true });
-  }
-
-
 }
 
 FileStore.config = {

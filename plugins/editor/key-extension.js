@@ -6,8 +6,8 @@ const { findNext, findPrevious, replace } = require('../../src/actions/find');
 const { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
-const { hideOverlay, newFile, processSave, processSaveAs } = require('../../src/actions/file');
-const { showDownload } = require('../../src/actions/device');
+const { newFile, saveFile } = require('../../src/actions/file');
+const { hideOverlays, showSave, showDownload } = require('../../src/actions/overlay');
 
 const keyExtension = {
   setup: function(app) {
@@ -87,21 +87,21 @@ const keyExtension = {
         code: 'CTRL_S',
         exec: (evt) => {
           evt.preventDefault();
-          processSave();
+          saveFile();
         }
       },
       saveAs: {
         code: 'CTRL_SHIFT_S',
         exec: (evt) => {
           evt.preventDefault();
-          processSaveAs();
+          showSave();
         }
       },
       hideOverlay: {
         code: 'ESC',
         exec: (evt) => {
           evt.preventDefault();
-          hideOverlay();
+          hideOverlays();
         }
       }
     };

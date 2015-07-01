@@ -2,8 +2,9 @@
 
 const React = require('react');
 const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
-const { newFile, processSave, showDelete } = require('../../src/actions/file');
-const { showDownload } = require('../../src/actions/device');
+
+const { newFile, saveFile } = require('../../src/actions/file');
+const { showDelete, showDownload } = require('../../src/actions/overlay');
 
 require('react-mfb-iceddev/mfb.css');
 
@@ -24,7 +25,7 @@ const FileOperations = React.createClass({
           icon="ion-backspace-outline"
           label="Delete File" />
         <ChildButton
-          onClick={processSave}
+          onClick={saveFile}
           icon="ion-compose"
           label="Save File" />
         <ChildButton

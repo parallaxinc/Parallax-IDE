@@ -2,21 +2,18 @@
 
 const alt = require('../alt');
 
-const { hideOverlay } = require('../actions/file');
-const { download, noDownload, reloadDevices, showDownload, updateSelected } = require('../actions/device');
-const { clearOutput, output } = require('../actions/console');
 const { rx, tx } = require('../actions/transmission');
+const { showDownload } = require('../actions/overlay');
+const { clearOutput, output } = require('../actions/console');
+const { download, reloadDevices, updateSelected } = require('../actions/device');
 
 class DeviceStore {
   constructor() {
 
     this.bindListeners({
       onDownload: download,
-      onHideOverlay: hideOverlay,
-      onNoDownload: noDownload,
-      onReloadDevices: reloadDevices,
-      onUpdateSelected: updateSelected,
-      onShowDownload: showDownload
+      onReloadDevices: [reloadDevices, showDownload],
+      onUpdateSelected: updateSelected
     });
 
     this.state = {
@@ -24,10 +21,8 @@ class DeviceStore {
       devicePath: null,
       searching: true,
       selectedDevice: null,
-      progress: 0,
-      showDownloadOverlay: false
+      progress: 0
     };
-
   }
 
   onDownload(handlers) {
@@ -65,20 +60,8 @@ class DeviceStore {
       .catch(handleError)
       .finally(() => {
         board.removeListener('progress', updateProgress);
-        this.setState({
-          progress: 0,
-          showDownloadOverlay: false
-        });
+        this.setState({ progress: 0 });
       });
-
-  }
-
-  onHideOverlay() {
-    this.onNoDownload();
-  }
-
-  onNoDownload() {
-    this.setState({ showDownloadOverlay: false });
   }
 
   onReloadDevices(){
@@ -95,11 +78,6 @@ class DeviceStore {
     this.setState({ devicePath: null, searching: true });
     scanBoards(scanOpts)
       .then((devices) => this.setState({ devices: devices, searching: false }));
-  }
-
-  onShowDownload() {
-    this.onReloadDevices();
-    this.setState({ showDownloadOverlay: true });
   }
 
   onUpdateSelected(device) {
