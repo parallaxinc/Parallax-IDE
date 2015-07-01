@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path');
+
 const _ = require('lodash');
 
 const alt = require('../alt');
@@ -138,6 +140,7 @@ class FileStore {
   onNewFile() {
     const { workspace, userConfig, documents } = this.getInstance();
 
+    const cwd = workspace.cwd.deref();
     const directory = workspace.directory.toJS();
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
       if(dirfile.name.match(/untitled/)) {
@@ -158,7 +161,7 @@ class FileStore {
 
     userConfig.set('last-file', builtName);
 
-    documents.create(builtName, '');
+    documents.create(path.join(cwd, builtName), '');
 
     this.setState({
       fileName: builtName,
@@ -178,6 +181,7 @@ class FileStore {
     const { workspace, userConfig, documents } = this.getInstance();
     const { isNewFile } = this.state;
 
+    const cwd = workspace.cwd.deref();
     const content = workspace.current.deref();
 
     if(isNewFile && content.length){
@@ -186,7 +190,7 @@ class FileStore {
       return;
     }
 
-    const doc = documents.swap(filename);
+    const doc = documents.swap(path.join(cwd, filename));
     if(doc){
       this.state.fileName = filename;
       workspace.current.update(() => doc.getValue());
@@ -203,7 +207,7 @@ class FileStore {
 
       userConfig.set('last-file', filename);
 
-      documents.create(filename, workspace.current.deref());
+      documents.create(path.join(cwd, filename), workspace.current.deref());
       documents.focus();
 
       this.setState({
