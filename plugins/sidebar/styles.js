@@ -13,15 +13,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column'
   }),
-  overlayUserMessage: {
-    display: 'flex',
-    margin: '20px',
-    color: '#911',
-    backgroundColor: '#fcdede',
-    border: '1px solid #d2b2b2',
-    borderRadius: '3px',
-    padding: '10px'
-  },
   changeFolderButton: {
     position: 'absolute',
     top: -28,

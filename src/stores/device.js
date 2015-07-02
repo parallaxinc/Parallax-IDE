@@ -4,22 +4,22 @@ const alt = require('../alt');
 const _ = require('lodash');
 
 const { rx, tx } = require('../actions/transmission');
-const { showDownload } = require('../actions/overlay');
+const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
-const { download, reloadDevices, updateSelected } = require('../actions/device');
-
-const styles = require('../../plugins/sidebar/styles');
+const { disableAuto, reloadDevices, updateSelected } = require('../actions/device');
+const { handleSuccess, handleError } = require('../actions/file');
 
 class DeviceStore {
   constructor() {
 
     this.bindListeners({
-      onDownload: download,
       onReloadDevices: [reloadDevices, showDownload],
+      onDisableAuto: disableAuto,
       onUpdateSelected: updateSelected
     });
 
     this.state = {
+      auto: true,
       devices: [],
       devicePath: null,
       message: null,
@@ -27,45 +27,16 @@ class DeviceStore {
       selectedDevice: null,
       progress: 0
     };
+
+    this.messages = {
+      none: 'No BASIC Stamps found.',
+      noneMatched: 'No matching BASIC Stamps found.',
+      multiple: 'Please select which module to download to.'
+    };
   }
 
-  onDownload(handlers) {
-
-    function updateProgress(progress){
-      this.setState({ progress: progress });
-    }
-
-    const { handleSuccess, handleError, handleComplete } = handlers;
-    const { workspace, toast, getBoard } = this.getInstance();
-    const { selectedDevice } = this.state;
-
-    const name = workspace.filename.deref();
-    const source = workspace.current.deref();
-
-    if(!selectedDevice){
-      return;
-    }
-
-    const board = getBoard(selectedDevice);
-
-    board.removeListener('terminal', output);
-    board.removeListener('terminal', rx);
-
-    board.on('progress', updateProgress.bind(this));
-    board.on('progress', tx.bind(this));
-
-    board.bootload(selectedDevice)
-      .tap(() => clearOutput())
-      .then(() => board.on('terminal', output))
-      .then(() => board.on('terminal', rx))
-      .tap(() => toast.clear())
-      .tap(() => handleSuccess(`'${name}' downloaded successfully`))
-      .catch(handleError)
-      .finally(() => {
-        board.removeListener('progress', updateProgress);
-        this.setState({ progress: 0 });
-        handleComplete();
-      });
+  onDisableAuto() {
+    this.setState({ auto: false });
   }
 
   onReloadDevices(){
@@ -88,62 +59,100 @@ class DeviceStore {
 
   }
 
-  _checkDevices(){
-    const { devices } = this.state;
-    const noModulesFoundMessage = 'No BASIC Stamps found.';
-    const multipleModulesFoundMessage = 'Please select which module to download to.';
-    let matchedDevices = [];
-
-    _.forEach(devices, (device) => {
-      if (device.match) {
-        matchedDevices.push(device);
-      }
-    });
-    if (matchedDevices.length === 0) {
-      console.log('devicenot found');
-      this.setState({ message: noModulesFoundMessage });
-    }
-    else if (matchedDevices.length === 1) {
-      console.log('one match found');
-      this.setState({
-        message: null,
-        selectedDevice: matchedDevices[0]
-      });
-      this.onDownload({
-        handleSuccess: this._handleSuccess.bind(this),
-        handleError: this._handleError.bind(this)
-      });
-    }
-    else {
-      console.log('multiple matches found');
-      this.setState({ message: multipleModulesFoundMessage });
-    }
-  }
-
-  _handleError(err){
-    // leaving this in for better debugging of errors
-    console.log(err);
-    const { toast } = this.getInstance();
-
-    toast.show(err.message, { style: styles.errorToast });
-  }
-
-  _handleSuccess(msg){
-    const { toast } = this.getInstance();
-
-    toast.show(msg, { style: styles.successToast, timeout: 5000 });
-  }
-
   onUpdateSelected(device) {
+
     this.setState({
       devicePath: device.path,
       selectedDevice: device
     });
 
-    this.onDownload({
-      handleSuccess: this._handleSuccess.bind(this),
-      handleError: this._handleError.bind(this)
+    if(!device.name) {
+      return;
+    }
+
+    this._download();
+  }
+
+  _checkDevices(){
+    const { auto, devices } = this.state;
+    const { none, noneMatched, multiple } = this.messages;
+    let matchedDevices = [];
+    let exists = false;
+
+    _.forEach(devices, (device) => {
+      if (device.match) {
+        matchedDevices.push(device);
+      }
+      if (device.name) {
+        exists = true;
+      }
     });
+
+    if (!exists) {
+
+      this.setState({ message: none });
+
+    } else if (matchedDevices.length === 0) {
+
+      //TODO: setup for part 4 of auto download issue
+      this.setState({ message: noneMatched });
+
+    } else if(matchedDevices.length === 1) {
+
+      this.setState({
+        message: null,
+        selectedDevice: matchedDevices[0]
+      });
+
+      if (auto) {
+        this._download();
+      }
+
+    } else {
+
+      this.setState({ message: multiple });
+
+    }
+
+    this.setState({ auto: true });
+
+  }
+
+  _download() {
+
+    function updateProgress(progress){
+      this.setState({ progress: progress });
+    }
+
+    const { workspace, toast, getBoard } = this.getInstance();
+    const { selectedDevice } = this.state;
+
+    const name = workspace.filename.deref();
+
+    if(!selectedDevice){
+      return;
+    }
+
+    const board = getBoard(selectedDevice);
+
+    board.removeListener('terminal', output);
+    board.removeListener('terminal', rx);
+
+    board.on('progress', updateProgress.bind(this));
+    board.on('progress', tx.bind(this));
+
+    board.bootload(selectedDevice.program)
+      .tap(() => clearOutput())
+      .then(() => board.on('terminal', output))
+      .then(() => board.on('terminal', rx))
+      .tap(() => toast.clear())
+      .tap(() => handleSuccess(`'${name}' downloaded successfully`))
+      .catch(handleError)
+      .finally(() => {
+        board.removeListener('progress', updateProgress);
+        this.setState({ progress: 0 });
+        hideDownload();
+      });
   }
 
 }

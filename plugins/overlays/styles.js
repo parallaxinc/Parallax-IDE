@@ -36,6 +36,15 @@ const styles = {
     display: 'flex',
     marginTop: 20
   },
+  overlayUserMessage: {
+    display: 'flex',
+    margin: '20px',
+    color: '#911',
+    backgroundColor: '#fcdede',
+    border: '1px solid #d2b2b2',
+    borderRadius: '3px',
+    padding: '10px'
+  },
   progressContainerStyle: {
     width: '100%',
     height: '8px',

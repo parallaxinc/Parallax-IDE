@@ -9,7 +9,7 @@ const { createContainer } = require('sovereign');
 
 const Progress = require('./progress');
 const deviceStore = require('../../src/stores/device');
-const { download, reloadDevices, updateSelected } = require('../../src/actions/device');
+const { disableAuto, reloadDevices, updateSelected } = require('../../src/actions/device');
 
 const styles = require('./styles');
 
@@ -17,7 +17,6 @@ class DownloadOverlay extends React.Component {
 
   constructor(){
 
-    this._onAccept = this._onAccept.bind(this);
     this._onCancel = this._onCancel.bind(this);
     this._onReloadDevices = this._onReloadDevices.bind(this);
     this._onUpdateSelected = this._onUpdateSelected.bind(this);
@@ -86,19 +85,12 @@ class DownloadOverlay extends React.Component {
             <Button onClick={this._onReloadDevices}>Refresh</Button>
           </div>
           <div style={styles.overlayButtonContainer}>
-            <Button onClick={this._onAccept}>Download</Button>
             <Button onClick={this._onCancel}>Cancel</Button>
           </div>
         </div>
         <Progress percent={progress} />
       </Card>
     );
-  }
-
-  _onAccept(){
-    const { handleSuccess, handleError, handleComplete } = this.props;
-
-    download(handleSuccess, handleError, handleComplete);
   }
 
   _onCancel(evt){
@@ -110,6 +102,7 @@ class DownloadOverlay extends React.Component {
   }
 
   _onReloadDevices(){
+    disableAuto();
     reloadDevices(this.props);
   }
 
