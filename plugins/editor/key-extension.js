@@ -8,7 +8,7 @@ const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
 const { newFile, saveFile } = require('../../src/actions/file');
 const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
-const { disableAuto } = require('../../src/actions/device');
+const { disableAuto, enableAuto } = require('../../src/actions/device');
 
 const keyExtension = {
   setup: function(app) {
@@ -18,6 +18,7 @@ const keyExtension = {
         code: ['F9', 'CTRL_R'],
         exec: (evt) => {
           evt.preventDefault();
+          enableAuto();
           showDownload();
         }
       },

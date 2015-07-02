@@ -5,8 +5,14 @@ const { Menu, MainButton, ChildButton } = require('react-mfb-iceddev');
 
 const { newFile, saveFile } = require('../../src/actions/file');
 const { showDelete, showDownload } = require('../../src/actions/overlay');
+const { enableAuto } = require('../../src/actions/device');
 
 require('react-mfb-iceddev/mfb.css');
+
+function download(){
+  enableAuto();
+  showDownload();
+}
 
 const FileOperations = React.createClass({
   render: function(){
@@ -17,7 +23,7 @@ const FileOperations = React.createClass({
           iconResting="ion-plus-round"
           iconActive="ion-close-round" />
         <ChildButton
-          onClick={showDownload}
+          onClick={download}
           icon="ion-code-download"
           label="Download" />
         <ChildButton

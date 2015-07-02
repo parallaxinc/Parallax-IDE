@@ -96,7 +96,6 @@ class DownloadOverlay extends React.Component {
   }
 
   _onReloadDevices(){
-    disableAuto();
     reloadDevices(this.props);
   }
 

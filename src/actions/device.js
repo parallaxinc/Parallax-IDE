@@ -12,6 +12,10 @@ class DeviceActions {
     this.dispatch();
   }
 
+  enableAuto(){
+    this.dispatch();
+  }
+
   updateSelected(device) {
     this.dispatch(device);
   }

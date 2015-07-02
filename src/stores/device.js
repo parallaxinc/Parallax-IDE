@@ -6,7 +6,7 @@ const _ = require('lodash');
 const { rx, tx } = require('../actions/transmission');
 const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
-const { disableAuto, reloadDevices, updateSelected } = require('../actions/device');
+const { enableAuto, disableAuto, reloadDevices, updateSelected } = require('../actions/device');
 const { handleSuccess, handleError } = require('../actions/file');
 
 class DeviceStore {
@@ -15,6 +15,7 @@ class DeviceStore {
     this.bindListeners({
       onReloadDevices: [reloadDevices, showDownload],
       onDisableAuto: disableAuto,
+      onEnableAuto: enableAuto,
       onUpdateSelected: updateSelected
     });
 
@@ -37,6 +38,10 @@ class DeviceStore {
 
   onDisableAuto() {
     this.setState({ auto: false });
+  }
+
+  onEnableAuto(){
+    this.setState({ auto: true });
   }
 
   onReloadDevices(){
@@ -67,8 +72,6 @@ class DeviceStore {
           this._checkDevices();
         }
     });
-
-    this.setState({ auto: true });
   }
 
   onUpdateSelected(device) {
