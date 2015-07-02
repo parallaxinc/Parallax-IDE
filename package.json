@@ -37,6 +37,8 @@
     "chrome-sync-fs": "git://github.com/2fast2fourier/chrome-sync-fs#sync-fs",
     "css-loader": "^0.9.1",
     "del": "^1.1.1",
+    "eslint": "^0.24.0",
+    "eslint-plugin-react": "^2.6.3",
     "expect": "git://github.com/phated/expect",
     "gulp": "git://github.com/gulpjs/gulp#4.0",
     "gulp-util": "^3.0.4",

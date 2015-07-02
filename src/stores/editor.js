@@ -2,7 +2,7 @@
 
 const alt = require('../alt');
 
-const { findNext, findPrevious } = require('../actions/find');
+const { findNext, findPrevious, replace } = require('../actions/find');
 const { handleInput } = require('../actions/editor');
 const { moveByScrollUpLine, moveByScrollDownLine } = require('../actions/editor-move');
 const { dedent, indent } = require('../actions/text-move');
@@ -12,14 +12,15 @@ class EditorStore {
   constructor() {
 
     this.bindListeners({
+      onDedent: dedent,
       onFindNext: findNext,
       onFindPrevious: findPrevious,
       onHandleInput: handleInput,
+      onIndent: indent,
       onMoveByScrollUpLine: moveByScrollUpLine,
       onMoveByScrollDownLine: moveByScrollDownLine,
-      onDedent: dedent,
-      onIndent: indent,
-      onPrint: print
+      onPrint: print,
+      onReplace: replace
     });
 
   }
@@ -63,6 +64,11 @@ class EditorStore {
   }
   onPrint() {
     window.print();
+  }
+  onReplace() {
+    const { cm } = this.getInstance();
+
+    cm.execCommand('replace');
   }
 
 }

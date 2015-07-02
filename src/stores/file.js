@@ -7,9 +7,17 @@ const _ = require('lodash');
 const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
-const { clearName, deleteFile, hideOverlay, loadFile, newFile,
-  processCreate, processNoCreate, processSave, processSaveAs,
-  updateName } = require('../actions/file');
+const { hideOverlays, hideSave } = require('../actions/overlay');
+const {
+  clearName,
+  updateName,
+  newFile,
+  loadFile,
+  saveFile,
+  saveFileAs,
+  deleteFile,
+  handleError,
+  handleSuccess } = require('../actions/file');
 
 class FileStore {
   constructor() {
@@ -17,20 +25,20 @@ class FileStore {
     this.bindListeners({
       onClearName: clearName,
       onDeleteFile: deleteFile,
-      onHideOverlay: hideOverlay,
+      onHandleError: handleError,
+      onHandleSuccess: handleSuccess,
+      onHideOverlay: hideOverlays,
       onNewFile: newFile,
       onLoadFile: loadFile,
-      onProcessCreate: processCreate,
-      onProcessNoCreate: processNoCreate,
-      onProcessSave: processSave,
-      onProcessSaveAs: processSaveAs,
+      onSaveFileAs: saveFileAs,
+      onCancelSave: hideSave,
+      onSaveFile: saveFile,
       onUpdateName: updateName
     });
 
     this.state = {
       fileName: '',
-      isNewFile: false,
-      showSaveOverlay: false
+      isNewFile: false
     };
 
     this.loadQueue = [];
@@ -57,27 +65,16 @@ class FileStore {
     }
 
     workspace.deleteFile(workspace.filename)
-      .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
-      .catch(this._handleError)
-      .finally(() => {
-        this.setState({ showSaveOverlay: false });
-        this.onNewFile();
-      });
-
-  }
-
-  onHideSave() {
-    this.setState({
-      showSaveOverlay: false
-    });
+      .tap(() => this.onHandleSuccess(`'${name}' deleted successfully`))
+      .catch(this.onHandleError)
+      .finally(() => this.onNewFile());
   }
 
   onHideOverlay() {
-    this.setState({ showSaveOverlay: false });
     this.onClearName();
   }
 
-  onProcessCreate(name) {
+  onSaveFileAs(name) {
     const { workspace } = this.getInstance();
 
     if(!name){
@@ -93,48 +90,36 @@ class FileStore {
           this.onLoadFile(this.loadQueue.shift());
         }
       })
-      .tap(() => this._handleSuccess(`'${name}' created successfully`))
-      .catch(this._handleError)
-      .finally(() => this.setState({ showSaveOverlay: false }));
-
-    this.onHideSave();
+      .tap(() => this.onHandleSuccess(`'${name}' created successfully`))
+      .catch(this.onHandleError);
   }
 
-  onProcessNoCreate(status){
-    if(status.trash){
-      this.setState({ isNewFile: false, showSaveOverlay: false });
-      if(this.loadQueue.length){
-        this.onLoadFile(this.loadQueue.shift());
-      }
-    } else {
-      this.setState({ showSaveOverlay: false });
+  onCancelSave(status){
+    if(!status.trash){
+      return;
+    }
+
+    this.setState({ isNewFile: false });
+    if(this.loadQueue.length){
+      this.onLoadFile(this.loadQueue.shift());
     }
   }
 
-  onProcessSave() {
+  onSaveFile() {
     const { isNewFile } = this.state;
 
     if(isNewFile) {
-      this.setState({ showSaveOverlay: true });
-    } else {
-      this.setState({ showSaveOverlay: false });
-      this._save();
+      return;
     }
-  }
 
-  onProcessSaveAs() {
-    this.setState({ showSaveOverlay: true });
-  }
-
-  _save() {
     const { workspace } = this.getInstance();
 
     const name = workspace.filename.deref();
 
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(name, workspace.current)
-      .tap(() => this._handleSuccess(`'${name}' saved successfully`))
-      .catch(this._handleError);
+      .tap(() => this.onHandleSuccess(`'${name}' saved successfully`))
+      .catch(this.onHandleError);
   }
 
   onNewFile() {
@@ -186,7 +171,6 @@ class FileStore {
 
     if(isNewFile && content.length){
       this._queueLoad(filename);
-      this.onProcessSave();
       return;
     }
 
@@ -201,7 +185,7 @@ class FileStore {
 
     workspace.loadFile(filename, (err) => {
       if(err){
-        this._handleError(err);
+        this.onHandleError(err);
         return;
       }
 
@@ -217,7 +201,7 @@ class FileStore {
     });
   }
 
-  _handleError(err){
+  onHandleError(err){
     // leaving this in for better debugging of errors
     console.log(err);
     const { toast } = this.getInstance();
@@ -225,13 +209,11 @@ class FileStore {
     toast.show(err.message, { style: styles.errorToast });
   }
 
-  _handleSuccess(msg){
+  onHandleSuccess(msg){
     const { toast } = this.getInstance();
 
     toast.show(msg, { style: styles.successToast, timeout: 5000 });
   }
-
-
 }
 
 FileStore.config = {

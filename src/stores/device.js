@@ -2,16 +2,17 @@
 
 const alt = require('../alt');
 
-const { download, reloadDevices, updateSelected } = require('../actions/device');
-const { clearOutput, output } = require('../actions/console');
 const { rx, tx } = require('../actions/transmission');
+const { showDownload } = require('../actions/overlay');
+const { clearOutput, output } = require('../actions/console');
+const { download, reloadDevices, updateSelected } = require('../actions/device');
 
 class DeviceStore {
   constructor() {
 
     this.bindListeners({
       onDownload: download,
-      onReloadDevices: reloadDevices,
+      onReloadDevices: [reloadDevices, showDownload],
       onUpdateSelected: updateSelected
     });
 
@@ -22,7 +23,6 @@ class DeviceStore {
       selectedDevice: null,
       progress: 0
     };
-
   }
 
   onDownload(handlers) {
@@ -31,8 +31,8 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
-    const { handleSuccess, handleError } = handlers;
-    const { workspace, toast, overlay, getBoard } = this.getInstance();
+    const { handleSuccess, handleError, handleComplete } = handlers;
+    const { workspace, toast, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
     const name = workspace.filename.deref();
@@ -59,11 +59,10 @@ class DeviceStore {
       .tap(() => handleSuccess(`'${name}' downloaded successfully`))
       .catch(handleError)
       .finally(() => {
-        overlay.hide();
         board.removeListener('progress', updateProgress);
         this.setState({ progress: 0 });
+        handleComplete();
       });
-
   }
 
   onReloadDevices(){

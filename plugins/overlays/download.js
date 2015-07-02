@@ -8,10 +8,10 @@ const Loader = require('react-loader');
 const { createContainer } = require('sovereign');
 
 const Progress = require('./progress');
-const deviceStore = require('../../../src/stores/device');
-const { download, reloadDevices, updateSelected } = require('../../../src/actions/device');
+const deviceStore = require('../../src/stores/device');
+const { download, reloadDevices, updateSelected } = require('../../src/actions/device');
 
-const styles = require('../styles');
+const styles = require('./styles');
 
 class DownloadOverlay extends React.Component {
 
@@ -80,9 +80,9 @@ class DownloadOverlay extends React.Component {
   }
 
   _onAccept(){
-    const { handleSuccess, handleError } = this.props;
+    const { handleSuccess, handleError, handleComplete } = this.props;
 
-    download(handleSuccess, handleError);
+    download(handleSuccess, handleError, handleComplete);
   }
 
   _onCancel(evt){

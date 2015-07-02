@@ -9,14 +9,11 @@ const File = require('./file');
 const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
-const NewFileOverlay = require('./overlays/new-file');
-
 const deviceStore = require('../../src/stores/device');
 const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
 
-const { processCreate, processNoCreate, processSave, newFile, loadFile } = require('../../src/actions/file');
-function noop(){}
+const { loadFile } = require('../../src/actions/file');
 
 function sidebar(app, opts, done){
 
@@ -47,46 +44,17 @@ function sidebar(app, opts, done){
 
     const Component = (
       <Sidebar>
-        <ProjectOperations workspace={space} overlay={overlay} config={userConfig} />
+        <ProjectOperations />
         <FileList workspace={space} loadFile={loadFile}>
           <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
           {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
         </FileList>
-        <FileOperations workspace={space} overlay={overlay} toast={toast} irken={irken} loadFile={loadFile} />
+        <FileOperations />
       </Sidebar>
     );
 
     React.render(Component, el, cb);
   });
-
-  // Internal Helpers
-
-  function _onChangeFileStore() {
-    const { showSaveOverlay } = fileStore.getState();
-    if (showSaveOverlay) {
-      _showCreateOverlay();
-    } else {
-      overlay.hide();
-    }
-  }
-
-  function _renderOverlay(component){
-    function renderer(el){
-      React.render(component, el);
-    }
-
-    overlay.render(renderer, { backdrop: true });
-  }
-
-  function _showCreateOverlay(){
-    const component = (
-      <NewFileOverlay
-        onAccept={processCreate}
-        onCancel={processNoCreate} />
-    );
-
-    _renderOverlay(component);
-  }
 
   // Store bindings
   deviceStore.workspace = space;
@@ -99,11 +67,7 @@ function sidebar(app, opts, done){
 
   fileStore.workspace = space;
   fileStore.userConfig = userConfig;
-
   fileStore.toast = toast;
-
-  // Set up listeners
-  fileStore.listen(_onChangeFileStore);
 
   done();
 }

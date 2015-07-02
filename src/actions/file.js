@@ -7,12 +7,12 @@ class FileActions {
     this.dispatch();
   }
 
-  deleteFile(name) {
-    this.dispatch(name);
+  updateName(value) {
+    this.dispatch(value);
   }
 
-  hideOverlay() {
-    this.dispatch();
+  deleteFile(name) {
+    this.dispatch(name);
   }
 
   newFile() {
@@ -23,26 +23,21 @@ class FileActions {
     this.dispatch(filename);
   }
 
-  processCreate(name) {
+  saveFile() {
+    this.dispatch();
+  }
+
+  saveFileAs(name) {
     this.dispatch(name);
   }
 
-  processNoCreate(status){
-    this.dispatch(status);
+  handleError(err) {
+    this.dispatch(err);
   }
 
-  processSave() {
-    this.dispatch();
+  handleSuccess(msg) {
+    this.dispatch(msg);
   }
-
-  processSaveAs() {
-    this.dispatch();
-  }
-
-  updateName(value) {
-    this.dispatch(value);
-  }
-
 }
 
 module.exports = alt.createActions(FileActions);

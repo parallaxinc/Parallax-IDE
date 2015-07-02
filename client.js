@@ -36,6 +36,9 @@ const plugins = [
   },
   {
     register: require('./plugins/sidebar')
+  },
+  {
+    register: require('./plugins/overlays')
   }
 ];
 
