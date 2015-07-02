@@ -52,7 +52,11 @@ class DeviceStore {
       ],
       source: source
     };
-    this.setState({ devicePath: null, searching: true });
+    this.setState({
+      devicePath: null,
+      message: null,
+      searching: true
+    });
     scanBoards(scanOpts)
     .then((devices) => this.setState({ devices: devices, searching: false }))
     .then(() => this._checkDevices());
@@ -65,10 +69,6 @@ class DeviceStore {
       devicePath: device.path,
       selectedDevice: device
     });
-
-    if(!device.name) {
-      return;
-    }
 
     this._download();
   }

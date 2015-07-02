@@ -8,10 +8,6 @@ class DeviceActions {
     this.dispatch();
   }
 
-  enableAuto() {
-    this.dispatch();
-  }
-
   disableAuto() {
     this.dispatch();
   }

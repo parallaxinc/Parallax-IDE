@@ -13,20 +13,31 @@ const { disableAuto, reloadDevices, updateSelected } = require('../../src/action
 
 const styles = require('./styles');
 
+function componentizeUserMessage(message){
+  let messageBox;
+  if(message) {
+    messageBox = <div style={styles.overlayUserMessage}>{message}</div>;
+  }
+  else {
+    messageBox = null;
+  }
+
+  return messageBox;
+}
+
 class DownloadOverlay extends React.Component {
 
   constructor(){
 
     this._onCancel = this._onCancel.bind(this);
     this._onReloadDevices = this._onReloadDevices.bind(this);
-    this._onUpdateSelected = this._onUpdateSelected.bind(this);
 
   }
 
   componentizeDevice(device, selectedPath){
     const highlight = device.path === selectedPath ? 'active' : 'inactive';
     return (
-      <tr style={styles[highlight]} onClick={this._onUpdateSelected.bind(this, device)}>
+      <tr style={styles[highlight]} onClick={updateSelected.bind(this, device)}>
         <td style={styles.deviceTd}>{device.name}</td>
         <td style={styles.deviceTd}>{device.version}</td>
         <td style={styles.deviceTd}>{device.path}</td>
@@ -34,23 +45,11 @@ class DownloadOverlay extends React.Component {
       );
   }
 
-  componentizeUserMessage(message){
-    let messageBox;
-    if(message) {
-      messageBox = <div style={styles.overlayUserMessage}>{message}</div>;
-    }
-    else {
-      messageBox = null;
-    }
-
-    return messageBox;
-  }
-
   render(){
     const { devices, devicePath, message, progress, searching } = this.props;
 
     const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
-    const userMessage = this.componentizeUserMessage(message);
+    const userMessage = componentizeUserMessage(message);
 
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
@@ -106,9 +105,6 @@ class DownloadOverlay extends React.Component {
     reloadDevices(this.props);
   }
 
-  _onUpdateSelected(device){
-    updateSelected(device);
-  }
 }
 
 module.exports = createContainer(DownloadOverlay, {
