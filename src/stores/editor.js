@@ -100,7 +100,6 @@ class EditorStore {
     const anchor = doc.posFromIndex(opts.position);
     const head = doc.posFromIndex(opts.position + opts.length);
 
-    console.log('onHighlight', opts, anchor, head);
     doc.setSelection(anchor, head);
   }
 
