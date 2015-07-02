@@ -3,8 +3,8 @@
 const alt = require('../alt');
 
 class DeviceActions {
-  download(handleSuccess, handleError) {
-    this.dispatch({ handleSuccess, handleError });
+  download(handleSuccess, handleError, handleComplete) {
+    this.dispatch({ handleSuccess, handleError, handleComplete });
   }
 
   reloadDevices() {

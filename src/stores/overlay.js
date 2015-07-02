@@ -3,7 +3,6 @@
 const alt = require('../alt');
 
 const fileStore = require('./file');
-const { download } = require('../actions/device');
 const { deleteFile, saveFile, saveFileAs, loadFile } = require('../actions/file');
 const { confirmDelete, changeProject, deleteProject } = require('../actions/project');
 const {
@@ -23,13 +22,14 @@ class OverlayStore {
 
     this.bindListeners({
       onHideOverlays: hideOverlays,
-      onSaveNewFile: [saveFile, loadFile],
+      onSaveBeforeLoad: loadFile,
+      onSaveNewFile: saveFile,
       onShowSave: showSave,
       onHideSave: [saveFileAs, hideSave],
       onShowDelete: showDelete,
       onHideDelete: [hideDelete, deleteFile],
       onShowDownload: showDownload,
-      onHideDownload: [download, hideDownload],
+      onHideDownload: hideDownload,
       onShowProjects: [deleteProject, showProjects],
       onHideProjects: [changeProject, hideProjects],
       onShowProjectDelete: [confirmDelete, showProjectDelete]
@@ -52,6 +52,17 @@ class OverlayStore {
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
     });
+  }
+
+  onSaveBeforeLoad(){
+    // TODO: don't really like this
+    const { workspace } = fileStore;
+    const { isNewFile } = fileStore.getState();
+    const content = workspace.current.deref();
+
+    if(isNewFile && content.length){
+      this.onShowSave();
+    }
   }
 
   onSaveNewFile(){

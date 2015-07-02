@@ -31,7 +31,7 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
-    const { handleSuccess, handleError } = handlers;
+    const { handleSuccess, handleError, handleComplete } = handlers;
     const { workspace, toast, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
@@ -61,6 +61,7 @@ class DeviceStore {
       .finally(() => {
         board.removeListener('progress', updateProgress);
         this.setState({ progress: 0 });
+        handleComplete();
       });
   }
 

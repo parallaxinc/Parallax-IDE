@@ -63,7 +63,8 @@ function overlays(app, opts, done){
         <DownloadOverlay
           onCancel={hideDownload}
           handleSuccess={handleSuccess}
-          handleError={handleError} />
+          handleError={handleError}
+          handleComplete={hideDownload} />
       );
     }
 

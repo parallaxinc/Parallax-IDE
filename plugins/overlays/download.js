@@ -80,9 +80,9 @@ class DownloadOverlay extends React.Component {
   }
 
   _onAccept(){
-    const { handleSuccess, handleError } = this.props;
+    const { handleSuccess, handleError, handleComplete } = this.props;
 
-    download(handleSuccess, handleError);
+    download(handleSuccess, handleError, handleComplete);
   }
 
   _onCancel(evt){
