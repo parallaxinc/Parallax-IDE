@@ -31,12 +31,6 @@ const styles = {
   },
   fileHasTemp: {
     backgroundColor: red
-  },
-  errorToast: {
-    backgroundColor: red
-  },
-  successToast: {
-    backgroundColor: green
   }
 };
 
