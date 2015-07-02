@@ -14,8 +14,6 @@ const fileStore = require('../../src/stores/file');
 
 const { loadFile } = require('../../src/actions/file');
 
-const makeToasts = require('../../src/lib/toasts');
-
 function sidebar(app, opts, done){
 
   const space = app.workspace;
