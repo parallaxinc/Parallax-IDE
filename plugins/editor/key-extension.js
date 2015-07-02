@@ -8,11 +8,20 @@ const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
 const { newFile, saveFile } = require('../../src/actions/file');
 const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
+const { disableAuto, enableAuto } = require('../../src/actions/device');
 
 const keyExtension = {
   setup: function(app) {
 
     const cmCommands = {
+      download: {
+        code: ['F9', 'CTRL_R'],
+        exec: (evt) => {
+          evt.preventDefault();
+          enableAuto();
+          showDownload();
+        }
+      },
       findNext: {
         code: 'F3',
         exec: (evt) => {
@@ -31,6 +40,7 @@ const keyExtension = {
         code: ['F6', 'CTRL_I'],
         exec: (evt) => {
           evt.preventDefault();
+          disableAuto();
           showDownload();
         }
       },
