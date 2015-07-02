@@ -67,7 +67,8 @@ function editor(app, opts, done){
         'Ctrl-Up': false,
         'Ctrl-Down': false,
         'Tab': false,
-        'Shift-Tab': false
+        'Shift-Tab': false,
+        'Ctrl-T': false
       });
       keyExtension.setup(app);
       editorStore.cm = codeEditor;
