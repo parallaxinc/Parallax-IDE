@@ -17,6 +17,7 @@ const keyExtension = require('./key-extension');
 
 const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
+const deviceStore = require('../../src/stores/device');
 const fileStore = require('../../src/stores/file');
 
 const { handleInput } = require('../../src/actions/editor');
@@ -70,6 +71,10 @@ function editor(app, opts, done){
   editorStore.toasts = toasts;
   editorStore.compile = compile;
   editorStore.workspace = space;
+
+  // really stinks to attach these in here
+  fileStore.toasts = toasts;
+  deviceStore.toasts = toasts;
 
   app.view('editor', function(el, cb){
     console.log('editor render');

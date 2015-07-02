@@ -23,8 +23,6 @@ function sidebar(app, opts, done){
   const getBoard = app.getBoard.bind(app);
   const scanBoards = app.scanBoards.bind(app);
 
-  const toasts = makeToasts(app.toast);
-
   function refreshDirectory(){
     // TODO: expose a method to refresh directory without changing it
     space.changeDir(space.cwd.deref());
@@ -58,13 +56,11 @@ function sidebar(app, opts, done){
 
   // Store bindings
   deviceStore.workspace = space;
-  deviceStore.toasts = toasts;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
 
   fileStore.workspace = space;
   fileStore.userConfig = userConfig;
-  fileStore.toasts = toasts;
 
   done();
 }
