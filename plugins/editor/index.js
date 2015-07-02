@@ -53,9 +53,10 @@ function editor(app, opts, done){
 
     doc.setSelection(anchor, head, { scroll: false });
 
-    const top = codeEditor.charCoords(anchor, 'local').top;
+    const charRect = codeEditor.charCoords(anchor, 'local');
     const halfHeight = codeEditor.getScrollerElement().offsetHeight / 2;
-    codeEditor.scrollTo(null, top - halfHeight - 5);
+    const halfTextHeight = Math.floor((charRect.bottom - charRect.top) / 2);
+    codeEditor.scrollTo(null, charRect.top - halfHeight - halfTextHeight);
   }
 
   consoleStore.listen(refreshConsole);
