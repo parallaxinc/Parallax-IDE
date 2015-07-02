@@ -63,7 +63,14 @@ class EditorStore {
     cm.execCommand('indentLess');
   }
   onPrint() {
+    const { cm, workspace } = this.getInstance();
+
+    const { title } = document;
+    document.title = workspace.filename.deref();
+    cm.setOption('viewportMargin', Infinity);
     window.print();
+    document.title = title;
+    cm.setOption('viewportMargin', 10);
   }
   onReplace() {
     const { cm } = this.getInstance();
