@@ -11,7 +11,7 @@ const overlayStore = require('../../src/stores/overlay');
 const projectStore = require('../../src/stores/project');
 
 const { confirmDelete, changeProject, deleteProject } = require('../../src/actions/project');
-const { handleError, handleSuccess, deleteFile, saveFileAs } = require('../../src/actions/file');
+const { deleteFile, saveFileAs } = require('../../src/actions/file');
 const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
 
 function overlays(app, opts, done){
@@ -61,10 +61,7 @@ function overlays(app, opts, done){
     if(showDownloadOverlay){
       component = (
         <DownloadOverlay
-          onCancel={hideDownload}
-          handleSuccess={handleSuccess}
-          handleError={handleError}
-          handleComplete={hideDownload} />
+          onCancel={hideDownload} />
       );
     }
 

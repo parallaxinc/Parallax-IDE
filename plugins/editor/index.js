@@ -9,18 +9,23 @@ require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
 require('../../assets/theme/parallax.css');
 
+const React = require('react');
 const CodeMirror = require('codemirror');
 require('./pbasic')(CodeMirror);
 
 const keyExtension = require('./key-extension');
+
 const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
+const deviceStore = require('../../src/stores/device');
 const fileStore = require('../../src/stores/file');
+
 const { handleInput } = require('../../src/actions/editor');
 const DocumentsStore = require('../../src/stores/documents');
 
-const React = require('react');
 const TransmissionBar = require('./transmission-bar');
+
+const makeToasts = require('../../src/lib/toasts');
 
 function editor(app, opts, done){
 
@@ -37,9 +42,39 @@ function editor(app, opts, done){
     }
   }
 
+  function highlighter(position, length) {
+    if(!codeEditor){
+      return;
+    }
+
+    const doc = codeEditor.getDoc();
+
+    const anchor = doc.posFromIndex(position);
+    const head = doc.posFromIndex(position + length);
+
+    doc.setSelection(anchor, head, { scroll: false });
+
+    const charRect = codeEditor.charCoords(anchor, 'local');
+    const halfHeight = codeEditor.getScrollerElement().offsetHeight / 2;
+    const halfTextHeight = Math.floor((charRect.bottom - charRect.top) / 2);
+    codeEditor.scrollTo(null, charRect.top - halfHeight - halfTextHeight);
+  }
+
   consoleStore.listen(refreshConsole);
 
-  var space = app.workspace;
+  const space = app.workspace;
+  const compile = app.compile.bind(app);
+  // seems strange to pass highlighter to toasts
+  // maybe this should be named "handlers" or something
+  const toasts = makeToasts(app.toast, highlighter);
+
+  editorStore.toasts = toasts;
+  editorStore.compile = compile;
+  editorStore.workspace = space;
+
+  // really stinks to attach these in here
+  fileStore.toasts = toasts;
+  deviceStore.toasts = toasts;
 
   app.view('editor', function(el, cb){
     console.log('editor render');
@@ -67,7 +102,8 @@ function editor(app, opts, done){
         'Ctrl-Up': false,
         'Ctrl-Down': false,
         'Tab': false,
-        'Shift-Tab': false
+        'Shift-Tab': false,
+        'Ctrl-T': false
       });
       keyExtension.setup(app);
       editorStore.cm = codeEditor;

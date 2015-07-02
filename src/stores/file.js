@@ -5,9 +5,9 @@ const path = require('path');
 const _ = require('lodash');
 
 const alt = require('../alt');
-const styles = require('../../plugins/sidebar/styles');
 
 const { hideOverlays, hideSave } = require('../actions/overlay');
+
 const {
   clearName,
   updateName,
@@ -15,9 +15,7 @@ const {
   loadFile,
   saveFile,
   saveFileAs,
-  deleteFile,
-  handleError,
-  handleSuccess } = require('../actions/file');
+  deleteFile } = require('../actions/file');
 
 class FileStore {
   constructor() {
@@ -25,8 +23,6 @@ class FileStore {
     this.bindListeners({
       onClearName: clearName,
       onDeleteFile: deleteFile,
-      onHandleError: handleError,
-      onHandleSuccess: handleSuccess,
       onHideOverlay: hideOverlays,
       onNewFile: newFile,
       onLoadFile: loadFile,
@@ -65,8 +61,8 @@ class FileStore {
     }
 
     workspace.deleteFile(workspace.filename)
-      .tap(() => this.onHandleSuccess(`'${name}' deleted successfully`))
-      .catch(this.onHandleError)
+      .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
+      .catch((err) => this._handleError(err))
       .finally(() => this.onNewFile());
   }
 
@@ -90,8 +86,8 @@ class FileStore {
           this.onLoadFile(this.loadQueue.shift());
         }
       })
-      .tap(() => this.onHandleSuccess(`'${name}' created successfully`))
-      .catch(this.onHandleError);
+      .tap(() => this._handleSuccess(`'${name}' created successfully`))
+      .catch((err) => this._handleError(err));
   }
 
   onCancelSave(status){
@@ -118,8 +114,8 @@ class FileStore {
 
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(name, workspace.current)
-      .tap(() => this.onHandleSuccess(`'${name}' saved successfully`))
-      .catch(this.onHandleError);
+      .tap(() => this._handleSuccess(`'${name}' saved successfully`))
+      .catch((err) => this._handleError(err));
   }
 
   onNewFile() {
@@ -185,7 +181,7 @@ class FileStore {
 
     workspace.loadFile(filename, (err) => {
       if(err){
-        this.onHandleError(err);
+        this._handleError(err);
         return;
       }
 
@@ -201,18 +197,16 @@ class FileStore {
     });
   }
 
-  onHandleError(err){
-    // leaving this in for better debugging of errors
-    console.log(err);
-    const { toast } = this.getInstance();
+  _handleError(err){
+    const { toasts } = this.getInstance();
 
-    toast.show(err.message, { style: styles.errorToast });
+    toasts.error(err);
   }
 
-  onHandleSuccess(msg){
-    const { toast } = this.getInstance();
+  _handleSuccess(msg){
+    const { toasts } = this.getInstance();
 
-    toast.show(msg, { style: styles.successToast, timeout: 5000 });
+    toasts.success(msg);
   }
 }
 

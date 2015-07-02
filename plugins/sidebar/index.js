@@ -10,20 +10,18 @@ const FileOperations = require('./file-operations');
 const ProjectOperations = require('./project-operations');
 
 const deviceStore = require('../../src/stores/device');
-const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
 
 const { loadFile } = require('../../src/actions/file');
 
+const makeToasts = require('../../src/lib/toasts');
+
 function sidebar(app, opts, done){
 
   const space = app.workspace;
-  const toast = app.toast;
-  const overlay = app.overlay;
   const userConfig = app.userConfig;
-  const irken = app;
-  const getBoard = app.getBoard.bind(irken);
-  const scanBoards = app.scanBoards.bind(irken);
+  const getBoard = app.getBoard.bind(app);
+  const scanBoards = app.scanBoards.bind(app);
 
   function refreshDirectory(){
     // TODO: expose a method to refresh directory without changing it
@@ -58,16 +56,11 @@ function sidebar(app, opts, done){
 
   // Store bindings
   deviceStore.workspace = space;
-  deviceStore.toast = toast;
-  deviceStore.overlay = overlay;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
 
-  editorStore.workspace = space;
-
   fileStore.workspace = space;
   fileStore.userConfig = userConfig;
-  fileStore.toast = toast;
 
   done();
 }

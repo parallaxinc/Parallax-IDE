@@ -1,13 +1,13 @@
 'use strict';
 
-const alt = require('../alt');
 const _ = require('lodash');
+
+const alt = require('../alt');
 
 const { rx, tx } = require('../actions/transmission');
 const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
 const { enableAuto, disableAuto, reloadDevices, updateSelected } = require('../actions/device');
-const { handleSuccess, handleError } = require('../actions/file');
 
 class DeviceStore {
   constructor() {
@@ -134,7 +134,7 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
-    const { workspace, toast, getBoard } = this.getInstance();
+    const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
     const name = workspace.filename.deref();
@@ -155,14 +155,32 @@ class DeviceStore {
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
-      .tap(() => toast.clear())
-      .tap(() => handleSuccess(`'${name}' downloaded successfully`))
-      .catch(handleError)
+      .tap(() => this._handleClear())
+      .tap(() => this._handleSuccess(`'${name}' downloaded successfully`))
+      .catch((err) => this._handleError(err))
       .finally(() => {
         board.removeListener('progress', updateProgress);
         this.setState({ progress: 0 });
         hideDownload();
       });
+  }
+
+  _handleClear(){
+    const { toasts } = this.getInstance();
+
+    toasts.clear();
+  }
+
+  _handleError(err){
+    const { toasts } = this.getInstance();
+
+    toasts.error(err);
+  }
+
+  _handleSuccess(msg){
+    const { toasts } = this.getInstance();
+
+    toasts.success(msg);
   }
 
 }
