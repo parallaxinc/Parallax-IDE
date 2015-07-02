@@ -30,14 +30,6 @@ class FileActions {
   saveFileAs(name) {
     this.dispatch(name);
   }
-
-  handleError(err) {
-    this.dispatch(err);
-  }
-
-  handleSuccess(msg) {
-    this.dispatch(msg);
-  }
 }
 
 module.exports = alt.createActions(FileActions);

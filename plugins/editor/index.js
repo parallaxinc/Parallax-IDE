@@ -9,18 +9,22 @@ require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
 require('../../assets/theme/parallax.css');
 
+const React = require('react');
 const CodeMirror = require('codemirror');
 require('./pbasic')(CodeMirror);
 
 const keyExtension = require('./key-extension');
+
 const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
 const fileStore = require('../../src/stores/file');
+
 const { handleInput } = require('../../src/actions/editor');
 const DocumentsStore = require('../../src/stores/documents');
 
-const React = require('react');
 const TransmissionBar = require('./transmission-bar');
+
+const makeToasts = require('../../src/lib/toasts');
 
 function editor(app, opts, done){
 
@@ -37,9 +41,30 @@ function editor(app, opts, done){
     }
   }
 
+  function highlighter(position, length) {
+    if(!codeEditor){
+      return;
+    }
+
+    const doc = codeEditor.getDoc();
+
+    const anchor = doc.posFromIndex(position);
+    const head = doc.posFromIndex(position + length);
+
+    doc.setSelection(anchor, head);
+  }
+
   consoleStore.listen(refreshConsole);
 
-  var space = app.workspace;
+  const space = app.workspace;
+  const compile = app.compile.bind(app);
+  // seems strange to pass highlighter to toasts
+  // maybe this should be named "handlers" or something
+  const toasts = makeToasts(app.toast, highlighter);
+
+  editorStore.toasts = toasts;
+  editorStore.compile = compile;
+  editorStore.workspace = space;
 
   app.view('editor', function(el, cb){
     console.log('editor render');
