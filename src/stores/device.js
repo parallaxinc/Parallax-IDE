@@ -75,7 +75,8 @@ class DeviceStore {
 
     this.setState({
       devicePath: device.path,
-      selectedDevice: device
+      selectedDevice: device,
+      message: null
     });
 
     this._download();

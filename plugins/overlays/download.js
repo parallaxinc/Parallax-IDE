@@ -13,18 +13,6 @@ const { disableAuto, reloadDevices, updateSelected } = require('../../src/action
 
 const styles = require('./styles');
 
-function componentizeUserMessage(message){
-  let messageBox;
-  if(message) {
-    messageBox = <div style={styles.overlayUserMessage}>{message}</div>;
-  }
-  else {
-    messageBox = null;
-  }
-
-  return messageBox;
-}
-
 class DownloadOverlay extends React.Component {
 
   constructor(){
@@ -49,12 +37,22 @@ class DownloadOverlay extends React.Component {
     const { devices, devicePath, message, progress, searching } = this.props;
 
     const deviceRows = _.map(devices, (device) => this.componentizeDevice(device, devicePath));
-    const userMessage = componentizeUserMessage(message);
+
+    let bottomBar;
+    if(message){
+      bottomBar = (
+        <div style={styles.overlayUserMessage}>{message}</div>
+      );
+    } else {
+      bottomBar = (
+        <Progress percent={progress} />
+      );
+    }
 
     return (
-      <Card styles={[styles.overlay, styles.overlayLarge]}>
-        <h3 style={styles.overlayTitle}>Please choose your connected device.</h3>
-        <div>
+      <Card styles={[styles.overlay, styles.overlayLarge, styles.overlayUnpad]}>
+        <h3 styles={[styles.overlayTitle, styles.overlayPad]}>Please choose your connected device.</h3>
+        <div style={styles.overlayPad}>
           <Loader loaded={!searching}>
             <div style={styles.deviceTableWrapper}>
               <div style={styles.deviceTableScroll}>
@@ -74,12 +72,7 @@ class DownloadOverlay extends React.Component {
             </div>
           </Loader>
         </div>
-        <div>
-        </div>
-
-        {userMessage}
-
-        <div style={styles.overlayDevicesBottom}>
+        <div styles={[styles.overlayDevicesBottom, styles.overlayPad]}>
           <div style={styles.overlayLoadingContainer}>
             <Button onClick={this._onReloadDevices}>Refresh</Button>
           </div>
@@ -87,7 +80,9 @@ class DownloadOverlay extends React.Component {
             <Button onClick={this._onCancel}>Cancel</Button>
           </div>
         </div>
-        <Progress percent={progress} />
+        <div style={styles.bottomBar}>
+          {bottomBar}
+        </div>
       </Card>
     );
   }

@@ -18,6 +18,12 @@ const styles = {
   overlayLarge: StyleSheet.create({
     height: 400
   }),
+  overlayUnpad: {
+    padding: '16px 0 0'
+  },
+  overlayPad: {
+    padding: '0 16px'
+  },
   overlayTitle: {
     margin: 0
   },
@@ -37,21 +43,21 @@ const styles = {
     marginTop: 20
   },
   overlayUserMessage: {
-    display: 'flex',
-    margin: '20px',
     color: '#911',
     backgroundColor: '#fcdede',
-    border: '1px solid #d2b2b2',
-    borderRadius: '3px',
-    padding: '10px'
+    padding: '10px 16px',
+    textAlign: 'center',
+    width: '100%'
+  },
+  bottomBar: {
+    height: '39px',
+    display: 'flex'
   },
   progressContainerStyle: {
     width: '100%',
     height: '8px',
     backgroundColor: '#b0d0ef',
-    position: 'absolute',
-    bottom: 0,
-    left: 0
+    marginTop: 'auto'
   },
   progressBarStyle: {
     height: '100%',
