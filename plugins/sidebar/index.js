@@ -22,6 +22,7 @@ function sidebar(app, opts, done){
   const overlay = app.overlay;
   const userConfig = app.userConfig;
   const irken = app;
+  const compile = app.compile.bind(irken);
   const getBoard = app.getBoard.bind(irken);
   const scanBoards = app.scanBoards.bind(irken);
 
@@ -63,6 +64,8 @@ function sidebar(app, opts, done){
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
 
+  editorStore.toast = toast;
+  editorStore.compile = compile;
   editorStore.workspace = space;
 
   fileStore.workspace = space;

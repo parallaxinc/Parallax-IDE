@@ -8,6 +8,8 @@ const alt = require('../alt');
 const styles = require('../../plugins/sidebar/styles');
 
 const { hideOverlays, hideSave } = require('../actions/overlay');
+const { highlight } = require('../actions/editor.js');
+
 const {
   clearName,
   updateName,
@@ -207,6 +209,9 @@ class FileStore {
     const { toast } = this.getInstance();
 
     toast.show(err.message, { style: styles.errorToast });
+    if(err && err.errorLength){
+      highlight(err.errorPosition, err.errorLength);
+    }
   }
 
   onHandleSuccess(msg){

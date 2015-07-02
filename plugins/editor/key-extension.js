@@ -6,6 +6,7 @@ const { findNext, findPrevious, replace } = require('../../src/actions/find');
 const { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/editor-move');
 const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
+const { syntaxCheck } = require('../../src/actions/editor');
 const { newFile, saveFile } = require('../../src/actions/file');
 const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
 const { disableAuto, enableAuto } = require('../../src/actions/device');
@@ -119,6 +120,13 @@ const keyExtension = {
         exec(evt){
           evt.preventDefault();
           showProjects();
+        }
+      },
+      syntaxCheck: {
+        code: ['CTRL_T', 'F7'],
+        exec(evt){
+          evt.preventDefault();
+          syntaxCheck();
         }
       }
     };
