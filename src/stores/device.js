@@ -42,6 +42,7 @@ class DeviceStore {
   onReloadDevices(){
 
     const { scanBoards, workspace } = this.getInstance();
+    const { auto } = this.state;
     const source = workspace.current.deref();
 
     const scanOpts = {
@@ -52,15 +53,22 @@ class DeviceStore {
       ],
       source: source
     };
+
     this.setState({
       devicePath: null,
       message: null,
       searching: true
     });
-    scanBoards(scanOpts)
-    .then((devices) => this.setState({ devices: devices, searching: false }))
-    .then(() => this._checkDevices());
 
+    scanBoards(scanOpts)
+      .then((devices) => this.setState({ devices: devices, searching: false }))
+      .then(() => {
+        if(auto) {
+          this._checkDevices();
+        }
+    });
+
+    this.setState({ auto: true });
   }
 
   onUpdateSelected(device) {
@@ -113,8 +121,6 @@ class DeviceStore {
       this.setState({ message: multiple });
 
     }
-
-    this.setState({ auto: true });
 
   }
 
