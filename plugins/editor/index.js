@@ -55,8 +55,8 @@ function editor(app, opts, done){
       scroll: false
     });
 
-    var top = codeEditor.charCoords(anchor, 'local').top;
-    var halfHeight = codeEditor.getScrollerElement().offsetHeight / 2;
+    const top = codeEditor.charCoords(anchor, 'local').top;
+    const halfHeight = codeEditor.getScrollerElement().offsetHeight / 2;
     codeEditor.scrollTo(null, top - halfHeight - 5);
   }
 
