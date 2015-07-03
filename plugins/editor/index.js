@@ -93,8 +93,7 @@ function editor(app, opts, done){
         lineNumbers: true
       });
 
-      codeEditor.on('inputRead', handleInput);
-      codeEditor.on('keyHandled', handleInput);
+      codeEditor.on('change', handleInput);
 
       codeEditor.setOption('styleSelectedText', true);
       codeEditor.setOption('tabSize', 2);
