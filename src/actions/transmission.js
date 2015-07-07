@@ -10,6 +10,10 @@ class TransmissionActions {
   tx() {
     this.dispatch();
   }
+
+  transmitInput(input) {
+    this.dispatch(input);
+  }
 }
 
 module.exports = alt.createActions(TransmissionActions);

@@ -35,6 +35,22 @@ const styles = {
   },
   tx: {
     backgroundColor: red
+  },
+  transmit: {
+    margin: 0,
+    height: '32px',
+    backgroundColor: 'rgba(255,203,0,.1)'
+  },
+  transmitInput: {
+    border: '0px',
+    backgroundColor: 'transparent',
+    outline: 'none',
+    resize: 'none',
+    width: '100%',
+    padding: '5px 10px',
+    fontSize: 'inherit',
+    fontFamily: 'inherit',
+    boxSizing: 'border-box'
   }
 };
 
