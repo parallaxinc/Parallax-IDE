@@ -31,6 +31,14 @@ class OverlayActions {
     this.dispatch();
   }
 
+  showOverwrite(){
+    this.dispatch();
+  }
+
+  hideOverwrite(){
+    this.dispatch();
+  }
+
   showProjects(){
     this.dispatch();
   }

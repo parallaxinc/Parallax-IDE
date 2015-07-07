@@ -6,13 +6,20 @@ const SaveOverlay = require('./save');
 const ProjectOverlay = require('./project');
 const DownloadOverlay = require('./download');
 const DeleteConfirmOverlay = require('./delete-confirm');
+const OverwriteConfirmOverlay = require('./overwrite-confirm');
 
 const overlayStore = require('../../src/stores/overlay');
 const projectStore = require('../../src/stores/project');
 
 const { confirmDelete, changeProject, deleteProject } = require('../../src/actions/project');
 const { deleteFile, saveFileAs } = require('../../src/actions/file');
-const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
+const { hideSave,
+        hideDelete,
+        hideDownload,
+        showOverwrite,
+        hideOverwrite,
+        showProjects,
+        hideProjects } = require('../../src/actions/overlay');
 
 function overlays(app, opts, done){
 
@@ -20,6 +27,20 @@ function overlays(app, opts, done){
 
   projectStore.config = userConfig;
   projectStore.workspace = workspace;
+
+  function checkSave(name, overwrite) {
+    workspace.filename.update(() => name);
+
+    if(workspace.directory.some((x) => x.get('name') === name) && !overwrite) {
+      showOverwrite();
+      return;
+    }
+
+    hideOverwrite();
+
+    saveFileAs(name);
+
+  }
 
   function renderOverlay(component){
     function renderer(el){
@@ -34,6 +55,7 @@ function overlays(app, opts, done){
       showSaveOverlay,
       showDeleteOverlay,
       showDownloadOverlay,
+      showOverwriteOverlay,
       showProjectsOverlay,
       showProjectDeleteOverlay } = overlayStore.getState();
 
@@ -41,7 +63,7 @@ function overlays(app, opts, done){
     if(showSaveOverlay){
       component = (
         <SaveOverlay
-          onAccept={saveFileAs}
+          onAccept={checkSave}
           onCancel={hideSave} />
       );
     }
@@ -85,12 +107,23 @@ function overlays(app, opts, done){
       );
     }
 
+    if(showOverwriteOverlay) {
+      const name = workspace.filename.deref();
+      component = (
+        <OverwriteConfirmOverlay
+          name={name}
+          onAccept={checkSave}
+          onCancel={hideOverwrite} />
+      );
+    }
+
     if(component){
       renderOverlay(component);
     } else {
       // if there is a change and every state is false, hide overlay
       overlay.hide();
     }
+
   }
 
   overlayStore.listen(onOverlayChange);
