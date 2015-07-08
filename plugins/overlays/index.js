@@ -14,6 +14,11 @@ const { confirmDelete, changeProject, deleteProject } = require('../../src/actio
 const { deleteFile, saveFileAs } = require('../../src/actions/file');
 const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
 
+function keyAction(event) {
+  console.log('KEYACTION:', event);
+  event.stopPropagation();
+}
+
 function overlays(app, opts, done){
 
   const { overlay, workspace, userConfig } = app;
@@ -91,6 +96,15 @@ function overlays(app, opts, done){
       // if there is a change and every state is false, hide overlay
       overlay.hide();
     }
+
+    if (showSaveOverlay) {
+      document.addEventListener('keydown', keyAction, false);
+    }
+    else {
+      document.removeEventListener('keydown', keyAction, false);
+    }
+
+
   }
 
   overlayStore.listen(onOverlayChange);
