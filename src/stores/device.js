@@ -29,7 +29,7 @@ class DeviceStore {
       progress: 0,
       searching: true,
       selectedDevice: null,
-      transmitText: 'hi'
+      transmitText: ''
     };
 
     this.messages = {

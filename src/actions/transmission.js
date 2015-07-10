@@ -10,7 +10,6 @@ class TransmissionActions {
   tx() {
     this.dispatch();
   }
-
 }
 
 module.exports = alt.createActions(TransmissionActions);
