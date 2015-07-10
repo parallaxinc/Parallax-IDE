@@ -16,6 +16,10 @@ class DeviceActions {
     this.dispatch();
   }
 
+  transmitInput(input) {
+    this.dispatch(input);
+  }
+
   updateSelected(device) {
     this.dispatch(device);
   }

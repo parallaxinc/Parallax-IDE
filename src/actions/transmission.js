@@ -11,9 +11,6 @@ class TransmissionActions {
     this.dispatch();
   }
 
-  transmitInput(input) {
-    this.dispatch(input);
-  }
 }
 
 module.exports = alt.createActions(TransmissionActions);

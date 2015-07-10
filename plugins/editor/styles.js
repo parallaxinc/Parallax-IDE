@@ -39,7 +39,8 @@ const styles = {
   transmit: {
     margin: 0,
     height: '32px',
-    backgroundColor: 'rgba(255,203,0,.1)'
+    backgroundColor: 'white',
+    boxShadow: 'inset 0px 5px 10px -5px rgba(0, 0, 0, 0.26)'
   },
   transmitInput: {
     border: '0px',

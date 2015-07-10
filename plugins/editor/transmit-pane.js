@@ -4,20 +4,33 @@ const React = require('react');
 const { createContainer } = require('sovereign');
 
 const styles = require('./styles');
-const transmissionStore = require('../../src/stores/transmission');
-const { transmitInput } = require('../../src/actions/transmission');
+const deviceStore = require('../../src/stores/device');
+const { transmitInput } = require('../../src/actions/device');
 
 class TransmitPane extends React.Component {
 
-  handleInput(event) {
-    transmitInput(event.key);
+
+  handleKeyDown(event) {
+    const { keyCode } = event.nativeEvent;
+    if (keyCode < 32 || (keyCode > 127 && keyCode < 160)) {
+      transmitInput(event);
+    }
+  }
+  handleKeyPress(event) {
+    const { keyCode } = event.nativeEvent;
+    if ((keyCode >= 32 && keyCode <= 127) ||
+        (keyCode >= 160 && keyCode <= 255)) {
+      transmitInput(event);
+    }
   }
 
   render() {
+    const { connection, transmitText } = this.props;
     return (
       <div style={styles.transmit}>
         <textarea style={styles.transmitInput} name='transmitInput'
-          onKeyPress={this.handleInput} rows='1' />
+          value={ transmitText } onKeyDown={this.handleKeyDown}
+          onKeyPress={this.handleKeyPress} rows='1' disabled={!connection} />
         <br />
       </div>
     );
@@ -27,11 +40,11 @@ class TransmitPane extends React.Component {
 module.exports = createContainer(TransmitPane, {
   getStores(){
     return {
-      deviceStore: transmissionStore
+      deviceStore: deviceStore
     };
   },
 
   getPropsFromStores() {
-    return transmissionStore.getState();
+    return deviceStore.getState();
   }
 });

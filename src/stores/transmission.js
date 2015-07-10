@@ -2,15 +2,14 @@
 
 const alt = require('../alt');
 
-const { rx, tx, transmitInput } = require('../actions/transmission');
+const { rx, tx } = require('../actions/transmission');
 
 class TransmissionStore {
   constructor() {
 
     this.bindListeners({
       onRx: rx,
-      onTx: tx,
-      onTransmitInput: transmitInput
+      onTx: tx
     });
 
     this.state = {
@@ -54,10 +53,6 @@ class TransmissionStore {
 
       this.setState({ timeoutIdTx: id });
     }
-  }
-
-  onTransmitInput(input) {
-    // send input to STAMP
   }
 
 }
