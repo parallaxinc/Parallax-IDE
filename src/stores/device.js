@@ -80,6 +80,8 @@ class DeviceStore {
   onTransmitInput(input) {
 
     const { keyCode } = input.nativeEvent;
+    const keyCodeArr = new Uint8Array([keyCode]);
+
     this._updateTransmitText(keyCode);
 
     const { selectedDevice } = this.state;
@@ -87,7 +89,7 @@ class DeviceStore {
 
     const board = getBoard(selectedDevice);
 
-    board.write(keyCode)
+    board.write(keyCodeArr.buffer)
       .catch((err) => this._handleError(err));
   }
 
