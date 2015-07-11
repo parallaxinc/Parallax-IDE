@@ -7,14 +7,15 @@ const { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/
 const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
 const { syntaxCheck } = require('../../src/actions/editor');
-const { newFile, saveFile } = require('../../src/actions/file');
+const { nextFile, newFile, previousFile, saveFile, saveFileAs } = require('../../src/actions/file');
 const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
 const { disableAuto, enableAuto } = require('../../src/actions/device');
 
-const keyExtension = {
-  setup: function(app) {
+class KeyExtension {
 
-    const cmCommands = {
+  constructor(app) {
+    this.app = app;
+    this.cmCommands = {
       download: {
         code: ['F9', 'CTRL_R'],
         exec: (evt) => {
@@ -94,6 +95,20 @@ const keyExtension = {
           newFile();
         }
       },
+      nextFile: {
+        code: 'CTRL_TAB',
+        exec: (evt) => {
+          evt.preventDefault();
+          nextFile();
+        }
+      },
+      previousFile: {
+        code: 'CTRL_SHIFT_TAB',
+        exec: (evt) => {
+          evt.preventDefault();
+          previousFile();
+        }
+      },
       save: {
         code: 'CTRL_S',
         exec: (evt) => {
@@ -131,7 +146,24 @@ const keyExtension = {
       }
     };
 
-    const customPredicates = {
+    this.overlayCommands = {
+      enter: {
+        code: 'ENTER',
+        exec(evt){
+          evt.preventDefault();
+          saveFileAs();
+        }
+      },
+      hideOverlay: {
+        code: 'ESC',
+        exec: (evt) => {
+          evt.preventDefault();
+          hideOverlays();
+        }
+      }
+    };
+
+    this.customPredicates = {
       CTRL_N: function({ ctrlKey, metaKey, keyCode }){
         return ((ctrlKey === true || metaKey === true) && keyCode === 78);
       },
@@ -142,30 +174,52 @@ const keyExtension = {
         return ((ctrlKey === true || metaKey === true) && shiftKey === false && keyCode === 83);
       }
     };
+  }
 
-    function setCodeMirrorCommands() {
-      for (let cmd in cmCommands) {
-        const codes = cmCommands[cmd].code;
-        const codesArray = (Array.isArray(codes)) ? codes : [codes];
-        setCommand(cmd, codesArray);
+  setBaseCommands() {
+    for (let cmd in this.cmCommands) {
+      const codes = this.cmCommands[cmd].code;
+      const codesArray = (Array.isArray(codes)) ? codes : [codes];
+      this.setCommand(this.cmCommands, cmd, codesArray);
+    }
+  }
+
+  removeBaseCommands() {
+    for (let cmd in this.cmCommands) {
+      if(this.cmCommands[cmd].remove) {
+        this.cmCommands[cmd].remove();
       }
     }
-
-    function setCommand(cmd, codes) {
-      codes.forEach((code) => {
-        const predicate = customPredicates[code] || app.keypress[code];
-        const oldRemove = cmCommands[cmd].remove;
-        const newRemove = app.keypress(predicate, cmCommands[cmd].exec);
-        if(oldRemove){
-          cmCommands[cmd].remove = _.flow(oldRemove, newRemove);
-        } else {
-          cmCommands[cmd].remove = newRemove;
-        }
-      });
-    }
-
-    setCodeMirrorCommands();
   }
-};
 
-module.exports = keyExtension;
+  setOverlayCommands() {
+    for (let cmd in this.overlayCommands) {
+      const codes = this.overlayCommands[cmd].code;
+      const codesArray = (Array.isArray(codes)) ? codes : [codes];
+      this.setCommand(this.overlayCommands, cmd, codesArray);
+    }
+  }
+
+  removeOverlayCommands() {
+    for (let cmd in this.overlayCommands) {
+      if(this.overlayCommands[cmd].remove) {
+        this.overlayCommands[cmd].remove();
+      }
+    }
+  }
+
+  setCommand(set, cmd, codes) {
+    codes.forEach((code) => {
+      const predicate = this.customPredicates[code] || this.app.keypress[code];
+      const oldRemove = set[cmd].remove;
+      const newRemove = this.app.keypress(predicate, set[cmd].exec);
+      if(oldRemove){
+        set[cmd].remove = _.flow(oldRemove, newRemove);
+      } else {
+        set[cmd].remove = newRemove;
+      }
+    });
+  }
+}
+
+module.exports = KeyExtension;

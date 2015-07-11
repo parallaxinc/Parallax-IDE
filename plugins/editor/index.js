@@ -13,7 +13,7 @@ const React = require('react');
 const CodeMirror = require('codemirror');
 require('./pbasic')(CodeMirror);
 
-const keyExtension = require('./key-extension');
+const KeyExtension = require('./key-extension');
 
 const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
@@ -104,7 +104,7 @@ function editor(app, opts, done){
         'Shift-Tab': false,
         'Ctrl-T': false
       });
-      keyExtension.setup(app);
+
       editorStore.cm = codeEditor;
       fileStore.documents = new DocumentsStore(codeEditor);
     }
