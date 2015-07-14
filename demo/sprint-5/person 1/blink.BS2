@@ -1,0 +1,20 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+infiniteLoop: 'label
+
+'if button is pressed, goto subroutine Flash
+IF IN1 = 1 THEN Flash
+
+GOTO infiniteLoop 'loop
+
+
+
+Flash: 'subroutine labeled Flash
+
+HIGH 0 'turn on LED
+PAUSE 1000 'wait 1 second
+LOW 0 'turn off LED
+PAUSE 1000 'wait 1 second
+
+RETURN 'go back to the rest of the program
