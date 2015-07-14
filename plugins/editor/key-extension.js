@@ -147,20 +147,20 @@ class KeyExtension {
     };
 
     this.overlayCommands = {
-      enter: {
-        code: 'ENTER',
-        exec(evt){
-          evt.preventDefault();
-          saveFileAs();
-        }
-      },
-      hideOverlay: {
-        code: 'ESC',
-        exec: (evt) => {
-          evt.preventDefault();
-          hideOverlays();
-        }
-      }
+      // enter: {
+      //   code: 'ENTER',
+      //   exec(evt){
+      //     evt.preventDefault();
+      //     saveFileAs();
+      //   }
+      // },
+      // hideOverlay: {
+      //   code: 'ESC',
+      //   exec: (evt) => {
+      //     evt.preventDefault();
+      //     hideOverlays();
+      //   }
+      // }
     };
 
     this.customPredicates = {
