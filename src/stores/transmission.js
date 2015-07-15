@@ -70,16 +70,14 @@ class TransmissionStore {
     }
   }
 
-  onTransmitInput(input) {
-
-    const { keyCode } = input.nativeEvent;
+  onTransmitInput(val) {
 
     const { selectedDevice } = deviceStore.getState();
     const { getBoard } = this.getInstance();
 
     const board = getBoard(selectedDevice);
 
-    board.write(keyCode)
+    board.write(val)
       .catch((err) => this._handleError(err));
   }
 
