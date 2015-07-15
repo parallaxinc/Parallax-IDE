@@ -2,14 +2,18 @@
 
 const alt = require('../alt');
 
-const { rx, tx } = require('../actions/transmission');
+const { connected, disconnected, rx, tx, transmitInput } = require('../actions/transmission');
+const deviceStore = require('./device');
 
 class TransmissionStore {
   constructor() {
 
     this.bindListeners({
+      onConnected: connected,
+      onDisconnected: disconnected,
       onRx: rx,
-      onTx: tx
+      onTx: tx,
+      onTransmitInput: transmitInput
     });
 
     this.state = {
@@ -17,9 +21,19 @@ class TransmissionStore {
       flashTx: false,
       timeoutIdRx: null,
       timeoutIdTx: null,
-      flashDuration: 50
+      flashDuration: 50,
+      transmitText: '',
+      connected: false
     };
 
+  }
+
+  onConnected() {
+    this.setState({ connected: true });
+  }
+
+  onDisconnected() {
+    this.setState({ connected: false });
   }
 
   onRx() {
@@ -53,6 +67,47 @@ class TransmissionStore {
 
       this.setState({ timeoutIdTx: id });
     }
+  }
+
+  onTransmitInput(input) {
+
+    const { keyCode } = input.nativeEvent;
+    const keyCodeArr = new Uint8Array([keyCode]);
+
+    this._updateTransmitText(keyCode);
+
+    const { selectedDevice } = deviceStore.getState();
+    const { getBoard } = this.getInstance();
+
+    const board = getBoard(selectedDevice);
+
+    board.write(keyCodeArr.buffer)
+      .catch((err) => this._handleError(err));
+  }
+
+  _updateTransmitText(keyCode) {
+
+    const key = String.fromCharCode(keyCode);
+    const { transmitText } = this.state;
+
+    let updatedTransmitText = null;
+    const ignorePress = [16, 17, 18, 20];
+
+    if ((keyCode >= 32 && keyCode <= 127) ||
+        (keyCode >= 160 && keyCode <= 255)) {
+      updatedTransmitText = transmitText + key;
+    } else if (keyCode === 8) {
+      updatedTransmitText = transmitText.slice(0, -1);
+    } else if (keyCode === 10 || keyCode === 13) {
+      updatedTransmitText = transmitText + '\n';
+    } else if (ignorePress.indexOf(keyCode) > -1) {
+      return;
+    } else {
+      updatedTransmitText = transmitText + ' ';
+    }
+
+    this.setState({ transmitText: updatedTransmitText });
+
   }
 
 }

@@ -4,10 +4,10 @@ const _ = require('lodash');
 
 const alt = require('../alt');
 
-const { rx, tx } = require('../actions/transmission');
+const { connected, disconnected, rx, tx } = require('../actions/transmission');
 const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
-const { enableAuto, disableAuto, reloadDevices, transmitInput, updateSelected } = require('../actions/device');
+const { enableAuto, disableAuto, reloadDevices, updateSelected } = require('../actions/device');
 
 class DeviceStore {
   constructor() {
@@ -16,20 +16,17 @@ class DeviceStore {
       onReloadDevices: [reloadDevices, showDownload],
       onDisableAuto: disableAuto,
       onEnableAuto: enableAuto,
-      onTransmitInput: transmitInput,
       onUpdateSelected: updateSelected
     });
 
     this.state = {
       auto: true,
-      connection: null,
       devices: [],
       devicePath: null,
       message: null,
       progress: 0,
       searching: true,
-      selectedDevice: null,
-      transmitText: ''
+      selectedDevice: null
     };
 
     this.messages = {
@@ -75,22 +72,6 @@ class DeviceStore {
           this._checkDevices();
         }
     });
-  }
-
-  onTransmitInput(input) {
-
-    const { keyCode } = input.nativeEvent;
-    const keyCodeArr = new Uint8Array([keyCode]);
-
-    this._updateTransmitText(keyCode);
-
-    const { selectedDevice } = this.state;
-    const { getBoard } = this.getInstance();
-
-    const board = getBoard(selectedDevice);
-
-    board.write(keyCodeArr.buffer)
-      .catch((err) => this._handleError(err));
   }
 
   onUpdateSelected(device) {
@@ -166,6 +147,7 @@ class DeviceStore {
 
     board.removeListener('terminal', output);
     board.removeListener('terminal', rx);
+    board.removeListener('close', disconnected);
 
     board.on('progress', updateProgress.bind(this));
     board.on('progress', tx.bind(this));
@@ -174,55 +156,17 @@ class DeviceStore {
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
+      .then(() => board.on('close', disconnected))
       .tap(() => this._handleClear())
-      .tap(() => this._watchConnection(board))
+      //.tap(() => this._watchConnection(board))
       .tap(() => this._handleSuccess(`'${name}' downloaded successfully`))
       .catch((err) => this._handleError(err))
       .finally(() => {
         board.removeListener('progress', updateProgress);
         this.setState({ progress: 0 });
+        connected();
         hideDownload();
       });
-  }
-
-  _updateTransmitText(keyCode) {
-
-    const key = String.fromCharCode(keyCode);
-    const { transmitText } = this.state;
-
-    let updatedTransmitText = null;
-    const ignorePress = [16, 17, 18, 20];
-
-    if ((keyCode >= 32 && keyCode <= 127) ||
-        (keyCode >= 160 && keyCode <= 255)) {
-      updatedTransmitText = transmitText + key;
-    } else if (keyCode === 8) {
-      updatedTransmitText = transmitText.slice(0, -1);
-    } else if (keyCode === 10 || keyCode === 13) {
-      updatedTransmitText = transmitText + '\n';
-    } else if (ignorePress.indexOf(keyCode) > -1) {
-      return;
-    } else {
-      updatedTransmitText = transmitText + ' ';
-    }
-
-    this.setState({ transmitText: updatedTransmitText });
-
-  }
-
-  _watchConnection(board) {
-
-    const connection = setInterval(() => {
-      if(!board.isOpen()) {
-        clearInterval(connection);
-        this.setState({ connection: null });
-      }
-    }, 1000);
-
-    this.setState({
-      connection: connection,
-      transmitText: ''
-    });
   }
 
   _handleClear(){
