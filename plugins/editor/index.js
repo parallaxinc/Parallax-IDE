@@ -30,15 +30,21 @@ const makeToasts = require('../../src/lib/toasts');
 function editor(app, opts, done){
 
   var codeEditor;
-  var outputConsole;
+  var receivePane;
   var transmission;
 
   function refreshConsole(){
     const { text } = consoleStore.getState();
 
-    if(outputConsole){
-      outputConsole.innerHTML = text;
-      outputConsole.scrollTop = outputConsole.scrollHeight;
+    if(receivePane){
+
+      receivePane.setValue(text);
+
+      const last = receivePane.lastLine();
+
+      if(last) {
+        receivePane.scrollIntoView(last);
+      }
     }
   }
 
@@ -109,17 +115,24 @@ function editor(app, opts, done){
       fileStore.documents = new DocumentsStore(codeEditor);
     }
 
-    if(!outputConsole){
-      outputConsole = document.createElement('pre');
-      outputConsole.style.height = '200px';
-      outputConsole.style.boxShadow = 'inset 0 5px 10px -5px rgba(0, 0, 0, 0.26)';
-      outputConsole.style.backgroundColor = 'white';
-      outputConsole.style.padding = '10px';
-      outputConsole.style.margin = '0';
-      outputConsole.style.overflow = 'auto';
-      outputConsole.style.whiteSpace = 'pre-wrap';
-      el.appendChild(outputConsole);
+    if(!receivePane) {
+      let receiveContainer = document.createElement('div');
+      receiveContainer.setAttribute('id', 'receivePane');
+      receiveContainer.style.boxShadow = 'inset 0 5px 10px -5px rgba(0, 0, 0, 0.26)';
+      receiveContainer.style.backgroundColor = 'white';
+      receiveContainer.style.padding = '10px';
+      receiveContainer.style.margin = '0';
+      receiveContainer.style.overflow = 'auto';
+      receiveContainer.style.whiteSpace = 'pre-wrap';
+      el.appendChild(receiveContainer);
+
+      receivePane = CodeMirror(receiveContainer, {
+        mode: 'none',
+        theme: 'none',
+        readOnly: true
+      });
     }
+
     if(!transmission) {
       transmission = document.createElement('div');
       el.appendChild(transmission);
