@@ -12,24 +12,29 @@ class TransmitPane extends React.Component {
   handleKeyDown(event) {
     const { keyCode } = event.nativeEvent;
     if (keyCode < 32 || (keyCode > 127 && keyCode < 160)) {
-      transmitInput(event);
+      transmitInput(keyCode);
     }
   }
   handleKeyPress(event) {
     const { keyCode } = event.nativeEvent;
     if ((keyCode >= 32 && keyCode <= 127) ||
         (keyCode >= 160 && keyCode <= 255)) {
-      transmitInput(event);
+      transmitInput(keyCode);
     }
   }
 
   render() {
-    const { connected, transmitText } = this.props;
+    const { connected, text } = this.props;
     return (
       <div style={styles.transmit}>
-        <textarea style={styles.transmitInput} name='transmitInput'
-          value={ transmitText } onKeyDown={this.handleKeyDown}
-          onKeyPress={this.handleKeyPress} rows='1' disabled={!connected} />
+        <textarea
+          style={styles.transmitInput}
+          name='transmitInput'
+          value={text}
+          onKeyDown={this.handleKeyDown}
+          onKeyPress={this.handleKeyPress}
+          rows='1'
+          disabled={!connected} />
         <br />
       </div>
     );

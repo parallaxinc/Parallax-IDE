@@ -23,10 +23,6 @@ class TransmissionActions {
   transmitInput(input) {
     this.dispatch(input);
   }
-
-  transmitParsed(input) {
-    this.dispatch(input);
-  }
 }
 
 module.exports = alt.createActions(TransmissionActions);
