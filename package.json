@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "alt": "^0.16.7",
-    "bs2-serial": "^0.10.0",
+    "bs2-serial": "^0.10.3",
     "codemirror": "^4.13.0",
     "frylord": "^0.6.0",
     "holovisor": "^0.2.0",
