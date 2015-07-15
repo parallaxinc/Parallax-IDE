@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const alt = require('../alt');
 
-const { rx, tx } = require('../actions/transmission');
+const { connected, disconnected, rx, tx } = require('../actions/transmission');
 const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
 const { enableAuto, disableAuto, reloadDevices, updateSelected } = require('../actions/device');
@@ -24,9 +24,9 @@ class DeviceStore {
       devices: [],
       devicePath: null,
       message: null,
+      progress: 0,
       searching: true,
-      selectedDevice: null,
-      progress: 0
+      selectedDevice: null
     };
 
     this.messages = {
@@ -134,6 +134,7 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
+
     const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
@@ -147,6 +148,7 @@ class DeviceStore {
 
     board.removeListener('terminal', output);
     board.removeListener('terminal', rx);
+    board.removeListener('close', disconnected);
 
     board.on('progress', updateProgress.bind(this));
     board.on('progress', tx.bind(this));
@@ -155,12 +157,14 @@ class DeviceStore {
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
+      .tap(() => board.on('close', disconnected))
       .tap(() => this._handleClear())
       .tap(() => this._handleSuccess(`'${name}' downloaded successfully`))
       .catch((err) => this._handleError(err))
       .finally(() => {
         board.removeListener('progress', updateProgress);
         this.setState({ progress: 0 });
+        connected();
         hideDownload();
       });
   }

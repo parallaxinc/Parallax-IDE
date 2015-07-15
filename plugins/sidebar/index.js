@@ -11,6 +11,7 @@ const ProjectOperations = require('./project-operations');
 
 const deviceStore = require('../../src/stores/device');
 const fileStore = require('../../src/stores/file');
+const transmissionStore = require('../../src/stores/transmission');
 
 const { loadFile } = require('../../src/actions/file');
 
@@ -59,6 +60,8 @@ function sidebar(app, opts, done){
 
   fileStore.workspace = space;
   fileStore.userConfig = userConfig;
+
+  transmissionStore.getBoard = getBoard;
 
   done();
 }

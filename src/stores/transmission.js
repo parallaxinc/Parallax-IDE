@@ -2,14 +2,18 @@
 
 const alt = require('../alt');
 
-const { rx, tx } = require('../actions/transmission');
+const { connected, disconnected, rx, tx, transmitInput } = require('../actions/transmission');
+const deviceStore = require('./device');
 
 class TransmissionStore {
   constructor() {
 
     this.bindListeners({
+      onConnected: connected,
+      onDisconnected: disconnected,
       onRx: rx,
-      onTx: tx
+      onTx: tx,
+      onTransmitInput: transmitInput
     });
 
     this.state = {
@@ -17,9 +21,22 @@ class TransmissionStore {
       flashTx: false,
       timeoutIdRx: null,
       timeoutIdTx: null,
-      flashDuration: 50
+      flashDuration: 50,
+      text: '',
+      connected: false
     };
 
+  }
+
+  onConnected() {
+    this.setState({
+      text: '',
+      connected: true
+    });
+  }
+
+  onDisconnected() {
+    this.setState({ connected: false });
   }
 
   onRx() {
@@ -55,6 +72,37 @@ class TransmissionStore {
     }
   }
 
+  onTransmitInput(val) {
+    const { selectedDevice } = deviceStore.getState();
+    const { getBoard } = this.getInstance();
+
+    const board = getBoard(selectedDevice);
+
+    board.once('transmit', this._processEvent.bind(this));
+
+    board.write(val)
+      .catch((err) => this._handleError(err));
+  }
+
+  _processEvent(input) {
+    const { text } = this.state;
+
+    const newText = input.reduce((result, ch) => {
+      if(ch.type === 'backspace'){
+        return result.slice(0, -1);
+      }
+
+      if(ch.type === 'text'){
+        return result + ch.data;
+      }
+
+      return result;
+    }, text);
+
+    this.setState({
+      text: newText
+    });
+  }
 }
 
 TransmissionStore.config = {

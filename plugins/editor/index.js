@@ -24,6 +24,7 @@ const { handleInput } = require('../../src/actions/editor');
 const DocumentsStore = require('../../src/stores/documents');
 
 const TransmissionBar = require('./transmission-bar');
+const TransmitPane = require('./transmit-pane');
 
 const makeToasts = require('../../src/lib/toasts');
 
@@ -32,6 +33,7 @@ function editor(app, opts, done){
   var codeEditor;
   var outputConsole;
   var transmission;
+  var transmitPane;
 
   function refreshConsole(){
     const { text } = consoleStore.getState();
@@ -109,6 +111,12 @@ function editor(app, opts, done){
       fileStore.documents = new DocumentsStore(codeEditor);
     }
 
+
+    if(!transmitPane) {
+      transmitPane = document.createElement('div');
+      el.appendChild(transmitPane);
+      React.render(<TransmitPane />, transmitPane);
+    }
     if(!outputConsole){
       outputConsole = document.createElement('pre');
       outputConsole.style.height = '200px';
