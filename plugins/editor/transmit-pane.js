@@ -22,17 +22,17 @@ class TransmitPane extends React.Component {
   }
 
   render() {
-    const { connected, transmitText } = this.props;
+    const { connected, text } = this.props;
     return (
       <div style={styles.transmit}>
-        <textarea style={styles.transmitInput}
+        <textarea
+          style={styles.transmitInput}
           name='transmitInput'
-          value={ transmitText }
+          value={text}
           onKeyDown={this.handleKeyDown}
           onChange={this.handleChange}
           rows='1'
-          disabled={!connected}
-        />
+          disabled={!connected} />
         <br />
       </div>
     );

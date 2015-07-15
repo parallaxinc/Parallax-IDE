@@ -2,7 +2,7 @@
 
 const alt = require('../alt');
 
-const { connected, disconnected, rx, tx, transmitInput, transmitParsed } = require('../actions/transmission');
+const { connected, disconnected, rx, tx, transmitInput } = require('../actions/transmission');
 const deviceStore = require('./device');
 
 class TransmissionStore {
@@ -13,8 +13,7 @@ class TransmissionStore {
       onDisconnected: disconnected,
       onRx: rx,
       onTx: tx,
-      onTransmitInput: transmitInput,
-      onTransmitParsed: transmitParsed
+      onTransmitInput: transmitInput
     });
 
     this.state = {
@@ -23,14 +22,17 @@ class TransmissionStore {
       timeoutIdRx: null,
       timeoutIdTx: null,
       flashDuration: 50,
-      transmitText: '',
+      text: '',
       connected: false
     };
 
   }
 
   onConnected() {
-    this.setState({ connected: true });
+    this.setState({
+      text: '',
+      connected: true
+    });
   }
 
   onDisconnected() {
@@ -71,29 +73,34 @@ class TransmissionStore {
   }
 
   onTransmitInput(val) {
-
     const { selectedDevice } = deviceStore.getState();
     const { getBoard } = this.getInstance();
 
     const board = getBoard(selectedDevice);
 
+    board.once('transmit', this._processEvent.bind(this));
+
     board.write(val)
       .catch((err) => this._handleError(err));
   }
 
-  onTransmitParsed(input) {
-    const { transmitText } = this.state;
+  _processEvent(input) {
+    const { text } = this.state;
 
-    let updatedTransmitText = null;
-
-    input.forEach((ch) => {
-      if (ch.type === 'backspace') {
-        updatedTransmitText = transmitText.slice(0, -1);
-
-      } else if (ch.type === 'text') {
-        updatedTransmitText = transmitText + ch.data;
+    const newText = input.reduce((result, ch) => {
+      if(ch.type === 'backspace'){
+        return result.slice(0, -1);
       }
-      this.setState({ transmitText: updatedTransmitText });
+
+      if(ch.type === 'text'){
+        return result + ch.data;
+      }
+
+      return result;
+    }, text);
+
+    this.setState({
+      text: newText
     });
   }
 }
