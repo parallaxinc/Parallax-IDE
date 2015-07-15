@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const alt = require('../alt');
 
-const { connected, disconnected, rx, tx } = require('../actions/transmission');
+const { connected, disconnected, rx, tx, transmitParsed } = require('../actions/transmission');
 const { hideDownload, showDownload } = require('../actions/overlay');
 const { clearOutput, output } = require('../actions/console');
 const { enableAuto, disableAuto, reloadDevices, updateSelected } = require('../actions/device');
@@ -156,9 +156,9 @@ class DeviceStore {
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
+      .then(() => board.on('transmit', transmitParsed))
       .then(() => board.on('close', disconnected))
       .tap(() => this._handleClear())
-      //.tap(() => this._watchConnection(board))
       .tap(() => this._handleSuccess(`'${name}' downloaded successfully`))
       .catch((err) => this._handleError(err))
       .finally(() => {
