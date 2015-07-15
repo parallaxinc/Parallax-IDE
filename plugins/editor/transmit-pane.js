@@ -7,10 +7,17 @@ const styles = require('./styles');
 const transmissionStore = require('../../src/stores/transmission');
 const { transmitInput } = require('../../src/actions/transmission');
 
+const ignore = [16, 17, 18, 20];
+
 class TransmitPane extends React.Component {
 
   handleKeyDown(event) {
     const { keyCode } = event.nativeEvent;
+
+    if (ignore.indexOf(keyCode) > -1) {
+      return;
+    }
+
     if (keyCode < 32 || (keyCode > 127 && keyCode < 160)) {
       transmitInput(keyCode);
     }
@@ -18,6 +25,7 @@ class TransmitPane extends React.Component {
 
   handleKeyPress(event) {
     const { keyCode } = event.nativeEvent;
+
     if ((keyCode >= 32 && keyCode <= 127) ||
         (keyCode >= 160 && keyCode <= 255)) {
       transmitInput(keyCode);
