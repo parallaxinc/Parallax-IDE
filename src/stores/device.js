@@ -134,6 +134,7 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
+
     const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 

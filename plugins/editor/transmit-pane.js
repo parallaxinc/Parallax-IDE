@@ -16,9 +16,18 @@ class TransmitPane extends React.Component {
     }
   }
 
-  handleChange(event) {
-    const { value } = event.target;
-    transmitInput(value);
+  handleKeyPress(event) {
+    const { keyCode } = event.nativeEvent;
+    if ((keyCode >= 32 && keyCode <= 127) ||
+        (keyCode >= 160 && keyCode <= 255)) {
+      transmitInput(keyCode);
+    }
+  }
+
+  handlePaste(event) {
+    const { clipboardData } = event;
+    const data = clipboardData.getData('text/plain');
+    transmitInput(data);
   }
 
   render() {
@@ -30,7 +39,8 @@ class TransmitPane extends React.Component {
           name='transmitInput'
           value={text}
           onKeyDown={this.handleKeyDown}
-          onChange={this.handleChange}
+          onKeyPress={this.handleKeyPress}
+          onPaste={this.handlePaste}
           rows='1'
           disabled={!connected} />
         <br />

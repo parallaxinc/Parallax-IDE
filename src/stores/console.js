@@ -106,6 +106,7 @@ class ConsoleStore {
       } else {
         lines[pointerLine] = targetLine.slice(0, pointerColumn - 1);
       }
+      this.setState({ pointerColumn: pointerColumn - 1 });
     } else {
       const prevLineNum = Math.max(0, pointerLine - 1);
       const prevLine = lines[prevLineNum] || '';
