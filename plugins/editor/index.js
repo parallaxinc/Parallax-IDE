@@ -106,9 +106,11 @@ function editor(app, opts, done){
         'Shift-Tab': false,
         'Ctrl-T': false
       });
+
       keyExtension.setup(app);
       editorStore.cm = codeEditor;
       fileStore.documents = new DocumentsStore(codeEditor);
+      deviceStore.cm = codeEditor;
     }
 
 

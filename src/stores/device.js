@@ -76,22 +76,23 @@ class DeviceStore {
 
   onUpdateSelected(device) {
 
-    const { workspace } = this.getInstance();
+    const { workspace, cm } = this.getInstance();
     const { noneMatched } = this.messages;
 
     if(this.state.message === noneMatched) {
 
       const { name } = device;
       const { TargetStart } = device.program.raw;
-      const end = source.indexOf('}', TargetStart);
-
       const source = workspace.current.deref();
+      const end = source.indexOf('}', TargetStart);
 
       const pre = source.substring(0, TargetStart);
       const post = source.substring(end, source.length);
       const newsource = pre + name + post;
 
-      workspace.updateContent(newsource);
+      //TODO: action -> action dispatch error
+      //editor should be set with new source
+      cm.getDoc().setValue(newsource);
 
     }
 
