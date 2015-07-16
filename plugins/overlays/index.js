@@ -13,10 +13,15 @@ const projectStore = require('../../src/stores/project');
 const { confirmDelete, changeProject, deleteProject } = require('../../src/actions/project');
 const { deleteFile, saveFileAs } = require('../../src/actions/file');
 const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
+const KeyExtension = require('../editor/key-extension');
 
 function overlays(app, opts, done){
 
   const { overlay, workspace, userConfig } = app;
+  let baseKeys = true;
+  let overlayKeys = false;
+  const keyExtension = new KeyExtension(app);
+  keyExtension.setBaseCommands();
 
   projectStore.config = userConfig;
   projectStore.workspace = workspace;
@@ -91,6 +96,21 @@ function overlays(app, opts, done){
       // if there is a change and every state is false, hide overlay
       overlay.hide();
     }
+
+    if (showSaveOverlay && !overlayKeys) {
+      keyExtension.removeBaseCommands();
+      keyExtension.setOverlayCommands();
+      overlayKeys = true;
+      baseKeys = false;
+    }
+
+    if (!showSaveOverlay && !baseKeys) {
+      keyExtension.removeOverlayCommands();
+      keyExtension.setBaseCommands();
+      overlayKeys = false;
+      baseKeys = true;
+    }
+
   }
 
   overlayStore.listen(onOverlayChange);

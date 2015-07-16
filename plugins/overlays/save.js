@@ -40,9 +40,10 @@ class SaveOverlay extends React.Component {
           placeHolder="filename"
           styles={styles.textField}
           floatingLabel
+          tabIndex='1'
           onChange={this._onUpdateName} />
         <div style={styles.overlayButtonContainer}>
-          <Button onClick={this._onAccept}>Save As</Button>
+          <Button tabIndex='1' onClick={this._onAccept}>Save As</Button>
           <Button onClick={() => this._onCancel({ trash: true })}>Don't Save</Button>
           <Button onClick={() => this._onCancel({ trash: false })}>Cancel</Button>
         </div>
@@ -51,12 +52,12 @@ class SaveOverlay extends React.Component {
   }
 
   _onAccept(){
-    const { onAccept, fileName } = this.props;
+    const { onAccept } = this.props;
 
-    clearName();
     if(typeof onAccept === 'function'){
-      onAccept(fileName);
+      onAccept();
     }
+    clearName();
   }
 
   _onCancel(status){

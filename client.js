@@ -39,6 +39,9 @@ const plugins = [
   },
   {
     register: require('./plugins/overlays')
+  },
+  {
+    register: require('./plugins/keys')
   }
 ];
 

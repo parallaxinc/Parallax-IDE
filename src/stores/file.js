@@ -13,6 +13,8 @@ const {
   updateName,
   newFile,
   loadFile,
+  nextFile,
+  previousFile,
   saveFile,
   saveFileAs,
   deleteFile } = require('../actions/file');
@@ -29,7 +31,9 @@ class FileStore {
       onSaveFileAs: saveFileAs,
       onCancelSave: hideSave,
       onSaveFile: saveFile,
-      onUpdateName: updateName
+      onUpdateName: updateName,
+      onPreviousFile: previousFile,
+      onNextFile: nextFile
     });
 
     this.state = {
@@ -70,14 +74,15 @@ class FileStore {
     this.onClearName();
   }
 
-  onSaveFileAs(name) {
+  onSaveFileAs() {
     const { workspace } = this.getInstance();
+    const { fileName } = this.state;
 
-    if(!name){
+    if(!fileName){
       return;
     }
 
-    workspace.filename.update(() => name);
+    workspace.filename.update(() => fileName);
     // TODO: these should transparently accept cursors for all non-function params
     workspace.saveFile(workspace.filename.deref(), workspace.current)
       .tap(() => {
@@ -86,7 +91,7 @@ class FileStore {
           this.onLoadFile(this.loadQueue.shift());
         }
       })
-      .tap(() => this._handleSuccess(`'${name}' created successfully`))
+      .tap(() => this._handleSuccess(`'${fileName}' created successfully`))
       .catch((err) => this._handleError(err));
   }
 
@@ -116,6 +121,30 @@ class FileStore {
     workspace.saveFile(name, workspace.current)
       .tap(() => this._handleSuccess(`'${name}' saved successfully`))
       .catch((err) => this._handleError(err));
+  }
+
+  onNextFile() {
+    this.changeFile({ direction: 'next' });
+  }
+
+  onPreviousFile() {
+    this.changeFile({ direction: 'prev' });
+  }
+
+  changeFile(move) {
+    const { workspace } = this.getInstance();
+    const filename = workspace.filename.deref();
+
+    workspace.directory.forEach((x, i) => {
+      if(x.get('name') === filename) {
+        if(i === workspace.directory.size - 1) {
+          i = -1;
+        }
+        const shift = move.direction === 'prev' ? i - 1 : i + 1;
+        const switchFile = workspace.directory.getIn([shift, 'name']);
+        this.onLoadFile(switchFile);
+      }
+    });
   }
 
   onNewFile() {

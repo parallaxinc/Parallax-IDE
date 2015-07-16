@@ -147,6 +147,7 @@ class OverlayStore {
       showProjectDeleteOverlay: true
     });
   }
+
 }
 
 OverlayStore.config = {

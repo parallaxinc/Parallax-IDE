@@ -46,6 +46,7 @@ class OverlayActions {
   hideProjectDelete(){
     this.dispatch();
   }
+
 }
 
 module.exports = alt.createActions(OverlayActions);

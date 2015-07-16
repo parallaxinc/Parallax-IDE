@@ -19,6 +19,14 @@ class FileActions {
     this.dispatch();
   }
 
+  nextFile() {
+    this.dispatch();
+  }
+
+  previousFile() {
+    this.dispatch();
+  }
+
   loadFile(filename){
     this.dispatch(filename);
   }
