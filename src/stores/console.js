@@ -20,7 +20,7 @@ class ConsoleStore {
       length: 0,
       lines: [''],
       lineWrap: 256,
-      maxLines: 256,
+      maxLines: 2048,
       pointerLine: 0,
       pointerColumn: 0,
       refreshDelayMillis: 64,
