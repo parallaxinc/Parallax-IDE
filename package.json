@@ -37,6 +37,7 @@
     "chrome-sync-fs": "git://github.com/2fast2fourier/chrome-sync-fs#sync-fs",
     "css-loader": "^0.9.1",
     "del": "^1.1.1",
+    "electron-prebuilt": "^0.29.2",
     "eslint": "^0.24.0",
     "eslint-plugin-react": "^2.6.3",
     "expect": "git://github.com/phated/expect",
@@ -47,15 +48,14 @@
     "json-loader": "^0.5.1",
     "level-js": "^2.1.6",
     "mocha": "^2.2.1",
-    "phantomjs": "git://github.com/phated/phantomjs",
     "style-loader": "^0.8.3",
     "webpack": "^1.7.2",
     "webpack-dev-server": "^1.7.0",
-    "zuul": "^2.1.1"
+    "zuul": "^3.2.0"
   },
   "scripts": {
     "test": "zuul test/*.js --local --open",
-    "ci": "zuul test/*.js --phantom",
+    "ci": "zuul test/*.js --electron",
     "build": "gulp",
     "release": "gulp gh-release",
     "postinstall": "gulp postinstall",
