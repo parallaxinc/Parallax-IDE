@@ -151,7 +151,6 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
-
     const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
@@ -170,7 +169,7 @@ class DeviceStore {
     board.on('progress', updateProgress.bind(this));
     board.on('progress', tx.bind(this));
 
-    board.bootload(selectedDevice.program)
+    board.bootload(workspace.current.deref())
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
