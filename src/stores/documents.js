@@ -8,11 +8,20 @@ class DocumentsStore {
   constructor(editor){
     this._editor = editor;
 
+    this._filename = null;
     this._documents = {};
   }
 
   focus(){
     this._editor.focus();
+  }
+
+  update(text){
+    if(!this._filename){
+      return;
+    }
+
+    return this.create(this._filename, text);
   }
 
   create(filename, text){
@@ -24,6 +33,8 @@ class DocumentsStore {
   }
 
   swap(filename) {
+    this._filename = filename;
+
     const doc = this._documents[filename];
 
     if(!doc){

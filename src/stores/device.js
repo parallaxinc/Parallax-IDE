@@ -76,7 +76,7 @@ class DeviceStore {
 
   onUpdateSelected(device) {
 
-    const { workspace, cm } = this.getInstance();
+    const { workspace, documents } = this.getInstance();
     const { noneMatched } = this.messages;
 
     if(this.state.message === noneMatched) {
@@ -88,12 +88,10 @@ class DeviceStore {
 
       const pre = source.substring(0, TargetStart);
       const post = source.substring(end, source.length);
-      const newsource = pre + name + post;
+      const newSource = pre + name + post;
 
-      //TODO: action -> action dispatch error
-      //editor should be set with new source
-      cm.getDoc().setValue(newsource);
-
+      documents.update(newSource);
+      workspace.updateContent(newSource);
     }
 
     this.setState({

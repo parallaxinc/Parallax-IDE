@@ -109,8 +109,9 @@ function editor(app, opts, done){
 
       keyExtension.setup(app);
       editorStore.cm = codeEditor;
-      fileStore.documents = new DocumentsStore(codeEditor);
-      deviceStore.cm = codeEditor;
+      const documents = new DocumentsStore(codeEditor);
+      fileStore.documents = documents;
+      deviceStore.documents = documents;
     }
 
 
