@@ -20,8 +20,8 @@ const styles = {
   },
   indicator: {
     backgroundColor: grey,
-    height: 10,
-    width: 10,
+    height: '10px',
+    width: '10px',
     borderRadius: '100%',
     margin: '0px 10px',
     display: 'inline-block'
