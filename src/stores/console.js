@@ -5,6 +5,8 @@ const _ = require('lodash');
 const alt = require('../alt');
 const { clearOutput, output } = require('../actions/console');
 
+const TAB_WIDTH = 8;
+
 class ConsoleStore {
   constructor() {
 
@@ -133,6 +135,14 @@ class ConsoleStore {
     });
   }
 
+  tab(){
+    const { pointerColumn } = this.state;
+    const tabColumn = Math.floor(pointerColumn / TAB_WIDTH);
+    this.setState({
+      pointerColumn: (tabColumn + 1) * TAB_WIDTH
+    });
+  }
+
   processEvent(evt){
     const { pointerLine, pointerColumn } = this.state;
     switch(evt.type){
@@ -177,6 +187,9 @@ class ConsoleStore {
         break;
       case 'clear-below':
         this.clearBelow();
+        break;
+      case 'tab':
+        this.tab();
         break;
       default:
         console.log('Not yet implemented:', evt);
