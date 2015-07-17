@@ -38,6 +38,11 @@ class TransmitPane extends React.Component {
     transmitInput(data);
   }
 
+  shouldComponentUpdate(nextProps){
+    const { connected, text } = this.props;
+    return (connected !== nextProps.connected || text !== nextProps.text);
+  }
+
   render() {
     const { connected, text } = this.props;
     return (

@@ -2,12 +2,29 @@
 
 const _ = require('lodash');
 const React = require('react');
-const { createContainer } = require('sovereign');
 
 const styles = require('./styles');
 const transmissionStore = require('../../src/stores/transmission');
 
 class Indicators extends React.Component {
+
+  constructor(){
+    this._updateIndicators = this._updateIndicators.bind(this);
+  }
+
+  _updateIndicators(){
+    const { flashRx, flashTx } = transmissionStore.getState();
+    if(flashRx){
+      this.rx.style.backgroundColor = styles.rx.backgroundColor;
+    } else {
+      this.rx.style.backgroundColor = styles.indicator.backgroundColor;
+    }
+    if(flashTx){
+      this.tx.style.backgroundColor = styles.tx.backgroundColor;
+    } else {
+      this.tx.style.backgroundColor = styles.indicator.backgroundColor;
+    }
+  }
 
   componentDidMount() {
     var parent = React.findDOMNode(this);
@@ -23,64 +40,28 @@ class Indicators extends React.Component {
       tx.style[name] = style;
       rx.style[name] = style;
     });
-    console.log('componentDidMount', tx, rx, tx.style);
+
+    transmissionStore.listen(this._updateIndicators);
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount');
     var parent = React.findDOMNode(this);
     parent.removeChild(this.tx);
     parent.removeChild(this.rx);
     this.tx = null;
     this.rx = null;
+    transmissionStore.unlisten(this._updateIndicators);
   }
 
-  shouldComponentUpdate(nextProps) {
-    const { flashRx, flashTx } = this.props;
-    if(this.rx != null && nextProps.flashRx !== flashRx){
-      if(nextProps.flashRx){
-        this.rx.style.backgroundColor = styles.rx.backgroundColor;
-      }else{
-        this.rx.style.backgroundColor = styles.indicator.backgroundColor;
-      }
-    }
-    if(this.tx != null && nextProps.flashTx !== flashTx){
-      if(nextProps.flashTx){
-        this.tx.style.backgroundColor = styles.tx.backgroundColor;
-      }else{
-        this.tx.style.backgroundColor = styles.indicator.backgroundColor;
-      }
-    }
+  shouldComponentUpdate() {
     return false;
   }
 
   render() {
-    // const { flashRx, flashTx } = this.props;
-
-    // let indicatorRx = [styles.indicator];
-    // let indicatorTx = [styles.indicator];
-    // if(flashRx) {
-    //   indicatorRx.push(styles.rx);
-    // }
-    // if(flashTx) {
-    //   indicatorTx.push(styles.tx);
-    // }
-    //TX<span styles={indicatorTx} /> RX<span styles={indicatorRx} />
     return (
-      <span style={styles.rxtx}>
-      </span>
+      <span style={styles.rxtx}></span>
     );
   }
 }
 
-module.exports = createContainer(Indicators, {
-  getStores(){
-    return {
-      deviceStore: transmissionStore
-    };
-  },
-
-  getPropsFromStores() {
-    return transmissionStore.getState();
-  }
-});
+module.exports = Indicators;
