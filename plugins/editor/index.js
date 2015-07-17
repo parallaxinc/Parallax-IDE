@@ -34,15 +34,28 @@ function editor(app, opts, done){
   var outputConsole;
   var transmission;
   var transmitPane;
+  var scrollDown = false;
 
   function refreshConsole(){
     const { text } = consoleStore.getState();
 
     if(outputConsole){
+      scrollDown = true;
       outputConsole.innerHTML = text;
-      outputConsole.scrollTop = outputConsole.scrollHeight;
+      // outputConsole.scrollTop = outputConsole.scrollHeight;
     }
   }
+
+  function updateScroll(){
+    requestAnimationFrame(updateScroll);
+
+    if(outputConsole && scrollDown){
+      scrollDown = false;
+      outputConsole.scrollTop = 350000;
+    }
+  }
+
+  requestAnimationFrame(updateScroll);
 
   function highlighter(position, length) {
     if(!codeEditor){
