@@ -76,6 +76,24 @@ class DeviceStore {
 
   onUpdateSelected(device) {
 
+    const { workspace, documents } = this.getInstance();
+    const { noneMatched } = this.messages;
+
+    if(this.state.message === noneMatched) {
+
+      const { name } = device;
+      const { TargetStart } = device.program.raw;
+      const source = workspace.current.deref();
+      const end = source.indexOf('}', TargetStart);
+
+      const pre = source.substring(0, TargetStart);
+      const post = source.substring(end, source.length);
+      const newSource = pre + name + post;
+
+      documents.update(newSource);
+      workspace.updateContent(newSource);
+    }
+
     this.setState({
       devicePath: device.path,
       selectedDevice: device,
@@ -106,7 +124,6 @@ class DeviceStore {
 
     } else if (matchedDevices.length === 0) {
 
-      //TODO: setup for part 4 of auto download issue
       this.setState({ message: noneMatched });
 
     } else if(matchedDevices.length === 1) {
@@ -134,7 +151,6 @@ class DeviceStore {
       this.setState({ progress: progress });
     }
 
-
     const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
 
@@ -153,7 +169,7 @@ class DeviceStore {
     board.on('progress', updateProgress.bind(this));
     board.on('progress', tx.bind(this));
 
-    board.bootload(selectedDevice.program)
+    board.bootload(workspace.current.deref())
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
