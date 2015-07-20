@@ -84,7 +84,6 @@ Scroller.prototype._renderVisible = function(){
     if(this.sticky){
       this.startPosition = Math.max(0, this.lines.length - this.minVisible);
     }
-    console.log('_renderVisible', this.startPosition, this.sticky, top);
     this.console.innerHTML = generateContent(this.lines, this.startPosition, this.lines.length, this.minVisible);
     if(this.jumpToBottom){
       this.console.scrollTop = 2000;
