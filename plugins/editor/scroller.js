@@ -45,25 +45,26 @@ var Scroller = function() {
 };
 
 Scroller.prototype.setLines = function(newLines) {
+  // console.log(newLines);
   var len = newLines.length;
+  this.lines = newLines;
   if(this.sticky){
     this.startPosition = Math.max(0, len - this.minVisible);
+  }else if(newLines.length === 1 && newLines[0].length === 0){
+    // ^^ `lines` is reset to an array with one empty line. ugh.
+
+    // handle the reset case when lines is replaced with an empty array
+    // we don't have a direct event that can call this
+    this.reset();
   }
-  this.lines = newLines;
   this.dirty = true;
 };
 
-Scroller.prototype.reset = function(clearLines){
-  this.visibleCount = this.minVisible;
+Scroller.prototype.reset = function(){
+  this.startPosition = Math.max(0, this.lines.length - this.minVisible);
+  this.jumpToBottom = true;
   this.sticky = true;
   this.dirty = true;
-  if(clearLines){
-    this.lines = [];
-    this.startPosition = 0;
-  }
-  if(this.console){
-    this.animateRequest = requestAnimationFrame(this.refresh);
-  }
 };
 
 Scroller.prototype.requestRefresh = function(){
@@ -110,14 +111,12 @@ Scroller.prototype.onScroll = function(){
   var height = this.console.offsetHeight;
   var scrollHeight = this.console.scrollHeight;
   var scrollTop = this.console.scrollTop;
-  if(scrollTop < 15 && this.startPosition > 0){
+  if(!this.jumpToBottom && scrollTop < 15 && this.startPosition > 0){
     this.expand();
-  }else if(scrollTop + height > scrollHeight - 15){
-    if(!this.sticky){
-      this.jumpToBottom = true;
-      this.sticky = true;
-      this.dirty = true;
-    }
+  }else if(!this.sticky && scrollTop + height > scrollHeight - 15){
+    this.jumpToBottom = true;
+    this.sticky = true;
+    this.dirty = true;
   }
 
   if(this.dirty){
