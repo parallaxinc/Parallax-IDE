@@ -40,9 +40,9 @@ var Scroller = function() {
   //pre-bind functions and throttle expansion
   this.refresh = this._renderVisible.bind(this);
   this.scroll = this._onScroll.bind(this);
-  this.expand = _.throttle(this._expand.bind(this), 100, {
+  this.expand = _.throttle(this._expand.bind(this), 150, {
     leading: true,
-    trailing: false
+    trailing: true
   });
 };
 
@@ -87,7 +87,7 @@ Scroller.prototype._renderVisible = function(){
       this.jumpToBottom = false;
     }else if(!this.sticky && this.startPosition > 0 && top === 0){
       //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
-      this.console.scrollTop = 1;
+      requestAnimationFrame(this.expand);
     }
     this.dirty = false;
   }
@@ -115,11 +115,11 @@ Scroller.prototype._onScroll = function(){
   var scrollTop = this.console.scrollTop;
   if(!this.jumpToBottom && scrollTop < 15 && this.startPosition > 0){
     this.expand();
-  }else if(!this.sticky && scrollTop + height > scrollHeight - 20){
+  }else if(!this.sticky && scrollTop + height > scrollHeight - 30){
     this.jumpToBottom = true;
     this.sticky = true;
     this.dirty = true;
-  }else if(this.sticky && scrollTop + height - 40 < scrollHeight){
+  }else if(this.sticky && scrollTop + height < scrollHeight - 30){
     this.sticky = false;
   }
 
