@@ -41,10 +41,7 @@ function editor(app, opts, done){
   function refreshConsole(){
     const { lines } = consoleStore.getState();
     scroller.setLines(lines);
-
-    if(outputConsole){
-      requestAnimationFrame(scroller.refresh);
-    }
+    scroller.requestRefresh();
   }
 
   function highlighter(position, length) {
