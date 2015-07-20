@@ -119,7 +119,7 @@ Scroller.prototype._onScroll = function(){
     this.jumpToBottom = true;
     this.sticky = true;
     this.dirty = true;
-  }else if(this.sticky && scrollTop + height < scrollHeight - 40){
+  }else if(this.sticky && scrollTop + height - 40 < scrollHeight){
     this.sticky = false;
   }
 
