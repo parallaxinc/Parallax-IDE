@@ -36,8 +36,10 @@ var Scroller = function() {
   this.jumpToBottom = true;
   this.dirty = false;
   this.console = null;
-  this.refresh = this.renderVisible.bind(this);
-  this.scroll = this.onScroll.bind(this);
+
+  //pre-bind functions and throttle expansion
+  this.refresh = this._renderVisible.bind(this);
+  this.scroll = this._onScroll.bind(this);
   this.expand = _.throttle(this._expand.bind(this), 100, {
     leading: true,
     trailing: false
@@ -45,7 +47,6 @@ var Scroller = function() {
 };
 
 Scroller.prototype.setLines = function(newLines) {
-  // console.log(newLines);
   var len = newLines.length;
   this.lines = newLines;
   if(this.sticky){
@@ -73,7 +74,7 @@ Scroller.prototype.requestRefresh = function(){
   }
 };
 
-Scroller.prototype.renderVisible = function(){
+Scroller.prototype._renderVisible = function(){
   this.animateRequest = null;
   if(this.dirty && this.console){
     if(this.sticky){
@@ -102,12 +103,9 @@ Scroller.prototype._expand = function(){
 
     this.dirty = false;
   }
-  if(!this.animateRequest){
-    this.animateRequest = requestAnimationFrame(this.refresh);
-  }
 };
 
-Scroller.prototype.onScroll = function(){
+Scroller.prototype._onScroll = function(){
   var height = this.console.offsetHeight;
   var scrollHeight = this.console.scrollHeight;
   var scrollTop = this.console.scrollTop;
