@@ -75,6 +75,7 @@ Scroller.prototype.requestRefresh = function(){
 };
 
 Scroller.prototype._renderVisible = function(){
+  var top = this.console.scrollTop;
   this.animateRequest = null;
   if(this.dirty && this.console){
     if(this.sticky){
@@ -84,6 +85,9 @@ Scroller.prototype._renderVisible = function(){
     if(this.jumpToBottom){
       this.console.scrollTop = 350000;
       this.jumpToBottom = false;
+    }else if(!this.sticky && this.startPosition > 0 && top === 0){
+      //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
+      this.console.scrollTop = 1;
     }
     this.dirty = false;
   }
@@ -111,13 +115,15 @@ Scroller.prototype._onScroll = function(){
   var scrollTop = this.console.scrollTop;
   if(!this.jumpToBottom && scrollTop < 15 && this.startPosition > 0){
     this.expand();
-  }else if(!this.sticky && scrollTop + height > scrollHeight - 15){
+  }else if(!this.sticky && scrollTop + height > scrollHeight - 20){
     this.jumpToBottom = true;
     this.sticky = true;
     this.dirty = true;
+  }else if(this.sticky && scrollTop + height < scrollHeight - 40){
+    this.sticky = false;
   }
 
-  if(this.dirty){
+  if(this.dirty && !this.animateRequest){
     this.animateRequest = requestAnimationFrame(this.refresh);
   }
 };
