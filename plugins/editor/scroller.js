@@ -27,7 +27,7 @@ function generateContent(lines, start, end, minLength) {
     .join('\n');
 }
 
-var Scroller = function() {
+function Scroller() {
   this.lines = [];
   this.minVisible = 30;
   this.startPosition = 0;
@@ -44,7 +44,7 @@ var Scroller = function() {
     leading: true,
     trailing: true
   });
-};
+}
 
 Scroller.prototype.setLines = function(newLines) {
   var len = newLines.length;
