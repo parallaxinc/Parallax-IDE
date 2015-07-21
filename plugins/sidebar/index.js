@@ -24,7 +24,7 @@ function sidebar(app, opts, done){
 
   function refreshDirectory(){
     // TODO: expose a method to refresh directory without changing it
-    space.changeDir(space.cwd.deref());
+    space.changeDirectory(space.getState().cwd);
   }
 
   // TODO: move into frylord?
@@ -37,20 +37,24 @@ function sidebar(app, opts, done){
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
-    const directory = space.directory;
+    const { cwd, directory } = space.getState();
 
     const Component = (
       <Sidebar>
         <ProjectOperations />
         <FileList workspace={space} loadFile={loadFile}>
-          <ListItem icon="folder" disableRipple>{space.cwd.deref()}</ListItem>
-          {directory.map((file) => <File key={file.get('name')} filename={file.get('name')} temp={file.get('temp')} loadFile={loadFile} />)}
+          <ListItem icon="folder" disableRipple>{cwd}</ListItem>
+          {directory.map(({ name, temp }) => <File key={name} filename={name} temp={temp} loadFile={loadFile} />)}
         </FileList>
         <FileOperations />
       </Sidebar>
     );
 
     React.render(Component, el, cb);
+  });
+
+  space.subscribe(() => {
+    app.render();
   });
 
   // Store bindings

@@ -7,7 +7,7 @@ const styles = require('./styles');
 
 const File = React.createClass({
   openFile: function(filename){
-    const { loadFile, config } = this.props;
+    const { loadFile } = this.props;
     loadFile(filename);
   },
   render: function(){

@@ -32,7 +32,13 @@ const plugins = [
     register: require('./plugins/appbar')
   },
   {
-    register: require('./plugins/editor')
+    register: require('./plugins/notifications')
+  },
+  {
+    register: require('./plugins/editor'),
+    options: {
+      initial: ''
+    }
   },
   {
     register: require('./plugins/sidebar')
@@ -56,16 +62,19 @@ function onRender(err){
   // Finish Loading Plugin
   const cwd = userConfig.get('cwd') || defaultProject;
   const lastFile = userConfig.get('last-file');
-  workspace.changeDir(cwd, (err) => {
-    console.log(err);
-    if(lastFile){
-      loadFile(lastFile);
-    } else {
-      newFile();
-    }
+  console.log(cwd, lastFile);
+  workspace.changeDirectory(cwd)
+    .then(() => {
+      console.log(workspace.getState());
+      if(lastFile){
+        loadFile(lastFile);
+      } else {
+        newFile();
+      }
 
-    console.log('file loaded');
-  });
+      console.log('file loaded');
+    })
+    .catch(console.error.bind(console));
 }
 
 function onRegister(err){

@@ -75,7 +75,6 @@ function editor(app, opts, done){
   editorStore.workspace = space;
 
   // really stinks to attach these in here
-  fileStore.toasts = toasts;
   deviceStore.toasts = toasts;
 
   app.view('editor', function(el, cb){
@@ -144,7 +143,9 @@ function editor(app, opts, done){
     cb();
   });
 
-  space.updateContent(opts.initial, done);
+  space.updateContent(opts.initial);
+
+  done();
 }
 
 module.exports = editor;

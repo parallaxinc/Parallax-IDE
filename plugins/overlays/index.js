@@ -47,11 +47,11 @@ function overlays(app, opts, done){
     }
 
     if(showDeleteOverlay){
-      const name = workspace.filename.deref();
-      if(name){
+      const { filename } = workspace.getState();
+      if(filename){
         component = (
           <DeleteConfirmOverlay
-            name={name}
+            name={filename}
             onAccept={deleteFile}
             onCancel={hideDelete} />
         );

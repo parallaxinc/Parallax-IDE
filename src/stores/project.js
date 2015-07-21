@@ -40,10 +40,11 @@ class ProjectStore {
       return;
     }
 
-    workspace.changeDir(projectName, () => {
-      config.set('cwd', projectName);
-      this.onClearName();
-    });
+    workspace.changeDirectory(projectName)
+      .then(() => {
+        config.set('cwd', projectName);
+        this.onClearName();
+      });
   }
 
   onDeleteProject(projectName){
@@ -53,10 +54,10 @@ class ProjectStore {
       return;
     }
 
-    workspace.deleteDir(projectName, () => {
-      // TODO: handle error
-      this.onClearName();
-    });
+    workspace.deleteDirectory(projectName)
+      .then(() => {
+        this.onClearName();
+      });
   }
 }
 

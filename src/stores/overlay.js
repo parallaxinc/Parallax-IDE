@@ -58,7 +58,7 @@ class OverlayStore {
     // TODO: don't really like this
     const { workspace } = fileStore;
     const { isNewFile } = fileStore.getState();
-    const content = workspace.current.deref();
+    const { content } = workspace.getState();
 
     if(isNewFile && content.length){
       this.onShowSave();

@@ -65,9 +65,10 @@ class EditorStore {
   }
   onPrint() {
     const { cm, workspace } = this.getInstance();
+    const { filename } = workspace.getState();
 
     const { title } = document;
-    document.title = workspace.filename.deref();
+    document.title = filename;
     cm.setOption('viewportMargin', Infinity);
     window.print();
     document.title = title;
@@ -80,9 +81,10 @@ class EditorStore {
   }
   onSyntaxCheck() {
     const { workspace, compile } = this.getInstance();
+    const { content } = workspace.getState();
     const result = compile({
       type: 'bs2',
-      source: workspace.current.deref()
+      source: content
     });
     if(result.error){
       this._handleError(result.error);

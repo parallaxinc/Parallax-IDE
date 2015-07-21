@@ -42,8 +42,9 @@ class FileStore {
 
   onClearName() {
     const { workspace } = this.getInstance();
+    const { filename } = workspace.getState();
     this.setState({
-      fileName: workspace.filename.deref()
+      fileName: filename
     });
   }
 
@@ -55,14 +56,13 @@ class FileStore {
 
   onDeleteFile(name) {
     const { workspace } = this.getInstance();
+    const { filename } = workspace.getState();
 
     if(!name){
       return;
     }
 
-    workspace.deleteFile(workspace.filename)
-      .tap(() => this._handleSuccess(`'${name}' deleted successfully`))
-      .catch((err) => this._handleError(err))
+    workspace.deleteFile(filename)
       .finally(() => this.onNewFile());
   }
 
@@ -72,22 +72,20 @@ class FileStore {
 
   onSaveFileAs(name) {
     const { workspace } = this.getInstance();
+    const { content } = workspace.getState();
 
     if(!name){
       return;
     }
 
-    workspace.filename.update(() => name);
-    // TODO: these should transparently accept cursors for all non-function params
-    workspace.saveFile(workspace.filename.deref(), workspace.current)
+    workspace.updateFilename(name);
+    workspace.saveFile(name, content)
       .tap(() => {
         this.setState({ isNewFile: false });
         if(this.loadQueue.length){
           this.onLoadFile(this.loadQueue.shift());
         }
-      })
-      .tap(() => this._handleSuccess(`'${name}' created successfully`))
-      .catch((err) => this._handleError(err));
+      });
   }
 
   onCancelSave(status){
@@ -109,20 +107,15 @@ class FileStore {
     }
 
     const { workspace } = this.getInstance();
+    const { filename, content } = workspace.getState();
 
-    const name = workspace.filename.deref();
-
-    // TODO: these should transparently accept cursors for all non-function params
-    workspace.saveFile(name, workspace.current)
-      .tap(() => this._handleSuccess(`'${name}' saved successfully`))
-      .catch((err) => this._handleError(err));
+    workspace.saveFile(filename, content);
   }
 
   onNewFile() {
     const { workspace, userConfig, documents } = this.getInstance();
+    const { cwd, directory } = workspace.getState();
 
-    const cwd = workspace.cwd.deref();
-    const directory = workspace.directory.toJS();
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
       if(dirfile.name.match(/untitled/)) {
         const getnum = dirfile.name.match(/\d+/);
@@ -137,7 +130,7 @@ class FileStore {
 
     const builtName = `untitled${untitledLast + 1}`;
 
-    workspace.filename.update(() => builtName);
+    workspace.updateFilename(builtName);
     workspace.updateContent('');
 
     userConfig.set('last-file', builtName);
@@ -161,9 +154,7 @@ class FileStore {
 
     const { workspace, userConfig, documents } = this.getInstance();
     const { isNewFile } = this.state;
-
-    const cwd = workspace.cwd.deref();
-    const content = workspace.current.deref();
+    const { cwd, content } = workspace.getState();
 
     if(isNewFile && content.length){
       this._queueLoad(filename);
@@ -173,40 +164,25 @@ class FileStore {
     const doc = documents.swap(path.join(cwd, filename));
     if(doc){
       this.state.fileName = filename;
-      workspace.current.update(() => doc.getValue());
-      workspace.filename.update(() => filename);
+      workspace.updateContent(doc.getValue());
+      workspace.updateFilename(filename);
       documents.focus();
       return;
     }
 
-    workspace.loadFile(filename, (err) => {
-      if(err){
-        this._handleError(err);
-        return;
-      }
+    workspace.changeFile(filename)
+      .then(() => {
+        const { filename, content } = workspace.getState();
+        userConfig.set('last-file', filename);
 
-      userConfig.set('last-file', filename);
+        documents.create(path.join(cwd, filename), content);
+        documents.focus();
 
-      documents.create(path.join(cwd, filename), workspace.current.deref());
-      documents.focus();
-
-      this.setState({
-        fileName: filename,
-        isNewFile: false
+        this.setState({
+          fileName: filename,
+          isNewFile: false
+        });
       });
-    });
-  }
-
-  _handleError(err){
-    const { toasts } = this.getInstance();
-
-    toasts.error(err);
-  }
-
-  _handleSuccess(msg){
-    const { toasts } = this.getInstance();
-
-    toasts.success(msg);
   }
 }
 

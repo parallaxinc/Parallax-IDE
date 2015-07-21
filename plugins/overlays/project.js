@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('lodash');
 const React = require('react');
 const Card = require('react-material/components/Card');
 const Button = require('react-material/components/Button');
@@ -24,10 +25,7 @@ class ProjectOverlay extends React.Component {
   }
 
   render(){
-    const space = this.props.workspace;
-    const projects = space.projects;
-    const cwd = space.cwd.deref().substr(1);
-    const { projectName } = this.props;
+    const { projects, cwd, projectName } = this.props;
 
     return (
       <Card styles={[styles.overlay, styles.overlayLarge]}>
@@ -105,7 +103,8 @@ module.exports = createContainer(ProjectOverlay, {
     };
   },
 
-  getPropsFromStores() {
-    return projectStore.getState();
+  getPropsFromStores(props) {
+    const { workspace } = props;
+    return _.assign({}, projectStore.getState(), workspace.getState());
   }
 });

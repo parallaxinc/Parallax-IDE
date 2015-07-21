@@ -48,7 +48,7 @@ class DeviceStore {
 
     const { scanBoards, workspace } = this.getInstance();
     const { auto } = this.state;
-    const source = workspace.current.deref();
+    const { content } = workspace.getState();
 
     const scanOpts = {
       reject: [
@@ -56,7 +56,7 @@ class DeviceStore {
         /Bluetooth-Modem/,
         /dev\/cu\./
       ],
-      source: source
+      source: content
     };
 
     this.setState({
@@ -78,16 +78,16 @@ class DeviceStore {
 
     const { workspace, documents } = this.getInstance();
     const { noneMatched } = this.messages;
+    const { content } = workspace.getState();
 
     if(this.state.message === noneMatched) {
 
       const { name } = device;
       const { TargetStart } = device.program.raw;
-      const source = workspace.current.deref();
-      const end = source.indexOf('}', TargetStart);
+      const end = content.indexOf('}', TargetStart);
 
-      const pre = source.substring(0, TargetStart);
-      const post = source.substring(end, source.length);
+      const pre = content.substring(0, TargetStart);
+      const post = content.substring(end, content.length);
       const newSource = pre + name + post;
 
       documents.update(newSource);
@@ -153,8 +153,7 @@ class DeviceStore {
 
     const { workspace, getBoard } = this.getInstance();
     const { selectedDevice } = this.state;
-
-    const name = workspace.filename.deref();
+    const { filename, content } = workspace.getState();
 
     if(!selectedDevice){
       return;
@@ -169,13 +168,13 @@ class DeviceStore {
     board.on('progress', updateProgress.bind(this));
     board.on('progress', tx.bind(this));
 
-    board.bootload(workspace.current.deref())
+    board.bootload(content)
       .tap(() => clearOutput())
       .then(() => board.on('terminal', output))
       .then(() => board.on('terminal', rx))
       .tap(() => board.on('close', disconnected))
       .tap(() => this._handleClear())
-      .tap(() => this._handleSuccess(`'${name}' downloaded successfully`))
+      .tap(() => this._handleSuccess(`'${filename}' downloaded successfully`))
       .catch((err) => this._handleError(err))
       .finally(() => {
         board.removeListener('progress', updateProgress);
