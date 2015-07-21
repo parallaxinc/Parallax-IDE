@@ -1,0 +1,4 @@
+  '{$STAMP BS2}
+'{$PBASIC 2.5}
+
+  DEBUG "Hello World!", CR

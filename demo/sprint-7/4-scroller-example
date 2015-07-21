@@ -1,0 +1,20 @@
+'{$STAMP BS2e}
+'{$PBASIC 2.5}
+
+Idx VAR WORD
+
+'Set this to 10, 100, 500 and test scroll-back.
+Delay CON 10
+
+Idx = 0
+
+DO
+  Idx = Idx + 1
+  DEBUG "Loop ", DEC Idx, CR
+  HIGH 0
+  DEBUG "On",CR
+  PAUSE Delay
+  LOW 0
+  DEBUG "Off",CR
+  PAUSE Delay
+LOOP

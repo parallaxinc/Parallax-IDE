@@ -1,0 +1,22 @@
+' {$STAMP BS2}
+' {$PBASIC 2.5}
+
+lines   VAR     Nib
+idx     VAR     Nib
+
+Main:
+  DEBUG CLS, "How many lines to print (1 - 5)? --> "
+  DEBUGIN DEC1 lines
+
+  IF ((lines >= 1) AND (lines <= 5)) THEN
+    DEBUG CR, CR
+    FOR idx = 1 TO lines                        ' print message specified times
+      DEBUG DEC1 idx, ". "
+      DEBUG "BASIC Stamp!", CR
+    NEXT
+    END                                         ' end of program
+  ELSE
+    DEBUG CR, "Invalid entry!"                  ' warning message
+    PAUSE 2000                                  ' wait 2 seconds
+    GOTO Main                                   ' get another entry
+      ENDIF
