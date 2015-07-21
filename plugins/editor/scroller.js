@@ -78,9 +78,9 @@ Scroller.prototype.requestRefresh = function(){
 };
 
 Scroller.prototype._renderVisible = function(){
-  var top = this.console.scrollTop;
   this.animateRequest = null;
   if(this.dirty && this.console){
+    var top = this.console.scrollTop;
     if(this.sticky){
       this.startPosition = Math.max(0, this.lines.length - this.minVisible);
     }
