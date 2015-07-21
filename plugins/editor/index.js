@@ -28,20 +28,20 @@ const TransmitPane = require('./transmit-pane');
 
 const makeToasts = require('../../src/lib/toasts');
 
+const Scroller = require('./scroller');
+
 function editor(app, opts, done){
 
   var codeEditor;
   var outputConsole;
   var transmission;
   var transmitPane;
+  var scroller = new Scroller();
 
   function refreshConsole(){
-    const { text } = consoleStore.getState();
-
-    if(outputConsole){
-      outputConsole.innerHTML = text;
-      outputConsole.scrollTop = outputConsole.scrollHeight;
-    }
+    const { lines } = consoleStore.getState();
+    scroller.setLines(lines);
+    scroller.requestRefresh();
   }
 
   function highlighter(position, length) {
@@ -130,6 +130,10 @@ function editor(app, opts, done){
       outputConsole.style.overflow = 'auto';
       outputConsole.style.whiteSpace = 'pre-wrap';
       el.appendChild(outputConsole);
+
+      scroller.setConsole(outputConsole);
+
+      outputConsole.addEventListener('scroll', scroller.scroll, false);
     }
     if(!transmission) {
       transmission = document.createElement('div');
