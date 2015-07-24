@@ -52,11 +52,13 @@ class SaveOverlay extends React.Component {
 
   _onAccept(){
     const { onAccept, fileName } = this.props;
+    const overwrite = false;
+
+    if(typeof onAccept === 'function'){
+      onAccept(fileName, overwrite);
+    }
 
     clearName();
-    if(typeof onAccept === 'function'){
-      onAccept(fileName);
-    }
   }
 
   _onCancel(status){

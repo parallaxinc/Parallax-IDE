@@ -13,6 +13,8 @@ const {
   hideDelete,
   showDownload,
   hideDownload,
+  showOverwrite,
+  hideOverwrite,
   showProjects,
   hideProjects,
   showProjectDelete } = require('../actions/overlay');
@@ -30,6 +32,8 @@ class OverlayStore {
       onHideDelete: [hideDelete, deleteFile],
       onShowDownload: showDownload,
       onHideDownload: hideDownload,
+      onShowOverwrite: showOverwrite,
+      onHideOverwrite: hideOverwrite,
       onShowProjects: [deleteProject, showProjects],
       onHideProjects: [changeProject, hideProjects],
       onShowProjectDelete: [confirmDelete, showProjectDelete]
@@ -39,6 +43,7 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: false,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
     };
@@ -49,8 +54,27 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: false,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
+    });
+  }
+
+  onShowOverwrite() {
+    this.setState({
+      showSaveOverlay: false,
+      showDeleteOverlay: false,
+      showDownloadOverlay: false,
+      showOverwriteOverlay: true,
+      showProjectsOverlay: false,
+      showProjectDeleteOverlay: false
+    });
+  }
+
+  onHideOverwrite() {
+    this.setState({
+      showOverwriteOverlay: false,
+      showSaveOverlay: true
     });
   }
 
@@ -78,6 +102,7 @@ class OverlayStore {
       showSaveOverlay: true,
       showDeleteOverlay: false,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
     });
@@ -94,6 +119,7 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: true,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
     });
@@ -110,6 +136,7 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: false,
       showDownloadOverlay: true,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: false
     });
@@ -126,6 +153,7 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: false,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: true,
       showProjectDeleteOverlay: false
     });
@@ -143,6 +171,7 @@ class OverlayStore {
       showSaveOverlay: false,
       showDeleteOverlay: false,
       showDownloadOverlay: false,
+      showOverwriteOverlay: false,
       showProjectsOverlay: false,
       showProjectDeleteOverlay: true
     });
