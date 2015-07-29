@@ -1,24 +1,17 @@
 'use strict';
 
 const React = require('react');
-const ListItem = require('react-material/components/ListItem');
-
-const Sidebar = require('./sidebar');
-const FileList = require('./file-list');
-const File = require('./file');
-const FileOperations = require('./file-operations');
-const ProjectOperations = require('./project-operations');
+const { createContainer } = require('sovereign');
 
 const deviceStore = require('../../src/stores/device');
 const fileStore = require('../../src/stores/file');
 const transmissionStore = require('../../src/stores/transmission');
 
-const { loadFile } = require('../../src/actions/file');
+const SidebarView = require('../../src/views/sidebar');
 
 function sidebar(app, opts, done){
 
-  const space = app.workspace;
-  const userConfig = app.userConfig;
+  const { workspace, userConfig } = app;
   const getBoard = app.getBoard.bind(app);
   const scanBoards = app.scanBoards.bind(app);
 
@@ -26,42 +19,51 @@ function sidebar(app, opts, done){
   if(typeof chrome !== 'undefined' && typeof chrome.syncFileSystem !== 'undefined'){
     chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
       if(detail.direction === 'remote_to_local'){
-        space.refreshDirectory();
+        workspace.refreshDirectory();
       }
     });
     chrome.syncFileSystem.onServiceStatusChanged.addListener(function(){
-      space.refreshDirectory();
+      workspace.refreshDirectory();
     });
   }
 
-  app.view('sidebar', function(el, cb){
-    console.log('sidebar render');
-    const { cwd, directory } = space.getState();
+  const View = createContainer(SidebarView, {
+    getStores(){
+      return {
+        workspace
+      };
+    },
 
-    var Component = (
-      <Sidebar>
-        <ProjectOperations />
-        <FileList workspace={space} loadFile={loadFile}>
-          <ListItem icon="folder" disableRipple>{cwd}</ListItem>
-          {directory.map(({ name, temp }) => <File key={name} filename={name} temp={temp} loadFile={loadFile} />)}
-        </FileList>
-        <FileOperations />
-      </Sidebar>
-    );
+    listen(store, onChange){
+      return store.subscribe(onChange);
+    },
 
-    React.render(Component, el, cb);
+    unlisten(store, onChange, unsubscribe){
+      unsubscribe();
+    },
+
+    getPropsFromStores(){
+      const { cwd, directory } = workspace.getState();
+
+      return {
+        cwd,
+        directory
+      };
+    }
   });
 
-  space.subscribe(() => {
-    app.render();
+  app.view('sidebar', function(el, cb){
+    console.log('sidebar render');
+
+    React.render(<View />, el, cb);
   });
 
   // Store bindings
-  deviceStore.workspace = space;
+  deviceStore.workspace = workspace;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
 
-  fileStore.workspace = space;
+  fileStore.workspace = workspace;
   fileStore.userConfig = userConfig;
 
   transmissionStore.getBoard = getBoard;
