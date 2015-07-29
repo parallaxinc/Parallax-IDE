@@ -23,14 +23,16 @@ function sidebar(app, opts, done){
   const scanBoards = app.scanBoards.bind(app);
 
   // TODO: move into frylord?
-  chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
-    if(detail.direction === 'remote_to_local'){
+  if(typeof chrome !== 'undefined' && typeof chrome.syncFileSystem !== 'undefined'){
+    chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
+      if(detail.direction === 'remote_to_local'){
+        space.refreshDirectory();
+      }
+    });
+    chrome.syncFileSystem.onServiceStatusChanged.addListener(function(){
       space.refreshDirectory();
-    }
-  });
-  chrome.syncFileSystem.onServiceStatusChanged.addListener(function(){
-    space.refreshDirectory();
-  });
+    });
+  }
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
