@@ -65,6 +65,7 @@ function onRender(err){
   console.log(cwd, lastFile);
   workspace.changeDirectory(cwd)
     .then(() => {
+      userConfig.set('cwd', cwd);
       console.log(workspace.getState());
       if(lastFile){
         loadFile(lastFile);

@@ -22,24 +22,21 @@ function sidebar(app, opts, done){
   const getBoard = app.getBoard.bind(app);
   const scanBoards = app.scanBoards.bind(app);
 
-  function refreshDirectory(){
-    // TODO: expose a method to refresh directory without changing it
-    space.changeDirectory(space.getState().cwd);
-  }
-
   // TODO: move into frylord?
   chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
     if(detail.direction === 'remote_to_local'){
-      refreshDirectory();
+      space.refreshDirectory();
     }
   });
-  chrome.syncFileSystem.onServiceStatusChanged.addListener(refreshDirectory);
+  chrome.syncFileSystem.onServiceStatusChanged.addListener(function(){
+    space.refreshDirectory();
+  });
 
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
     const { cwd, directory } = space.getState();
 
-    const Component = (
+    var Component = (
       <Sidebar>
         <ProjectOperations />
         <FileList workspace={space} loadFile={loadFile}>

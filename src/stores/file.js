@@ -164,8 +164,8 @@ class FileStore {
     const doc = documents.swap(path.join(cwd, filename));
     if(doc){
       this.state.fileName = filename;
-      workspace.updateContent(doc.getValue());
       workspace.updateFilename(filename);
+      workspace.updateContent(doc.getValue());
       documents.focus();
       return;
     }
