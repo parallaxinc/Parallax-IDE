@@ -1,9 +1,11 @@
 'use strict';
 
+const _ = require('lodash');
 const React = require('react');
 
 const styles = {
   overlayButtonContainer: {
+    marginTop: 'auto',
     marginLeft: 'auto',
     height: '40px'
   }
@@ -12,11 +14,14 @@ const styles = {
 class OverlayFooter extends React.Component {
   render(){
     const {
-      children
+      children,
+      style
     } = this.props;
 
+    const footerStyle = _.assign({}, styles.overlayButtonContainer, style);
+
     return (
-      <div style={styles.overlayButtonContainer}>
+      <div style={footerStyle}>
         {children}
       </div>
     );

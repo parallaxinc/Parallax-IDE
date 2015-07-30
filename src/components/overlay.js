@@ -21,16 +21,17 @@ class Overlay extends React.Component {
   render(){
     const {
       large,
-      children
+      children,
+      style
     } = this.props;
 
-    const style = _.assign({}, styles.overlay);
+    const cardStyle = _.assign({}, styles.overlay, style);
     if(large){
-      _.assign(style, styles.overlayLarge);
+      _.assign(cardStyle, styles.overlayLarge);
     }
 
     return (
-      <Card styles={style}>
+      <Card styles={cardStyle}>
         {children}
       </Card>
     );

@@ -2,17 +2,17 @@
 
 const React = require('react');
 
-const DownloadOverlay = require('./download');
-
 const SaveOverlay = require('../../src/views/save-overlay');
 const ProjectOverlay = require('../../src/views/project-overlay');
+const DownloadOverlay = require('../../src/views/download-overlay');
 const DeleteConfirmOverlay = require('../../src/views/delete-confirm-overlay');
 
+const deviceStore = require('../../src/stores/device');
 const overlayStore = require('../../src/stores/overlay');
 const projectStore = require('../../src/stores/project');
 
 const { deleteProject } = require('../../src/actions/project');
-const { hideDownload, showProjects } = require('../../src/actions/overlay');
+const { showProjects } = require('../../src/actions/overlay');
 
 function overlays(app, opts, done){
 
@@ -53,8 +53,7 @@ function overlays(app, opts, done){
 
     if(showDownloadOverlay){
       component = (
-        <DownloadOverlay
-          onCancel={hideDownload} />
+        <DownloadOverlay deviceStore={deviceStore} />
       );
     }
 
