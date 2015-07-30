@@ -2,11 +2,11 @@
 
 const React = require('react');
 
-const deviceStore = require('../../src/stores/device');
-const fileStore = require('../../src/stores/file');
-const transmissionStore = require('../../src/stores/transmission');
+const deviceStore = require('../stores/device');
+const fileStore = require('../stores/file');
+const transmissionStore = require('../stores/transmission');
 
-const SidebarView = require('../../src/views/sidebar');
+const SidebarView = require('../views/sidebar');
 
 function sidebar(app, opts, done){
 

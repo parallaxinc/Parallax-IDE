@@ -2,17 +2,14 @@
 
 const React = require('react');
 
-const TopBar = require('./component');
+const AppbarView = require('../views/appbar');
 
 function appbar(app, opts, done){
+
   app.view('appbar', function(el, cb){
     console.log('appbar render');
 
-    const Component = (
-      <TopBar title={opts.title} app={app} />
-    );
-
-    React.render(Component, el, cb);
+    React.render(<AppbarView />, el, cb);
   });
 
   done();

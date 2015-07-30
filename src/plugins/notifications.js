@@ -1,6 +1,16 @@
 'use strict';
 
-const styles = require('./styles');
+const red = '#da2100';
+const green = '#159600';
+
+const styles = {
+  errorToast: {
+    backgroundColor: red
+  },
+  successToast: {
+    backgroundColor: green
+  }
+};
 
 function notifications({ workspace, toast }, opts, done){
 

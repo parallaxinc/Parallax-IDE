@@ -3,10 +3,22 @@
 const React = require('react');
 const AppBar = require('react-material/components/AppBar');
 
-const styles = require('./styles');
+const styles = {
+  appbar: {
+    normalAppBarStyle: {
+      backgroundColor: '#2c83d8'
+    }
+  },
+  logo: {
+    boxSizing: 'border-box',
+    height: '100%',
+    position: 'absolute',
+    right: 0,
+    padding: 8
+  }
+};
 
 class TopBar extends React.Component {
-
   render(){
     return (
       <AppBar styles={styles.appbar}>

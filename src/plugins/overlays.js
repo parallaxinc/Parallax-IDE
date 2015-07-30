@@ -2,17 +2,17 @@
 
 const React = require('react');
 
-const SaveOverlay = require('../../src/views/save-overlay');
-const ProjectOverlay = require('../../src/views/project-overlay');
-const DownloadOverlay = require('../../src/views/download-overlay');
-const DeleteConfirmOverlay = require('../../src/views/delete-confirm-overlay');
+const SaveOverlay = require('../views/save-overlay');
+const ProjectOverlay = require('../views/project-overlay');
+const DownloadOverlay = require('../views/download-overlay');
+const DeleteConfirmOverlay = require('../views/delete-confirm-overlay');
 
-const deviceStore = require('../../src/stores/device');
-const overlayStore = require('../../src/stores/overlay');
-const projectStore = require('../../src/stores/project');
+const deviceStore = require('../stores/device');
+const overlayStore = require('../stores/overlay');
+const projectStore = require('../stores/project');
 
-const { deleteProject } = require('../../src/actions/project');
-const { showProjects } = require('../../src/actions/overlay');
+const { deleteProject } = require('../actions/project');
+const { showProjects } = require('../actions/overlay');
 
 function overlays(app, opts, done){
 

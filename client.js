@@ -29,10 +29,10 @@ const plugins = [
     register: require('iggins')
   },
   {
-    register: require('./plugins/appbar')
+    register: require('./src/plugins/appbar')
   },
   {
-    register: require('./plugins/notifications')
+    register: require('./src/plugins/notifications')
   },
   {
     register: require('./plugins/editor'),
@@ -41,10 +41,10 @@ const plugins = [
     }
   },
   {
-    register: require('./plugins/sidebar')
+    register: require('./src/plugins/sidebar')
   },
   {
-    register: require('./plugins/overlays')
+    register: require('./src/plugins/overlays')
   }
 ];
 
