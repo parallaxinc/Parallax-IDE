@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const { createContainer } = require('sovereign');
 
 const deviceStore = require('../../src/stores/device');
 const fileStore = require('../../src/stores/file');
@@ -27,35 +26,10 @@ function sidebar(app, opts, done){
     });
   }
 
-  const View = createContainer(SidebarView, {
-    getStores(){
-      return {
-        workspace
-      };
-    },
-
-    listen(store, onChange){
-      return store.subscribe(onChange);
-    },
-
-    unlisten(store, onChange, unsubscribe){
-      unsubscribe();
-    },
-
-    getPropsFromStores(){
-      const { cwd, directory } = workspace.getState();
-
-      return {
-        cwd,
-        directory
-      };
-    }
-  });
-
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
 
-    React.render(<View />, el, cb);
+    React.render(<SidebarView workspace={workspace} />, el, cb);
   });
 
   // Store bindings

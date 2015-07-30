@@ -4,6 +4,7 @@ require('react-mfb-iceddev/mfb.css');
 
 const _ = require('lodash');
 const React = require('react');
+const { createContainer } = require('sovereign');
 const ListItem = require('react-material/components/ListItem');
 
 const Sidebar = require('../components/sidebar');
@@ -53,4 +54,19 @@ class SidebarView extends React.Component {
   }
 }
 
-module.exports = SidebarView;
+module.exports = createContainer(SidebarView, {
+  getStores({ workspace }){
+    return {
+      workspace
+    };
+  },
+
+  getPropsFromStores({ workspace }){
+    const { cwd, directory } = workspace.getState();
+
+    return {
+      cwd,
+      directory
+    };
+  }
+});
