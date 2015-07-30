@@ -1,32 +1,23 @@
 'use strict';
 
+const path = require('path');
+
 const alt = require('../alt');
 
-const { clearName, updateName, changeProject, deleteProject, confirmDelete } = require('../actions/project');
+const { changeProject, deleteProject, confirmDelete } = require('../actions/project');
 
 class ProjectStore {
   constructor() {
 
     this.bindListeners({
-      onClearName: clearName,
-      onUpdateName: updateName,
       onChangeProject: changeProject,
       onDeleteProject: deleteProject,
       onConfirmDelete: confirmDelete
     });
 
     this.state = {
-      projectName: '',
       deleteProjectName: ''
     };
-  }
-
-  onClearName() {
-    this.setState({ projectName: '' });
-  }
-
-  onUpdateName(value) {
-    this.setState({ projectName: value });
   }
 
   onConfirmDelete(projectName){
@@ -40,10 +31,11 @@ class ProjectStore {
       return;
     }
 
-    workspace.changeDirectory(projectName)
+    const dirpath = path.join('/', projectName);
+
+    workspace.changeDirectory(dirpath)
       .then(() => {
-        config.set('cwd', projectName);
-        this.onClearName();
+        config.set('cwd', dirpath);
       });
   }
 
@@ -54,10 +46,9 @@ class ProjectStore {
       return;
     }
 
-    workspace.deleteDirectory(projectName)
-      .then(() => {
-        this.onClearName();
-      });
+    const dirpath = path.join('/', projectName);
+
+    workspace.deleteDirectory(dirpath);
   }
 }
 

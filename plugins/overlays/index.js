@@ -2,17 +2,17 @@
 
 const React = require('react');
 
-const SaveOverlay = require('./save');
-const ProjectOverlay = require('./project');
 const DownloadOverlay = require('./download');
-const DeleteConfirmOverlay = require('./delete-confirm');
+
+const SaveOverlay = require('../../src/views/save-overlay');
+const ProjectOverlay = require('../../src/views/project-overlay');
+const DeleteConfirmOverlay = require('../../src/views/delete-confirm-overlay');
 
 const overlayStore = require('../../src/stores/overlay');
 const projectStore = require('../../src/stores/project');
 
-const { confirmDelete, changeProject, deleteProject } = require('../../src/actions/project');
-const { deleteFile, saveFileAs } = require('../../src/actions/file');
-const { hideSave, hideDelete, hideDownload, showProjects, hideProjects } = require('../../src/actions/overlay');
+const { deleteProject } = require('../../src/actions/project');
+const { hideDownload, showProjects } = require('../../src/actions/overlay');
 
 function overlays(app, opts, done){
 
@@ -36,26 +36,19 @@ function overlays(app, opts, done){
       showDownloadOverlay,
       showProjectsOverlay,
       showProjectDeleteOverlay } = overlayStore.getState();
+    const { filename } = workspace.getState();
 
     let component;
     if(showSaveOverlay){
       component = (
-        <SaveOverlay
-          onAccept={saveFileAs}
-          onCancel={hideSave} />
+        <SaveOverlay />
       );
     }
 
-    if(showDeleteOverlay){
-      const { filename } = workspace.getState();
-      if(filename){
-        component = (
-          <DeleteConfirmOverlay
-            name={filename}
-            onAccept={deleteFile}
-            onCancel={hideDelete} />
-        );
-      }
+    if(showDeleteOverlay && filename){
+      component = (
+        <DeleteConfirmOverlay workspace={workspace} />
+      );
     }
 
     if(showDownloadOverlay){
@@ -67,11 +60,7 @@ function overlays(app, opts, done){
 
     if(showProjectsOverlay){
       component = (
-        <ProjectOverlay
-          workspace={workspace}
-          onAccept={changeProject}
-          onDelete={confirmDelete}
-          onCancel={hideProjects} />
+        <ProjectOverlay workspace={workspace} />
       );
     }
 
