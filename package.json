@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "@phated/redux-create-store": "^0.1.1",
     "alt": "^0.16.7",
     "bs2-serial": "^0.10.5",
     "codemirror": "^4.13.0",

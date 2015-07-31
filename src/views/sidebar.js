@@ -15,7 +15,7 @@ const FileOperationList = require('../components/file-operation-list');
 const FileOperationListItem = require('../components/file-operation-list-item');
 
 const { loadFile, newFile, saveFile } = require('../actions/file');
-const { showProjects, showDelete, showDownload } = require('../actions/overlay');
+const { showDelete, showDownload } = require('../actions/overlay');
 const { enableAuto } = require('../../src/actions/device');
 
 function download(){
@@ -33,12 +33,17 @@ class SidebarView extends React.Component {
   render(){
     const {
       cwd,
-      directory
+      directory,
+      handlers
     } = this.props;
+
+    const {
+      showProjectsOverlay
+    } = handlers;
 
     return (
       <Sidebar>
-        <ProjectsButton onClick={showProjects} />
+        <ProjectsButton onClick={showProjectsOverlay} />
         <FileList>
           <ListItem icon="folder" disableRipple>{cwd}</ListItem>
           {_.map(directory, componentizeFile)}

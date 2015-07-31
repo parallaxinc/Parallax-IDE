@@ -5,21 +5,24 @@ const React = require('react');
 const SaveOverlay = require('../views/save-overlay');
 const ProjectOverlay = require('../views/project-overlay');
 const DownloadOverlay = require('../views/download-overlay');
-const DeleteConfirmOverlay = require('../views/delete-confirm-overlay');
+const DeleteFileOverlay = require('../views/delete-file-overlay');
+const DeleteProjectOverlay = require('../views/delete-project-overlay');
 
 const deviceStore = require('../stores/device');
-const overlayStore = require('../stores/overlay');
-const projectStore = require('../stores/project');
 
-const { deleteProject } = require('../actions/project');
-const { showProjects } = require('../actions/overlay');
+const store = require('../store');
+
+const {
+  SAVE_OVERLAY,
+  DOWNLOAD_OVERLAY,
+  PROJECTS_OVERLAY,
+  DELETE_FILE_OVERLAY,
+  DELETE_PROJECT_OVERLAY
+} = require('../constants/overlay-states');
 
 function overlays(app, opts, done){
 
-  const { overlay, workspace, userConfig } = app;
-
-  projectStore.config = userConfig;
-  projectStore.workspace = workspace;
+  const { overlay, workspace, handlers } = app;
 
   function renderOverlay(component){
     function renderer(el){
@@ -30,58 +33,31 @@ function overlays(app, opts, done){
   }
 
   function onOverlayChange(){
-    const {
-      showSaveOverlay,
-      showDeleteOverlay,
-      showDownloadOverlay,
-      showProjectsOverlay,
-      showProjectDeleteOverlay } = overlayStore.getState();
-    const { filename } = workspace.getState();
+    const { overlayState } = store.getState();
 
-    let component;
-    if(showSaveOverlay){
-      component = (
-        <SaveOverlay />
-      );
-    }
-
-    if(showDeleteOverlay && filename){
-      component = (
-        <DeleteConfirmOverlay workspace={workspace} />
-      );
-    }
-
-    if(showDownloadOverlay){
-      component = (
-        <DownloadOverlay deviceStore={deviceStore} />
-      );
-    }
-
-    if(showProjectsOverlay){
-      component = (
-        <ProjectOverlay workspace={workspace} />
-      );
-    }
-
-    if(showProjectDeleteOverlay){
-      const { deleteProjectName } = projectStore.getState();
-      component = (
-        <DeleteConfirmOverlay
-          name={deleteProjectName}
-          onAccept={deleteProject}
-          onCancel={showProjects} />
-      );
-    }
-
-    if(component){
-      renderOverlay(component);
-    } else {
-      // if there is a change and every state is false, hide overlay
-      overlay.hide();
+    switch(overlayState){
+      case SAVE_OVERLAY:
+        renderOverlay(<SaveOverlay />);
+        break;
+      case DOWNLOAD_OVERLAY:
+        renderOverlay(<DownloadOverlay deviceStore={deviceStore} />);
+        break;
+      case PROJECTS_OVERLAY:
+        renderOverlay(<ProjectOverlay workspace={workspace} handlers={handlers} />);
+        break;
+      case DELETE_FILE_OVERLAY:
+        renderOverlay(<DeleteFileOverlay workspace={workspace} />);
+        break;
+      case DELETE_PROJECT_OVERLAY:
+        renderOverlay(<DeleteProjectOverlay store={store} handlers={handlers} />);
+        break;
+      default:
+        // if there is a change and every state is false, hide overlay
+        overlay.hide();
     }
   }
 
-  overlayStore.listen(onOverlayChange);
+  store.subscribe(onOverlayChange);
 
   done();
 }

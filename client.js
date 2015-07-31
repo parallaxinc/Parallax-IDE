@@ -29,6 +29,9 @@ const plugins = [
     register: require('iggins')
   },
   {
+    register: require('./src/plugins/handlers')
+  },
+  {
     register: require('./src/plugins/appbar')
   },
   {

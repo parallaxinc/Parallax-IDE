@@ -13,9 +13,6 @@ const ProjectList = require('../components/project-list');
 const ProjectListItem = require('../components/project-list-item');
 const DeleteButton = require('../components/delete-button');
 
-const { confirmDelete, changeProject } = require('../actions/project');
-const { hideProjects } = require('../actions/overlay');
-
 const styles = {
   textField: {
     containerStyling: {
@@ -24,44 +21,57 @@ const styles = {
   }
 };
 
-function componentizeProject(cwd, { name, fullPath }){
-  function onAccept(){
-    // clearName();
-    changeProject(name);
-  }
-
-  function onDelete(evt){
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    confirmDelete(name);
-  }
-
-  if(cwd === fullPath){
-    return (
-      <ProjectListItem>
-        {name}
-      </ProjectListItem>
-    );
-  } else {
-    return (
-      <ProjectListItem onClick={onAccept}>
-        {name} <DeleteButton onClick={onDelete} />
-      </ProjectListItem>
-    );
-  }
-}
-
 class ProjectOverlay extends React.Component {
   constructor(){
     this.state = {
       projectName: ''
     };
 
+    this.componentizeProject = this.componentizeProject.bind(this);
     this.updateName = this.updateName.bind(this);
     this.clearName = this.clearName.bind(this);
     this.create = this.create.bind(this);
     this.close = this.close.bind(this);
+  }
+
+  componentizeProject({ name, fullPath }){
+    const self = this;
+
+    const {
+      cwd,
+      handlers
+    } = this.props;
+
+    const {
+      changeProject,
+      deleteProjectConfirm
+    } = handlers;
+
+    function onAccept(){
+      self.clearName();
+      changeProject(name);
+    }
+
+    function onDelete(evt){
+      evt.preventDefault();
+      evt.stopPropagation();
+
+      deleteProjectConfirm(name);
+    }
+
+    if(cwd === fullPath){
+      return (
+        <ProjectListItem key={name}>
+          {name}
+        </ProjectListItem>
+      );
+    } else {
+      return (
+        <ProjectListItem key={name} onClick={onAccept}>
+          {name} <DeleteButton onClick={onDelete} />
+        </ProjectListItem>
+      );
+    }
   }
 
   updateName(evt){
@@ -79,6 +89,7 @@ class ProjectOverlay extends React.Component {
   }
 
   create(){
+    const { changeProject } = this.props.handlers;
     const { projectName } = this.state;
 
     this.clearName();
@@ -86,13 +97,14 @@ class ProjectOverlay extends React.Component {
   }
 
   close(){
+    const { hideOverlay } = this.props.handlers;
+
     this.clearName();
-    hideProjects();
+    hideOverlay();
   }
 
   render(){
     const {
-      cwd,
       projects
     } = this.props;
 
@@ -104,7 +116,7 @@ class ProjectOverlay extends React.Component {
       <Overlay large>
         <OverlayTitle>Open an existing project.</OverlayTitle>
         <ProjectList>
-          {_.map(projects, (...args) => componentizeProject(cwd, ...args))}
+          {_.map(projects, this.componentizeProject)}
         </ProjectList>
         <OverlayTitle>Or start a brand new one.</OverlayTitle>
         <TextField

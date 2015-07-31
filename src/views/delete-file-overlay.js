@@ -11,7 +11,7 @@ const OverlayFooter = require('../components/overlay-footer');
 const { deleteFile } = require('../actions/file');
 const { hideDelete} = require('../actions/overlay');
 
-class DeleteConfirmOverlay extends React.Component {
+class DeleteFileOverlay extends React.Component {
   render(){
     const {
       filename
@@ -29,7 +29,7 @@ class DeleteConfirmOverlay extends React.Component {
   }
 }
 
-module.exports = createContainer(DeleteConfirmOverlay, {
+module.exports = createContainer(DeleteFileOverlay, {
   getStores({ workspace }){
     return {
       workspace

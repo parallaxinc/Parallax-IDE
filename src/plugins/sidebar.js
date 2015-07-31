@@ -10,7 +10,7 @@ const SidebarView = require('../views/sidebar');
 
 function sidebar(app, opts, done){
 
-  const { workspace, userConfig } = app;
+  const { workspace, userConfig, handlers } = app;
   const getBoard = app.getBoard.bind(app);
   const scanBoards = app.scanBoards.bind(app);
 
@@ -29,7 +29,7 @@ function sidebar(app, opts, done){
   app.view('sidebar', function(el, cb){
     console.log('sidebar render');
 
-    React.render(<SidebarView workspace={workspace} />, el, cb);
+    React.render(<SidebarView workspace={workspace} handlers={handlers} />, el, cb);
   });
 
   // Store bindings
