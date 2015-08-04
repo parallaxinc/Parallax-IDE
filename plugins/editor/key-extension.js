@@ -7,8 +7,7 @@ const { moveByScrollUpLine, moveByScrollDownLine } = require('../../src/actions/
 const { dedent, indent } = require('../../src/actions/text-move');
 const { print } = require('../../src/actions/system');
 const { syntaxCheck } = require('../../src/actions/editor');
-const { newFile, saveFile } = require('../../src/actions/file');
-const { hideOverlays, showSave, showDownload, showProjects } = require('../../src/actions/overlay');
+const { showDownload } = require('../../src/actions/overlay');
 const { disableAuto, enableAuto } = require('../../src/actions/device');
 
 const keyExtension = {
@@ -87,59 +86,12 @@ const keyExtension = {
           print();
         }
       },
-      newFile: {
-        code: 'CTRL_N',
-        exec: (evt) => {
-          evt.preventDefault();
-          newFile();
-        }
-      },
-      save: {
-        code: 'CTRL_S',
-        exec: (evt) => {
-          evt.preventDefault();
-          saveFile();
-        }
-      },
-      saveAs: {
-        code: 'CTRL_SHIFT_S',
-        exec: (evt) => {
-          evt.preventDefault();
-          showSave();
-        }
-      },
-      hideOverlay: {
-        code: 'ESC',
-        exec: (evt) => {
-          evt.preventDefault();
-          hideOverlays();
-        }
-      },
-      projects: {
-        code: 'CTRL_O',
-        exec(evt){
-          evt.preventDefault();
-          showProjects();
-        }
-      },
       syntaxCheck: {
         code: ['CTRL_T', 'F7'],
         exec(evt){
           evt.preventDefault();
           syntaxCheck();
         }
-      }
-    };
-
-    const customPredicates = {
-      CTRL_N: function({ ctrlKey, metaKey, keyCode }){
-        return ((ctrlKey === true || metaKey === true) && keyCode === 78);
-      },
-      CTRL_SHIFT_S: function({ ctrlKey, metaKey, keyCode, shiftKey }){
-        return ((ctrlKey === true || metaKey === true) && shiftKey === true && keyCode === 83);
-      },
-      CTRL_S: function({ ctrlKey, metaKey, keyCode, shiftKey }){
-        return ((ctrlKey === true || metaKey === true) && shiftKey === false && keyCode === 83);
       }
     };
 
@@ -153,7 +105,7 @@ const keyExtension = {
 
     function setCommand(cmd, codes) {
       codes.forEach((code) => {
-        const predicate = customPredicates[code] || app.keypress[code];
+        const predicate = app.keypress[code];
         const oldRemove = cmCommands[cmd].remove;
         const newRemove = app.keypress(predicate, cmCommands[cmd].exec);
         if(oldRemove){

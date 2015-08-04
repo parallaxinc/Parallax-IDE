@@ -37,7 +37,7 @@ function overlays(app, opts, done){
 
     switch(overlayState){
       case SAVE_OVERLAY:
-        renderOverlay(<SaveOverlay />);
+        renderOverlay(<SaveOverlay workspace={workspace} handlers={handlers} />);
         break;
       case DOWNLOAD_OVERLAY:
         renderOverlay(<DownloadOverlay deviceStore={deviceStore} />);
@@ -46,7 +46,7 @@ function overlays(app, opts, done){
         renderOverlay(<ProjectOverlay workspace={workspace} handlers={handlers} />);
         break;
       case DELETE_FILE_OVERLAY:
-        renderOverlay(<DeleteFileOverlay workspace={workspace} />);
+        renderOverlay(<DeleteFileOverlay workspace={workspace} handlers={handlers} />);
         break;
       case DELETE_PROJECT_OVERLAY:
         renderOverlay(<DeleteProjectOverlay store={store} handlers={handlers} />);

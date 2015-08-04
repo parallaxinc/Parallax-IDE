@@ -32,6 +32,9 @@ const plugins = [
     register: require('./src/plugins/handlers')
   },
   {
+    register: require('./src/plugins/keyboard-shortcuts')
+  },
+  {
     register: require('./src/plugins/appbar')
   },
   {

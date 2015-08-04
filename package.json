@@ -13,7 +13,7 @@
     "codemirror": "^4.13.0",
     "frylord": "^0.6.0",
     "holovisor": "^0.2.0",
-    "iggins": "^0.2.1",
+    "iggins": "^0.3.0",
     "irken": "^0.7.1",
     "lodash": "^3.9.1",
     "react": "^0.13.1",

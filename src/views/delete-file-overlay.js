@@ -8,21 +8,45 @@ const Overlay = require('../components/overlay');
 const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
 
-const { deleteFile } = require('../actions/file');
-const { hideDelete} = require('../actions/overlay');
-
 class DeleteFileOverlay extends React.Component {
+
+  constructor(...args){
+    super(...args);
+
+    this.delete = this.delete.bind(this);
+  }
+
+  delete(){
+    const {
+      filename,
+      handlers
+    } = this.props;
+
+    const {
+      deleteFile,
+      hideOverlay
+    } = handlers;
+
+    deleteFile(filename);
+    hideOverlay();
+  }
+
   render(){
     const {
-      filename
+      filename,
+      handlers
     } = this.props;
+
+    const {
+      hideOverlay
+    } = handlers;
 
     return (
       <Overlay>
         <OverlayTitle>Are sure you want to delete {filename}?</OverlayTitle>
         <OverlayFooter>
-          <Button onClick={() => deleteFile(filename)}>Yes</Button>
-          <Button onClick={() => hideDelete()}>No</Button>
+          <Button onClick={this.delete}>Yes</Button>
+          <Button onClick={hideOverlay}>No</Button>
         </OverlayFooter>
       </Overlay>
     );
