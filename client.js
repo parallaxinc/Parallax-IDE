@@ -2,8 +2,6 @@
 
 const Irken = require('irken');
 
-const { loadFile, newFile } = require('./src/actions/file');
-
 const app = new Irken();
 
 const plugins = [
@@ -63,23 +61,29 @@ function onRender(err){
     return;
   }
 
-  const { userConfig, workspace } = app;
+  const {
+    userConfig,
+    handlers
+  } = app;
+
+  const {
+    newFile,
+    changeFile,
+    changeProject
+  } = handlers;
 
   // Finish Loading Plugin
+  // TODO: encapsulate into a startup handler?
   const cwd = userConfig.get('cwd') || defaultProject;
   const lastFile = userConfig.get('last-file');
   console.log(cwd, lastFile);
-  workspace.changeDirectory(cwd)
+  changeProject(cwd)
     .then(() => {
-      userConfig.set('cwd', cwd);
-      console.log(workspace.getState());
       if(lastFile){
-        loadFile(lastFile);
+        changeFile(lastFile);
       } else {
         newFile();
       }
-
-      console.log('file loaded');
     })
     .catch(console.error.bind(console));
 }

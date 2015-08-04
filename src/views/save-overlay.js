@@ -9,8 +9,6 @@ const Overlay = require('../components/overlay');
 const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
 
-const { hideSave } = require('../../src/actions/overlay');
-
 const styles = {
   textField: {
     containerStyling: {
@@ -68,7 +66,8 @@ class SaveOverlay extends React.Component {
   dontSave(){
     const { hideOverlay } = this.props.handlers;
 
-    hideSave({ trash: true });
+    // TODO: implement don't save on file change transition
+    // hideSave({ trash: true });
     hideOverlay();
     this.clearName();
   }
@@ -76,7 +75,6 @@ class SaveOverlay extends React.Component {
   cancel(){
     const { hideOverlay } = this.props.handlers;
 
-    hideSave({ trash: false });
     hideOverlay();
     this.clearName();
   }

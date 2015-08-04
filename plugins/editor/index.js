@@ -1,27 +1,15 @@
 'use strict';
 
-require('codemirror/mode/javascript/javascript');
-require('codemirror/addon/search/searchcursor');
-require('codemirror/addon/dialog/dialog');
-require('codemirror/addon/dialog/dialog.css');
-require('codemirror/addon/search/search');
-require('codemirror/addon/selection/mark-selection');
-require('codemirror/lib/codemirror.css');
-require('../../assets/theme/parallax.css');
-
 const React = require('react');
-const CodeMirror = require('codemirror');
-require('./pbasic')(CodeMirror);
 
 const keyExtension = require('./key-extension');
 
+const cm = require('../../src/code-mirror');
 const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
 const deviceStore = require('../../src/stores/device');
-const fileStore = require('../../src/stores/file');
 
 const { handleInput } = require('../../src/actions/editor');
-const DocumentsStore = require('../../src/stores/documents');
 
 const TransmissionBar = require('./transmission-bar');
 const TransmitPane = require('./transmit-pane');
@@ -37,6 +25,10 @@ function editor(app, opts, done){
   var transmission;
   var transmitPane;
   var scroller = new Scroller();
+
+  // TODO: get rid of these
+  editorStore.cm = cm;
+  deviceStore.documents = app.documents;
 
   function refreshConsole(){
     const { lines } = consoleStore.getState();
@@ -88,11 +80,8 @@ function editor(app, opts, done){
       editorContainer.setAttribute('id', 'editorContainer');
       el.appendChild(editorContainer);
 
-      codeEditor = CodeMirror(editorContainer, {
-        mode: 'pbasic',
-        theme: 'parallax',
-        lineNumbers: true
-      });
+      codeEditor = cm;
+      editorContainer.appendChild(codeEditor.getWrapperElement());
 
       codeEditor.on('change', handleInput);
 
@@ -107,10 +96,6 @@ function editor(app, opts, done){
       });
 
       keyExtension.setup(app);
-      editorStore.cm = codeEditor;
-      const documents = new DocumentsStore(codeEditor);
-      fileStore.documents = documents;
-      deviceStore.documents = documents;
     }
 
 
@@ -142,8 +127,6 @@ function editor(app, opts, done){
 
     cb();
   });
-
-  space.updateContent(opts.initial);
 
   done();
 }

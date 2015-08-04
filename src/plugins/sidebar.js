@@ -3,14 +3,13 @@
 const React = require('react');
 
 const deviceStore = require('../stores/device');
-const fileStore = require('../stores/file');
 const transmissionStore = require('../stores/transmission');
 
 const SidebarView = require('../views/sidebar');
 
 function sidebar(app, opts, done){
 
-  const { workspace, userConfig, handlers } = app;
+  const { workspace, handlers } = app;
   const getBoard = app.getBoard.bind(app);
   const scanBoards = app.scanBoards.bind(app);
 
@@ -36,9 +35,6 @@ function sidebar(app, opts, done){
   deviceStore.workspace = workspace;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
-
-  fileStore.workspace = workspace;
-  fileStore.userConfig = userConfig;
 
   transmissionStore.getBoard = getBoard;
 

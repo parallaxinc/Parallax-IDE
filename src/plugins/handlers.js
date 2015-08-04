@@ -4,12 +4,23 @@ const path = require('path');
 
 const _ = require('lodash');
 
+const cm = require('../code-mirror');
 const store = require('../store');
 const creators = require('../creators');
 
+// TODO: reorg
+const Documents = require('../stores/documents');
+
 function handlers(app, opts, done){
 
-  const { workspace, userConfig } = app;
+  const documents = new Documents(cm);
+  // TODO: remove
+  app.expose('documents', documents);
+
+  const {
+    workspace,
+    userConfig
+  } = app;
 
   function newFile(){
     const { cwd, directory } = workspace.getState();
@@ -33,7 +44,7 @@ function handlers(app, opts, done){
 
     userConfig.set('last-file', builtName);
 
-    // documents.create(path.join(cwd, builtName), '');
+    documents.create(path.join(cwd, builtName), '');
   }
 
   function saveFile(){
@@ -73,6 +84,42 @@ function handlers(app, opts, done){
       .then(newFile);
   }
 
+  function changeFile(filename){
+    if(!filename){
+      return;
+    }
+
+    const {
+      isNew,
+      content,
+      cwd
+    } = workspace.getState();
+
+    if(isNew && content.length){
+      // TODO: prompt save
+      return;
+    }
+
+    const doc = documents.swap(path.join(cwd, filename));
+    if(doc){
+      workspace.updateFilename(filename);
+      workspace.updateContent(doc.getValue());
+      documents.focus();
+      return;
+    }
+
+    // TODO: handle error
+    workspace.changeFile(filename)
+      .then(() => {
+        const { content } = workspace.getState();
+        userConfig.set('last-file', filename);
+
+        documents.create(path.join(cwd, filename), content);
+        documents.focus();
+      });
+  }
+
+  // TODO: should return a promise
   function changeProject(projectName){
     if(!projectName){
       return;
@@ -80,7 +127,7 @@ function handlers(app, opts, done){
 
     const dirpath = path.join('/', projectName);
 
-    workspace.changeDirectory(dirpath)
+    return workspace.changeDirectory(dirpath)
       .then(() => {
         userConfig.set('cwd', dirpath);
       });
@@ -123,6 +170,7 @@ function handlers(app, opts, done){
     saveFile,
     saveFileAs,
     deleteFile,
+    changeFile,
     // project methods
     changeProject,
     deleteProject,
