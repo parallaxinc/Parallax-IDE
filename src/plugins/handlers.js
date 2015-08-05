@@ -164,6 +164,51 @@ function handlers(app, opts, done){
     store.dispatch(creators.showSaveOverlay());
   }
 
+  function findNext(){
+    cm.execCommand('findNext');
+  }
+
+  function findPrevious(){
+    cm.execCommand('findPrev');
+  }
+
+  function replace(){
+    cm.execCommand('replace');
+  }
+
+  function moveByScrollUpLine(){
+    const scrollbox = cm.getScrollInfo();
+    cm.scrollTo(null, scrollbox.top - cm.defaultTextHeight());
+  }
+
+  function moveByScrollDownLine(){
+    const scrollbox = cm.getScrollInfo();
+    cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
+  }
+
+  function indent(){
+    cm.execCommand('indentMore');
+  }
+
+  function dedent(){
+    cm.execCommand('indentLess');
+  }
+
+  function print(){
+    const { filename } = workspace.getState();
+
+    const { title } = document;
+    document.title = filename;
+    cm.setOption('viewportMargin', Infinity);
+    window.print();
+    document.title = title;
+    cm.setOption('viewportMargin', 10);
+  }
+
+  function handleInput(){
+    workspace.updateContent(cm.getValue());
+  }
+
   app.expose('handlers', {
     // file methods
     newFile,
@@ -179,7 +224,17 @@ function handlers(app, opts, done){
     showSaveOverlay,
     showProjectsOverlay,
     showDeleteFileOverlay,
-    hideOverlay
+    hideOverlay,
+    // editor methods
+    findNext,
+    findPrevious,
+    replace,
+    moveByScrollUpLine,
+    moveByScrollDownLine,
+    indent,
+    dedent,
+    print,
+    handleInput
   });
 
   done();

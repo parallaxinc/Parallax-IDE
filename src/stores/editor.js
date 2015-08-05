@@ -2,82 +2,15 @@
 
 const alt = require('../alt');
 
-const { findNext, findPrevious, replace } = require('../actions/find');
-const { handleInput, syntaxCheck } = require('../actions/editor');
-const { moveByScrollUpLine, moveByScrollDownLine } = require('../actions/editor-move');
-const { dedent, indent } = require('../actions/text-move');
-const { print } = require('../actions/system');
+const { syntaxCheck } = require('../actions/editor');
 
 class EditorStore {
   constructor() {
 
     this.bindListeners({
-      onDedent: dedent,
-      onFindNext: findNext,
-      onFindPrevious: findPrevious,
-      onHandleInput: handleInput,
-      onIndent: indent,
-      onMoveByScrollUpLine: moveByScrollUpLine,
-      onMoveByScrollDownLine: moveByScrollDownLine,
-      onPrint: print,
-      onReplace: replace,
       onSyntaxCheck: syntaxCheck
     });
 
-  }
-
-  onFindNext() {
-    const { cm } = this.getInstance();
-
-    cm.execCommand('findNext');
-  }
-  onFindPrevious() {
-    const { cm } = this.getInstance();
-
-    cm.execCommand('findPrev');
-  }
-  onHandleInput(inst) {
-    const { workspace } = this.getInstance();
-
-    workspace.updateContent(inst.getValue());
-  }
-  onMoveByScrollUpLine() {
-    const { cm } = this.getInstance();
-
-    const scrollbox = cm.getScrollInfo();
-    cm.scrollTo(null, scrollbox.top - cm.defaultTextHeight());
-  }
-  onMoveByScrollDownLine() {
-    const { cm } = this.getInstance();
-
-    const scrollbox = cm.getScrollInfo();
-    cm.scrollTo(null, scrollbox.top + cm.defaultTextHeight());
-  }
-  onIndent() {
-    const { cm } = this.getInstance();
-
-    cm.execCommand('indentMore');
-  }
-  onDedent() {
-    const { cm } = this.getInstance();
-
-    cm.execCommand('indentLess');
-  }
-  onPrint() {
-    const { cm, workspace } = this.getInstance();
-    const { filename } = workspace.getState();
-
-    const { title } = document;
-    document.title = filename;
-    cm.setOption('viewportMargin', Infinity);
-    window.print();
-    document.title = title;
-    cm.setOption('viewportMargin', 10);
-  }
-  onReplace() {
-    const { cm } = this.getInstance();
-
-    cm.execCommand('replace');
   }
   onSyntaxCheck() {
     const { workspace, compile } = this.getInstance();

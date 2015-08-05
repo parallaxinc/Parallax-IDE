@@ -9,8 +9,6 @@ const consoleStore = require('../../src/stores/console');
 const editorStore = require('../../src/stores/editor');
 const deviceStore = require('../../src/stores/device');
 
-const { handleInput } = require('../../src/actions/editor');
-
 const TransmissionBar = require('./transmission-bar');
 const TransmitPane = require('./transmit-pane');
 
@@ -19,6 +17,8 @@ const makeToasts = require('../../src/lib/toasts');
 const Scroller = require('./scroller');
 
 function editor(app, opts, done){
+
+  const { handleInput } = app.handlers;
 
   var codeEditor;
   var outputConsole;
