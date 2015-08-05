@@ -1,47 +1,23 @@
 'use strict';
 
-const React = require('react');
-
 const keyExtension = require('./key-extension');
 
 const cm = require('../../src/code-mirror');
-const consoleStore = require('../../src/stores/console');
-const deviceStore = require('../../src/stores/device');
 
-const TransmissionBar = require('./transmission-bar');
-const TransmitPane = require('./transmit-pane');
+const deviceStore = require('../../src/stores/device');
 
 const makeToasts = require('../../src/lib/toasts');
 const highlighter = require('../../src/lib/highlighter');
-
-const Scroller = require('./scroller');
 
 function editor(app, opts, done){
 
   const { handleInput } = app.handlers;
 
   var codeEditor;
-  var outputConsole;
-  var transmission;
-  var transmitPane;
-  var scroller = new Scroller();
 
-  // TODO: get rid of these
-  deviceStore.documents = app.documents;
-
-  function refreshConsole(){
-    const { lines } = consoleStore.getState();
-    scroller.setLines(lines);
-    scroller.requestRefresh();
-  }
-
-  consoleStore.listen(refreshConsole);
-
-  // seems strange to pass highlighter to toasts
-  // maybe this should be named "handlers" or something
+  // TODO: get rid of all this
   const toasts = makeToasts(app.toast, highlighter);
-
-  // really stinks to attach these in here
+  deviceStore.documents = app.documents;
   deviceStore.toasts = toasts;
 
   app.view('editor', function(el, cb){
@@ -71,33 +47,6 @@ function editor(app, opts, done){
       });
 
       keyExtension.setup(app);
-    }
-
-
-    if(!transmitPane) {
-      transmitPane = document.createElement('div');
-      el.appendChild(transmitPane);
-      React.render(<TransmitPane />, transmitPane);
-    }
-    if(!outputConsole){
-      outputConsole = document.createElement('pre');
-      outputConsole.style.height = '200px';
-      outputConsole.style.boxShadow = 'inset 0 5px 10px -5px rgba(0, 0, 0, 0.26)';
-      outputConsole.style.backgroundColor = 'white';
-      outputConsole.style.padding = '10px';
-      outputConsole.style.margin = '0';
-      outputConsole.style.overflow = 'auto';
-      outputConsole.style.whiteSpace = 'pre-wrap';
-      el.appendChild(outputConsole);
-
-      scroller.setConsole(outputConsole);
-
-      outputConsole.addEventListener('scroll', scroller.scroll, false);
-    }
-    if(!transmission) {
-      transmission = document.createElement('div');
-      el.appendChild(transmission);
-      React.render(<TransmissionBar />, transmission);
     }
 
     cb();

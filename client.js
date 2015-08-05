@@ -42,6 +42,9 @@ const plugins = [
     register: require('./plugins/editor')
   },
   {
+    register: require('./src/plugins/terminal')
+  },
+  {
     register: require('./src/plugins/sidebar')
   },
   {

@@ -1,17 +1,42 @@
 'use strict';
 
 const React = require('react');
-const { createContainer } = require('sovereign');
 
-const styles = require('./styles');
-const transmissionStore = require('../../src/stores/transmission');
-const { transmitInput } = require('../../src/actions/transmission');
+const styles = {
+  transmit: {
+    margin: 0,
+    height: '32px',
+    backgroundColor: 'white',
+    boxShadow: 'inset 0px 5px 10px -5px rgba(0, 0, 0, 0.26)'
+  },
+  transmitInput: {
+    border: '0px',
+    backgroundColor: 'transparent',
+    outline: 'none',
+    resize: 'none',
+    width: '100%',
+    padding: '5px 10px',
+    fontSize: 'inherit',
+    fontFamily: 'inherit',
+    boxSizing: 'border-box'
+  }
+};
 
 const ignore = [16, 17, 18, 20];
 
 class TransmitPane extends React.Component {
 
+  constructor(...args){
+    super(...args);
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handlePaste = this.handlePaste.bind(this);
+  }
+
   handleKeyDown(event) {
+    const { onChange } = this.props;
+
     const { keyCode } = event.nativeEvent;
 
     if (ignore.indexOf(keyCode) > -1) {
@@ -19,23 +44,30 @@ class TransmitPane extends React.Component {
     }
 
     if (keyCode < 32 || (keyCode > 127 && keyCode < 160)) {
-      transmitInput(keyCode);
+      // TODO: pass the whole event?
+      onChange(keyCode);
     }
   }
 
   handleKeyPress(event) {
+    const { onChange } = this.props;
+
     const { keyCode } = event.nativeEvent;
 
     if ((keyCode >= 32 && keyCode <= 127) ||
         (keyCode >= 160 && keyCode <= 255)) {
-      transmitInput(keyCode);
+      // TODO: pass the whole event?
+      onChange(keyCode);
     }
   }
 
   handlePaste(event) {
+    const { onChange } = this.props;
+
     const { clipboardData } = event;
     const data = clipboardData.getData('text/plain');
-    transmitInput(data);
+
+    onChange(data);
   }
 
   shouldComponentUpdate(nextProps){
@@ -62,14 +94,9 @@ class TransmitPane extends React.Component {
   }
 }
 
-module.exports = createContainer(TransmitPane, {
-  getStores(){
-    return {
-      transmissionStore: transmissionStore
-    };
-  },
+TransmitPane.propTypes = {
+  connected: React.PropTypes.bool.isRequired,
+  text: React.PropTypes.string.isRequired
+};
 
-  getPropsFromStores() {
-    return transmissionStore.getState();
-  }
-});
+module.exports = TransmitPane;

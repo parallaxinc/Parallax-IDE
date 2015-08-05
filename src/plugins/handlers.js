@@ -8,10 +8,8 @@ const cm = require('../code-mirror');
 const store = require('../store');
 const creators = require('../creators');
 
+const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
-
-// TODO: reorg
-const Documents = require('../stores/documents');
 
 // TODO: move somewhere else?
 const red = '#da2100';
@@ -248,6 +246,45 @@ function handlers(app, opts, done){
     }
   }
 
+  // TODO: implement
+  function transmitInput(){
+
+  }
+
+  function rxOff(){
+    store.dispatch(creators.rxOff());
+  }
+
+  // TODO: better name? receive?
+  function rxOn(){
+    const { transmission } = store.getState();
+    const { duration, rxTimeout } = transmission;
+
+    let timeout;
+    if(!rxTimeout){
+      timeout = setTimeout(rxOff, duration);
+    }
+
+    store.dispatch(creators.rxOn(timeout));
+  }
+
+  function txOff(){
+    store.dispatch(creators.txOff());
+  }
+
+  // TODO: better name? transmit?
+  function txOn(){
+    const { transmission } = store.getState();
+    const { duration, txTimeout } = transmission;
+
+    let timeout;
+    if(!txTimeout){
+      timeout = setTimeout(txOff, duration);
+    }
+
+    store.dispatch(creators.txOn(timeout));
+  }
+
   app.expose('handlers', {
     // file methods
     newFile,
@@ -274,7 +311,13 @@ function handlers(app, opts, done){
     dedent,
     print,
     handleInput,
-    syntaxCheck
+    syntaxCheck,
+    // terminal methods
+    transmitInput,
+    rxOn,
+    rxOff,
+    txOn,
+    txOff
   });
 
   done();

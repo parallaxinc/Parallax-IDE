@@ -1,10 +1,8 @@
 'use strict';
 
-/* NOT IMPLEMENTING A FLUX STORE */
-
 const CodeMirror = require('codemirror');
 
-class DocumentsStore {
+class Documents {
   constructor(editor){
     this._editor = editor;
 
@@ -46,4 +44,4 @@ class DocumentsStore {
   }
 }
 
-module.exports = DocumentsStore;
+module.exports = Documents;

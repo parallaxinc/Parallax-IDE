@@ -27,7 +27,7 @@ function generateContent(lines, start, end, minLength) {
     .join('\n');
 }
 
-function Scroller() {
+function Scroller(consoleElement) {
   this.lines = [];
   this.minVisible = 30;
   this.startPosition = 0;
@@ -35,7 +35,7 @@ function Scroller() {
   this.sticky = true;
   this.jumpToBottom = true;
   this.dirty = false;
-  this.console = null;
+  this.console = consoleElement;
 
   //pre-bind functions and throttle expansion
   this.refresh = this._renderVisible.bind(this);
@@ -137,10 +137,6 @@ Scroller.prototype._onScroll = function(){
   if(this.dirty && !this.animateRequest){
     this.animateRequest = requestAnimationFrame(this.refresh);
   }
-};
-
-Scroller.prototype.setConsole = function(console){
-  this.console = console;
 };
 
 module.exports = Scroller;
