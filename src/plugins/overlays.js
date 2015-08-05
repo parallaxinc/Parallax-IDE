@@ -13,6 +13,7 @@ const deviceStore = require('../stores/device');
 const store = require('../store');
 
 const {
+  NO_OVERLAY,
   SAVE_OVERLAY,
   DOWNLOAD_OVERLAY,
   PROJECTS_OVERLAY,
@@ -51,9 +52,9 @@ function overlays(app, opts, done){
       case DELETE_PROJECT_OVERLAY:
         renderOverlay(<DeleteProjectOverlay store={store} handlers={handlers} />);
         break;
-      default:
-        // if there is a change and every state is false, hide overlay
+      case NO_OVERLAY:
         overlay.hide();
+        break;
     }
   }
 

@@ -12,7 +12,7 @@ function overlayState(state = initial, { type, payload }){
     case SHOW_OVERLAY:
       return payload.state;
     case HIDE_OVERLAY:
-      return '';
+      return payload.state;
     default:
       return state;
   }
