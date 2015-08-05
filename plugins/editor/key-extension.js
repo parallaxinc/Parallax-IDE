@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 
-const { syntaxCheck } = require('../../src/actions/editor');
 const { showDownload } = require('../../src/actions/overlay');
 const { disableAuto, enableAuto } = require('../../src/actions/device');
 
@@ -24,13 +23,6 @@ const keyExtension = {
           evt.preventDefault();
           disableAuto();
           showDownload();
-        }
-      },
-      syntaxCheck: {
-        code: ['CTRL_T', 'F7'],
-        exec(evt){
-          evt.preventDefault();
-          syntaxCheck();
         }
       }
     };

@@ -1,17 +1,28 @@
 'use strict';
 
+/*
+  The reason this file doesn't have some sort of generative
+  event handlers is that they are generic now but are going
+  to have "context" applied to them in the future.
+
+  The functions may eventually be split into multiple files
+  to reduce closures but for now, this is fine.
+ */
+
 function keyboardShortcuts(app, opts, done){
 
   const { keypress, handlers } = app;
 
   const {
     F3,
+    F7,
     TAB,
     ESC,
     CTRL_N,
     CTRL_O,
     CTRL_P,
     CTRL_S,
+    CTRL_T,
     CTRL_F4,
     CTRL_UP,
     SHIFT_F3,
@@ -33,7 +44,8 @@ function keyboardShortcuts(app, opts, done){
     moveByScrollDownLine,
     indent,
     dedent,
-    print
+    print,
+    syntaxCheck
   } = handlers;
 
   keypress(CTRL_N, function(evt){
@@ -100,6 +112,17 @@ function keyboardShortcuts(app, opts, done){
   keypress(CTRL_P, function(evt){
     evt.preventDefault();
     print();
+  });
+
+  keypress(CTRL_T, function(evt){
+    evt.preventDefault();
+    syntaxCheck();
+  });
+
+  // TODO: combine with CTRL_T handler
+  keypress(F7, function(evt){
+    evt.preventDefault();
+    syntaxCheck();
   });
 
   done();

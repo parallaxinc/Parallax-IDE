@@ -6,13 +6,13 @@ const keyExtension = require('./key-extension');
 
 const cm = require('../../src/code-mirror');
 const consoleStore = require('../../src/stores/console');
-const editorStore = require('../../src/stores/editor');
 const deviceStore = require('../../src/stores/device');
 
 const TransmissionBar = require('./transmission-bar');
 const TransmitPane = require('./transmit-pane');
 
 const makeToasts = require('../../src/lib/toasts');
+const highlighter = require('../../src/lib/highlighter');
 
 const Scroller = require('./scroller');
 
@@ -27,7 +27,6 @@ function editor(app, opts, done){
   var scroller = new Scroller();
 
   // TODO: get rid of these
-  editorStore.cm = cm;
   deviceStore.documents = app.documents;
 
   function refreshConsole(){
@@ -36,35 +35,11 @@ function editor(app, opts, done){
     scroller.requestRefresh();
   }
 
-  function highlighter(position, length) {
-    if(!codeEditor){
-      return;
-    }
-
-    const doc = codeEditor.getDoc();
-
-    const anchor = doc.posFromIndex(position);
-    const head = doc.posFromIndex(position + length);
-
-    doc.setSelection(anchor, head, { scroll: false });
-
-    const charRect = codeEditor.charCoords(anchor, 'local');
-    const halfHeight = codeEditor.getScrollerElement().offsetHeight / 2;
-    const halfTextHeight = Math.floor((charRect.bottom - charRect.top) / 2);
-    codeEditor.scrollTo(null, charRect.top - halfHeight - halfTextHeight);
-  }
-
   consoleStore.listen(refreshConsole);
 
-  const space = app.workspace;
-  const compile = app.compile.bind(app);
   // seems strange to pass highlighter to toasts
   // maybe this should be named "handlers" or something
   const toasts = makeToasts(app.toast, highlighter);
-
-  editorStore.toasts = toasts;
-  editorStore.compile = compile;
-  editorStore.workspace = space;
 
   // really stinks to attach these in here
   deviceStore.toasts = toasts;

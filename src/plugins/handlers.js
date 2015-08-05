@@ -8,8 +8,23 @@ const cm = require('../code-mirror');
 const store = require('../store');
 const creators = require('../creators');
 
+const highlighter = require('../lib/highlighter');
+
 // TODO: reorg
 const Documents = require('../stores/documents');
+
+// TODO: move somewhere else?
+const red = '#da2100';
+const green = '#159600';
+
+const styles = {
+  errorToast: {
+    backgroundColor: red
+  },
+  successToast: {
+    backgroundColor: green
+  }
+};
 
 function handlers(app, opts, done){
 
@@ -18,6 +33,7 @@ function handlers(app, opts, done){
   app.expose('documents', documents);
 
   const {
+    toast,
     workspace,
     userConfig
   } = app;
@@ -209,6 +225,29 @@ function handlers(app, opts, done){
     workspace.updateContent(cm.getValue());
   }
 
+  function syntaxCheck() {
+    const { content } = workspace.getState();
+    // TODO: it is a pain that compile requires `this`
+    const result = app.compile({
+      type: 'bs2',
+      source: content
+    });
+    if(result.error){
+      const err = result.error;
+      // leaving this in for better debugging of errors
+      console.log(err);
+
+      toast.show(err.message, { style: styles.errorToast });
+
+      if(err && err.errorLength){
+        highlighter(err.errorPosition, err.errorLength);
+      }
+    } else {
+      toast.clear();
+      toast.show('Tokenization successful!', { style: styles.successToast, timeout: 5000 });
+    }
+  }
+
   app.expose('handlers', {
     // file methods
     newFile,
@@ -234,7 +273,8 @@ function handlers(app, opts, done){
     indent,
     dedent,
     print,
-    handleInput
+    handleInput,
+    syntaxCheck
   });
 
   done();
