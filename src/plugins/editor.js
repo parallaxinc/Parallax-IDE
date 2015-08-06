@@ -1,6 +1,6 @@
 'use strict';
 
-const cm = require('../../src/code-mirror');
+const cm = require('../code-mirror');
 
 function editor(app, opts, done){
 

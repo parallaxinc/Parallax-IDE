@@ -39,7 +39,7 @@ const plugins = [
     register: require('./src/plugins/notifications')
   },
   {
-    register: require('./plugins/editor')
+    register: require('./src/plugins/editor')
   },
   {
     register: require('./src/plugins/terminal')

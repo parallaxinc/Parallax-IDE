@@ -9,7 +9,7 @@ require('codemirror/addon/search/search');
 require('codemirror/addon/selection/mark-selection');
 require('codemirror/lib/codemirror.css');
 require('../assets/theme/parallax.css');
-require('../plugins/editor/pbasic')(CodeMirror);
+require('./lib/pbasic')(CodeMirror);
 
 const cm = new CodeMirror(null, {
   mode: 'pbasic',

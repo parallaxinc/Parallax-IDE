@@ -2,7 +2,16 @@
 
 const React = require('react');
 
-const styles = require('./styles');
+const styles = {
+  baud: {
+    float: 'left',
+    padding: '3px 0px 0px 10px',
+    margin: 0
+  },
+  baudRate: {
+    paddingLeft: 8
+  }
+};
 
 class Baud extends React.Component {
 
