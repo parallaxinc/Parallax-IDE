@@ -14,8 +14,10 @@ const creators = {
   rxOff: require('./rx-off'),
   txOn: require('./tx-on'),
   txOff: require('./tx-off'),
+  receive: require('./receive'),
   transmit: require('./transmit'),
   updateDuration: require('./update-duration'),
+  clearTransmission: require('./clear-transmission'),
   // device creators
   connect: require('./connect'),
   disconnect: require('./disconnect'),

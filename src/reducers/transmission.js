@@ -3,40 +3,28 @@
 const _ = require('lodash');
 
 const {
-  RX_ON,
-  RX_OFF,
-  TX_ON,
-  TX_OFF,
+  RECEIVE,
   TRANSMIT,
-  UPDATE_DURATION,
+  CLEAR_TRANSMISSION,
   CONNECT
 } = require('../constants/action-types');
 
 const initial = {
-  flashRx: false,
-  rxTimeout: null,
-  flashTx: false,
-  txTimeout: null,
-  duration: 50,
-  text: ''
+  input: '',
+  // output is an array of lines
+  output: []
 };
 
 function transmission(state = initial, { type, payload }){
   switch(type){
-    case RX_ON:
-      return _.assign({}, state, { flashRx: true, rxTimeout: payload.timeout });
-    case RX_OFF:
-      return _.assign({}, state, { flashRx: false, rxTimeout: null });
-    case TX_ON:
-      return _.assign({}, state, { flashTx: true, txTimeout: payload.timeout });
-    case TX_OFF:
-      return _.assign({}, state, { flashTx: false, txTimeout: null });
-    case UPDATE_DURATION:
-      return _.assign({}, state, { duration: payload.duration });
     case CONNECT:
-      return _.assign({}, state, { text: '' });
+      return _.assign({}, state, { input: '' });
+    case RECEIVE:
+      return _.assign({}, state, { output: payload.output });
     case TRANSMIT:
-      return _.assign({}, state, { text: payload.text });
+      return _.assign({}, state, { input: payload.input });
+    case CLEAR_TRANSMISSION:
+      return _.assign({}, state, { input: '', output: '' });
     default:
       return state;
   }

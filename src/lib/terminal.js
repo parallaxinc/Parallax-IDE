@@ -2,22 +2,13 @@
 
 const _ = require('lodash');
 
-const alt = require('../alt');
-const { clearOutput, output } = require('../actions/console');
-
 const TAB_WIDTH = 8;
 
-class ConsoleStore {
+class Terminal {
   constructor() {
-
-    this.bindListeners({
-      clearAll: clearOutput,
-      onOutput: output
-    });
-
     this.state = {
       lastRefresh: 0,
-      length: 0,
+      // length: 0,
       lines: [''],
       lineWrap: 256,
       maxLines: 2048,
@@ -25,59 +16,55 @@ class ConsoleStore {
       pointerColumn: 0,
       refreshDelayMillis: 64,
       refreshQueued: null,
-      text: '',
+      // text: '',
       trimCount: 64
     };
 
+    this.queue = this.queue.bind(this);
   }
 
-  clearAll() {
+  queue(cb){
+    // this.updateText();
+    this.state.lastRefresh = Date.now();
+    this.state.refreshQueued = null;
+    cb();
+  }
+
+  clearAll(){
     const { refreshQueued } = this.state;
 
-    this.setState({
-      length: 0,
-      text: '',
-      lines: [''],
-      pointerLine: 0,
-      pointerColumn: 0
-    });
+    // this.setState({
+      // length: 0,
+      // text: '',
+      this.state.lines = [''];
+      this.state.pointerLine = 0;
+      this.state.pointerColumn = 0;
+    // });
 
     if(refreshQueued != null){
       clearInterval(refreshQueued);
-      this.setState({ refreshQueued: null });
+      this.state.refreshQueued = null;
+      // this.setState({ refreshQueued: null });
     }
-    this.setState({ lastRefresh: 0 });
+    this.state.lastRefresh = 0;
+    // this.setState({ lastRefreshs: 0 });
   }
 
-  onOutput(terminalMsg) {
+  refreshBuffer(msg, cb) {
     const { lastRefresh, refreshDelayMillis, refreshQueued } = this.state;
 
-    let allowEmit = false;
-
-    this._update(terminalMsg);
-
-    const refreshBuffer = () => {
-      this.updateText();
-      allowEmit = true;
-      this.setState({
-        lastRefresh: Date.now(),
-        refreshQueued: null
-      });
-    };
+    this._update(msg);
 
     if(refreshQueued != null){
-      return false;
+      return;
     }
 
+    // TODO: remove zalgo
     if(lastRefresh < Date.now() - refreshDelayMillis){
-      refreshBuffer();
-    }else{
-      this.setState({
-        refreshQueued: setTimeout(refreshBuffer, refreshDelayMillis)
-      });
+      this.queue(cb);
+    } else {
+      this.state.refreshQueued = setTimeout(this.queue, refreshDelayMillis, cb);
     }
-
-    return allowEmit;
   }
 
   _update(events) {
@@ -93,10 +80,8 @@ class ConsoleStore {
     for(var ix = lines.length; ix <= line; ix++){
       lines[ix] = '';
     }
-    this.setState({
-      pointerLine: Math.max(0, line),
-      pointerColumn: Math.min(255, Math.max(0, col))
-    });
+    this.state.pointerLine = Math.max(0, line);
+    this.state.pointerColumn = Math.min(255, Math.max(0, col));
   }
 
   backspace(){
@@ -108,14 +93,12 @@ class ConsoleStore {
       } else {
         lines[pointerLine] = targetLine.slice(0, pointerColumn - 1);
       }
-      this.setState({ pointerColumn: pointerColumn - 1 });
+      this.state.pointerColumn = pointerColumn - 1;
     } else {
       const prevLineNum = Math.max(0, pointerLine - 1);
       const prevLine = lines[prevLineNum] || '';
-      this.setState({
-        pointerLine: prevLineNum,
-        pointerColumn: prevLine.length
-      });
+      this.state.pointerLine = prevLineNum;
+      this.state.pointerColumn = prevLine.length;
     }
   }
 
@@ -130,17 +113,13 @@ class ConsoleStore {
   clearBelow(){
     const { lines, pointerLine } = this.state;
     const newLines = lines.slice(0, Math.min(pointerLine + 1, lines.length));
-    this.setState({
-      lines: newLines
-    });
+    this.state.lines = newLines;
   }
 
   tab(){
     const { pointerColumn } = this.state;
     const tabColumn = Math.floor(pointerColumn / TAB_WIDTH);
-    this.setState({
-      pointerColumn: (tabColumn + 1) * TAB_WIDTH
-    });
+    this.state.pointerColumn = (tabColumn + 1) * TAB_WIDTH;
   }
 
   processEvent(evt){
@@ -212,32 +191,18 @@ class ConsoleStore {
 
     if(lines.length > maxLines){
       const newLines = lines.slice(trimCount);
-      this.setState({
-        lines: newLines,
-        pointerLine: Math.max(0, pointerLine - trimCount),
-        pointerColumn: pointerColumn + data.length
-      });
-    }else{
-      this.setState({
-        pointerColumn: pointerColumn + data.length
-      });
+      this.state.lines = newLines;
+      this.state.pointerLine = Math.max(0, pointerLine - trimCount);
+      this.state.pointerColumn = pointerColumn + data.length;
+    } else {
+      this.state.pointerColumn = pointerColumn + data.length;
     }
   }
 
-  updateText(){
-    const { lines } = this.state;
-    const text = lines.join('\n');
-
-    this.setState({
-      text: text,
-      length: text.length
-    });
+  getLines(){
+    return this.state.lines;
   }
 
 }
 
-ConsoleStore.config = {
-  stateKey: 'state'
-};
-
-module.exports = alt.createStore(ConsoleStore);
+module.exports = Terminal;

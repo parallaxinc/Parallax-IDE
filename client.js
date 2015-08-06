@@ -45,6 +45,9 @@ const plugins = [
     register: require('./src/plugins/terminal')
   },
   {
+    register: require('./src/plugins/rxtx')
+  },
+  {
     register: require('./src/plugins/sidebar')
   },
   {

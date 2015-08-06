@@ -5,7 +5,6 @@ const React = require('react');
 const TerminalView = require('../views/terminal');
 
 const store = require('../store');
-const consoleStore = require('../stores/console');
 
 function terminal(app, opts, done){
 
@@ -24,10 +23,7 @@ function terminal(app, opts, done){
       el.appendChild(terminalContainer);
     }
 
-    React.render(<TerminalView
-      store={store}
-      consoleStore={consoleStore}
-      handlers={handlers} />, terminalContainer, cb);
+    React.render(<TerminalView store={store} handlers={handlers} />, terminalContainer, cb);
   });
 
   done();

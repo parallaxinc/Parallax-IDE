@@ -14,7 +14,10 @@ function overlayState(state = initial, { type, payload }){
     case HIDE_OVERLAY:
       return payload.state;
     default:
-      return state;
+      // We only want overlay to flash once, so if any action is
+      // dispatched that isn't an action we are watching, reset
+      // to initial
+      return initial;
   }
 }
 

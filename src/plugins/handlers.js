@@ -7,7 +7,9 @@ const _ = require('lodash');
 const cm = require('../code-mirror');
 const store = require('../store');
 const creators = require('../creators');
+const consoleStore = require('../console-store');
 
+const Terminal = require('../lib/terminal');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
 
@@ -40,11 +42,13 @@ const messages = {
   multiple: 'Please select which module to download to.'
 };
 
+const terminal = new Terminal();
+
+// TODO: refactor this plugin into smaller modules
 function handlers(app, opts, done){
 
+  // TODO: define outside of plugin?
   const documents = new Documents(cm);
-  // TODO: remove
-  app.expose('documents', documents);
 
   const {
     toast,
@@ -184,6 +188,9 @@ function handlers(app, opts, done){
 
   function showDownloadOverlay(){
     store.dispatch(creators.showDownloadOverlay());
+    // TODO: is there ever a time when show download overlay doesn't reload devices?
+    /* eslint no-use-before-define: false */
+    reloadDevices();
   }
 
   function showProjectsOverlay(){
@@ -273,11 +280,11 @@ function handlers(app, opts, done){
     const board = app.getBoard(selected);
 
     // TODO: move out of closure
-    board.once('transmit', function(input){
+    board.once('transmit', function(evt){
       const { transmission } = store.getState();
-      const { text } = transmission;
+      const { input } = transmission;
 
-      const newText = _.reduce(input, (result, ch) => {
+      const newText = _.reduce(evt, (result, ch) => {
         if(ch.type === 'backspace'){
           return result.slice(0, -1);
         }
@@ -287,7 +294,7 @@ function handlers(app, opts, done){
         }
 
         return result;
-      }, text);
+      }, input);
 
       store.dispatch(creators.transmit(newText));
     });
@@ -298,37 +305,39 @@ function handlers(app, opts, done){
   }
 
   function rxOff(){
-    store.dispatch(creators.rxOff());
+    consoleStore.dispatch(creators.rxOff());
   }
 
-  // TODO: better name? receive?
   function rxOn(){
-    const { transmission } = store.getState();
-    const { duration, rxTimeout } = transmission;
+    const { rxtx } = consoleStore.getState();
+    const { duration, rxTimeout } = rxtx;
 
     let timeout;
     if(!rxTimeout){
       timeout = setTimeout(rxOff, duration);
     }
 
-    store.dispatch(creators.rxOn(timeout));
+    consoleStore.dispatch(creators.rxOn(timeout));
   }
 
   function txOff(){
-    store.dispatch(creators.txOff());
+    consoleStore.dispatch(creators.txOff());
   }
 
-  // TODO: better name? transmit?
   function txOn(){
-    const { transmission } = store.getState();
-    const { duration, txTimeout } = transmission;
+    const { rxtx } = consoleStore.getState();
+    const { duration, txTimeout } = rxtx;
 
     let timeout;
     if(!txTimeout){
       timeout = setTimeout(txOff, duration);
     }
 
-    store.dispatch(creators.txOn(timeout));
+    consoleStore.dispatch(creators.txOn(timeout));
+  }
+
+  function updateDuration(duration){
+    consoleStore.dispatch(creators.updateDuration(duration));
   }
 
   function connect(){
@@ -339,14 +348,16 @@ function handlers(app, opts, done){
     store.dispatch(creators.disconnect());
   }
 
-  // TODO: implement
-  function updateTerminal(){
-
+  function updateTerminal(msg){
+    terminal.refreshBuffer(msg, function(){
+      const output = terminal.getLines();
+      store.dispatch(creators.receive(output));
+    });
   }
 
-  // TODO: implement
   function clearTerminal(){
-
+    terminal.clearAll();
+    store.dispatch(creators.clearTransmission());
   }
 
   function updateDownloadProgress(progress){
@@ -357,8 +368,8 @@ function handlers(app, opts, done){
     store.dispatch(creators.resetDownloadProgress());
   }
 
-  function onTerminal(){
-    updateTerminal();
+  function onTerminal(msg){
+    updateTerminal(msg);
     rxOn();
   }
 
@@ -523,10 +534,12 @@ function handlers(app, opts, done){
     syntaxCheck,
     // terminal methods
     transmitInput,
+    // rxtx methods
     rxOn,
     rxOff,
     txOn,
     txOff,
+    updateDuration,
     // device methods
     connect,
     disconnect,

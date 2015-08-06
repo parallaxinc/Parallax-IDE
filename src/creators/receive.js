@@ -1,16 +1,16 @@
 'use strict';
 
 const {
-  TRANSMIT
+  RECEIVE
 } = require('../constants/action-types');
 
-function transmit(input){
+function receive(output){
   return {
-    type: TRANSMIT,
+    type: RECEIVE,
     payload: {
-      input
+      output
     }
   };
 }
 
-module.exports = transmit;
+module.exports = receive;
