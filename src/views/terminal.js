@@ -129,19 +129,18 @@ class TermnialView extends React.Component {
 }
 
 module.exports = createContainer(TermnialView, {
-  getStores({ store, consoleStore, transmissionStore }){
+  getStores({ store, consoleStore }){
     return {
       store,
-      consoleStore,
-      transmissionStore
+      consoleStore
     };
   },
 
-  getPropsFromStores({ store, consoleStore, transmissionStore }){
+  getPropsFromStores({ store, consoleStore }){
     const { lines } = consoleStore.getState();
-    const { transmission } = store.getState();
-    const { flashRx, flashTx } = transmission;
-    const { connected, text } = transmissionStore.getState();
+    const { transmission, device } = store.getState();
+    const { flashRx, flashTx, text } = transmission;
+    const { connected } = device;
 
     return {
       lines,

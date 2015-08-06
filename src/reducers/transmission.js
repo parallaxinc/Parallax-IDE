@@ -7,7 +7,9 @@ const {
   RX_OFF,
   TX_ON,
   TX_OFF,
-  UPDATE_DURATION
+  TRANSMIT,
+  UPDATE_DURATION,
+  CONNECT
 } = require('../constants/action-types');
 
 const initial = {
@@ -15,7 +17,8 @@ const initial = {
   rxTimeout: null,
   flashTx: false,
   txTimeout: null,
-  duration: 50
+  duration: 50,
+  text: ''
 };
 
 function transmission(state = initial, { type, payload }){
@@ -30,6 +33,10 @@ function transmission(state = initial, { type, payload }){
       return _.assign({}, state, { flashTx: false, txTimeout: null });
     case UPDATE_DURATION:
       return _.assign({}, state, { duration: payload.duration });
+    case CONNECT:
+      return _.assign({}, state, { text: '' });
+    case TRANSMIT:
+      return _.assign({}, state, { text: payload.text });
     default:
       return state;
   }

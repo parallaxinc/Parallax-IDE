@@ -3,7 +3,6 @@
 const React = require('react');
 
 const deviceStore = require('../stores/device');
-const transmissionStore = require('../stores/transmission');
 
 const SidebarView = require('../views/sidebar');
 
@@ -35,8 +34,6 @@ function sidebar(app, opts, done){
   deviceStore.workspace = workspace;
   deviceStore.getBoard = getBoard;
   deviceStore.scanBoards = scanBoards;
-
-  transmissionStore.getBoard = getBoard;
 
   done();
 }

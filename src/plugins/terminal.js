@@ -6,7 +6,6 @@ const TerminalView = require('../views/terminal');
 
 const store = require('../store');
 const consoleStore = require('../stores/console');
-const transmissionStore = require('../stores/transmission');
 
 function terminal(app, opts, done){
 
@@ -28,7 +27,6 @@ function terminal(app, opts, done){
     React.render(<TerminalView
       store={store}
       consoleStore={consoleStore}
-      transmissionStore={transmissionStore}
       handlers={handlers} />, terminalContainer, cb);
   });
 

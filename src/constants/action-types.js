@@ -8,7 +8,10 @@ const actionTypes = {
   RX_OFF: 'RX_OFF',
   TX_ON: 'TX_ON',
   TX_OFF: 'TX_OFF',
-  UPDATE_DURATION: 'UPDATE_DURATION'
+  TRANSMIT: 'TRANSMIT',
+  UPDATE_DURATION: 'UPDATE_DURATION',
+  CONNECT: 'CONNECT',
+  DISCONNECT: 'DISCONNECT'
 };
 
 module.exports = actionTypes;

@@ -11,6 +11,9 @@ const creators = require('../creators');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
 
+// TODO: temporary
+const deviceStore = require('../stores/device');
+
 // TODO: move somewhere else?
 const red = '#da2100';
 const green = '#159600';
@@ -246,9 +249,34 @@ function handlers(app, opts, done){
     }
   }
 
-  // TODO: implement
-  function transmitInput(){
+  function transmitInput(value){
+    const { selectedDevice } = deviceStore.getState();
 
+    const board = app.getBoard(selectedDevice);
+
+    // TODO: move out of closure
+    board.once('transmit', function(input){
+      const { transmission } = store.getState();
+      const { text } = transmission;
+
+      const newText = _.reduce(input, (result, ch) => {
+        if(ch.type === 'backspace'){
+          return result.slice(0, -1);
+        }
+
+        if(ch.type === 'text'){
+          return result + ch.data;
+        }
+
+        return result;
+      }, text);
+
+      store.dispatch(creators.transmit(newText));
+    });
+
+    // TODO: handle error
+    board.write(value);
+      // .catch((err) => this._handleError(err));
   }
 
   function rxOff(){
@@ -285,6 +313,14 @@ function handlers(app, opts, done){
     store.dispatch(creators.txOn(timeout));
   }
 
+  function connect(){
+    store.dispatch(creators.connect());
+  }
+
+  function disconnect(){
+    store.dispatch(creators.disconnect());
+  }
+
   app.expose('handlers', {
     // file methods
     newFile,
@@ -317,7 +353,10 @@ function handlers(app, opts, done){
     rxOn,
     rxOff,
     txOn,
-    txOff
+    txOff,
+    // device methods
+    connect,
+    disconnect
   });
 
   done();
