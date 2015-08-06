@@ -29,7 +29,6 @@
     "babel-core": "^4.5.1",
     "babel-loader": "^4.0.0",
     "babel-runtime": "^4.7.16",
-    "babelify": "^5.0.4",
     "browser-serialport": "git://github.com/garrows/browser-serialport#update",
     "chalk": "^1.0.0",
     "css-loader": "^0.9.1",
@@ -47,7 +46,8 @@
     "style-loader": "^0.8.3",
     "webpack": "^1.7.2",
     "webpack-dev-server": "^1.7.0",
-    "zuul": "^3.2.0"
+    "zuul": "^3.2.0",
+    "zuul-builder-webpack": "^1.1.0"
   },
   "scripts": {
     "test": "zuul test/*.js --local --open",
