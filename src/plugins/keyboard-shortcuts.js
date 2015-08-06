@@ -15,12 +15,16 @@ function keyboardShortcuts(app, opts, done){
 
   const {
     F3,
+    F6,
     F7,
+    F9,
     TAB,
     ESC,
+    CTRL_I,
     CTRL_N,
     CTRL_O,
     CTRL_P,
+    CTRL_R,
     CTRL_S,
     CTRL_T,
     CTRL_F4,
@@ -36,6 +40,7 @@ function keyboardShortcuts(app, opts, done){
     saveFile,
     hideOverlay,
     showSaveOverlay,
+    showDownloadOverlay,
     showProjectsOverlay,
     findNext,
     findPrevious,
@@ -45,7 +50,9 @@ function keyboardShortcuts(app, opts, done){
     indent,
     dedent,
     print,
-    syntaxCheck
+    syntaxCheck,
+    enableAutoDownload,
+    disableAutoDownload
   } = handlers;
 
   keypress(CTRL_N, function(evt){
@@ -123,6 +130,32 @@ function keyboardShortcuts(app, opts, done){
   keypress(F7, function(evt){
     evt.preventDefault();
     syntaxCheck();
+  });
+
+  keypress(CTRL_R, function(evt){
+    evt.preventDefault();
+    enableAutoDownload();
+    showDownloadOverlay();
+  });
+
+  // TODO: combine with CTRL_R handler
+  keypress(F9, function(evt){
+    evt.preventDefault();
+    enableAutoDownload();
+    showDownloadOverlay();
+  });
+
+  keypress(CTRL_I, function(evt){
+    evt.preventDefault();
+    disableAutoDownload();
+    showDownloadOverlay();
+  });
+
+  // TODO: combine with CTRL_I handler
+  keypress(F6, function(evt){
+    evt.preventDefault();
+    disableAutoDownload();
+    showDownloadOverlay();
   });
 
   done();

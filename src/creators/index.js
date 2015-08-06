@@ -18,7 +18,16 @@ const creators = {
   updateDuration: require('./update-duration'),
   // device creators
   connect: require('./connect'),
-  disconnect: require('./disconnect')
+  disconnect: require('./disconnect'),
+  reloadDevices: require('./reload-devices'),
+  updateDevices: require('./update-devices'),
+  enableAutoDownload: require('./enable-auto-download'),
+  disableAutoDownload: require('./disable-auto-download'),
+  updateSearchStatus: require('./update-search-status'),
+  clearSearchStatus: require('./clear-search-status'),
+  updateSelectedDevice: require('./update-selected-device'),
+  resetDownloadProgress: require('./reset-download-progress'),
+  updateDownloadProgress: require('./update-download-progress')
 };
 
 module.exports = creators;

@@ -51,7 +51,6 @@ class TermnialView extends React.Component {
 
   _updateIndicators(props){
     const { flashRx, flashTx } = props;
-    console.log('_updateIndicators', props);
     if(flashRx){
       this.rx.style.backgroundColor = styles.rx.backgroundColor;
     } else {

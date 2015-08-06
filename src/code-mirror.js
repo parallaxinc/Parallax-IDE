@@ -11,11 +11,20 @@ require('codemirror/lib/codemirror.css');
 require('../assets/theme/parallax.css');
 require('../plugins/editor/pbasic')(CodeMirror);
 
-
 const cm = new CodeMirror(null, {
   mode: 'pbasic',
   theme: 'parallax',
   lineNumbers: true
+});
+
+cm.setOption('styleSelectedText', true);
+cm.setOption('tabSize', 2);
+cm.setOption('extraKeys', {
+  'Ctrl-Up': false,
+  'Ctrl-Down': false,
+  'Tab': false,
+  'Shift-Tab': false,
+  'Ctrl-T': false
 });
 
 module.exports = cm;

@@ -11,9 +11,6 @@ const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
 const ProgressBar = require('../components/progress-bar');
 
-const { reloadDevices, updateSelected } = require('../actions/device');
-const { hideDownload } = require('../actions/overlay');
-
 const styles = {
   overlay: {
     paddingBottom: 40
@@ -73,32 +70,58 @@ const styles = {
   }
 };
 
-function componentizeDevice(device, selectedPath){
-  const highlight = device.path === selectedPath ? 'active' : 'inactive';
-  return (
-    <tr style={styles[highlight]} onClick={() => updateSelected(device)}>
-      <td style={styles.deviceTd}>{device.name}</td>
-      <td style={styles.deviceTd}>{device.version}</td>
-      <td style={styles.deviceTd}>{device.path}</td>
-    </tr>
-  );
-}
-
 class DownloadOverlay extends React.Component {
 
-  render(){
-    const { devices, devicePath, message, progress, searching } = this.props;
+  constructor(...args){
+    super(...args);
 
-    const deviceRows = _.map(devices, (device) => componentizeDevice(device, devicePath));
+    this.componentizeDevice = this.componentizeDevice.bind(this);
+  }
+
+  componentizeDevice(device){
+    const {
+      path,
+      handlers
+    } = this.props;
+
+    const {
+      selectDevice
+    } = handlers;
+
+    const highlight = device.path === path ? 'active' : 'inactive';
+    return (
+      <tr style={styles[highlight]} onClick={() => selectDevice(device)}>
+        <td style={styles.deviceTd}>{device.name}</td>
+        <td style={styles.deviceTd}>{device.version}</td>
+        <td style={styles.deviceTd}>{device.path}</td>
+      </tr>
+    );
+  }
+
+  render(){
+    const {
+      deviceList,
+      searchStatus,
+      downloadProgress,
+      searching,
+      handlers
+    } = this.props;
+
+    const {
+      reloadDevices,
+      hideOverlay
+    } = handlers;
+
+    const deviceRows = _.map(deviceList, this.componentizeDevice);
 
     let bottomBar;
-    if(message){
+    if(searchStatus){
       bottomBar = (
-        <div style={styles.overlayUserMessage}>{message}</div>
+        <div style={styles.overlayUserMessage}>{searchStatus}</div>
       );
     } else {
       bottomBar = (
-        <ProgressBar percent={progress} />
+        <ProgressBar percent={downloadProgress} />
       );
     }
 
@@ -123,7 +146,7 @@ class DownloadOverlay extends React.Component {
         </Loader>
         <OverlayFooter style={styles.overlayFooter}>
           <Button styles={styles.refreshButton} onClick={reloadDevices}>Refresh</Button>
-          <Button onClick={hideDownload}>Cancel</Button>
+          <Button onClick={hideOverlay}>Cancel</Button>
         </OverlayFooter>
         <div style={styles.bottomBar}>
           {bottomBar}
@@ -135,13 +158,22 @@ class DownloadOverlay extends React.Component {
 }
 
 module.exports = createContainer(DownloadOverlay, {
-  getStores({ deviceStore }){
+  getStores({ store }){
     return {
-      deviceStore
+      store
     };
   },
 
-  getPropsFromStores({ deviceStore }) {
-    return deviceStore.getState();
+  getPropsFromStores({ store }) {
+    const { deviceList, device, downloadProgress } = store.getState();
+    const { searchStatus, searching, path } = device;
+
+    return {
+      deviceList,
+      downloadProgress,
+      searchStatus,
+      searching,
+      path
+    };
   }
 });

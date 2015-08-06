@@ -2,15 +2,11 @@
 
 const React = require('react');
 
-const deviceStore = require('../stores/device');
-
 const SidebarView = require('../views/sidebar');
 
 function sidebar(app, opts, done){
 
   const { workspace, handlers } = app;
-  const getBoard = app.getBoard.bind(app);
-  const scanBoards = app.scanBoards.bind(app);
 
   // TODO: move into frylord?
   if(typeof chrome !== 'undefined' && typeof chrome.syncFileSystem !== 'undefined'){
@@ -29,11 +25,6 @@ function sidebar(app, opts, done){
 
     React.render(<SidebarView workspace={workspace} handlers={handlers} />, el, cb);
   });
-
-  // Store bindings
-  deviceStore.workspace = workspace;
-  deviceStore.getBoard = getBoard;
-  deviceStore.scanBoards = scanBoards;
 
   done();
 }

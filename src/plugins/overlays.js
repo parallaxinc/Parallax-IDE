@@ -8,8 +8,6 @@ const DownloadOverlay = require('../views/download-overlay');
 const DeleteFileOverlay = require('../views/delete-file-overlay');
 const DeleteProjectOverlay = require('../views/delete-project-overlay');
 
-const deviceStore = require('../stores/device');
-
 const store = require('../store');
 
 const {
@@ -41,7 +39,7 @@ function overlays(app, opts, done){
         renderOverlay(<SaveOverlay workspace={workspace} handlers={handlers} />);
         break;
       case DOWNLOAD_OVERLAY:
-        renderOverlay(<DownloadOverlay deviceStore={deviceStore} />);
+        renderOverlay(<DownloadOverlay store={store} handlers={handlers} />);
         break;
       case PROJECTS_OVERLAY:
         renderOverlay(<ProjectOverlay workspace={workspace} handlers={handlers} />);

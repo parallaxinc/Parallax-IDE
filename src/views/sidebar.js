@@ -14,20 +14,23 @@ const ProjectsButton = require('../components/projects-button');
 const FileOperationList = require('../components/file-operation-list');
 const FileOperationListItem = require('../components/file-operation-list-item');
 
-const { showDownload } = require('../actions/overlay');
-const { enableAuto } = require('../../src/actions/device');
-
-function download(){
-  enableAuto();
-  showDownload();
-}
-
 class SidebarView extends React.Component {
 
   constructor(...args){
     super(...args);
 
+    this.download = this.download.bind(this);
     this.componentizeFile = this.componentizeFile.bind(this);
+  }
+
+  download(){
+    const {
+      enableAutoDownload,
+      showDownloadOverlay
+    } = this.props.handlers;
+
+    enableAutoDownload();
+    showDownloadOverlay();
   }
 
   componentizeFile({ name, temp }){
@@ -60,7 +63,7 @@ class SidebarView extends React.Component {
           {_.map(directory, this.componentizeFile)}
         </FileList>
         <FileOperationList>
-          <FileOperationListItem onClick={download} icon="ion-code-download" label="Download" />
+          <FileOperationListItem onClick={this.download} icon="ion-code-download" label="Download" />
           <FileOperationListItem onClick={showDeleteFileOverlay} icon="ion-backspace-outline" label="Delete File" />
           <FileOperationListItem onClick={saveFile} icon="ion-compose" label="Save File" />
           <FileOperationListItem onClick={newFile} icon="ion-document" label="New File" />
