@@ -50,26 +50,22 @@ function rxtxBar(app, opts, done){
   let rx;
   let tx;
 
-  consoleStore.subscribe(function(){
+  function onConsoleChange(){
     const { rxtx } = consoleStore.getState();
     const { flashRx, flashTx } = rxtx;
 
-    if(rx){
-      if(flashRx){
-        rx.style.backgroundColor = styles.rx.backgroundColor;
-      } else {
-        rx.style.backgroundColor = styles.indicator.backgroundColor;
-      }
+    if(flashRx){
+      rx.style.backgroundColor = styles.rx.backgroundColor;
+    } else {
+      rx.style.backgroundColor = styles.indicator.backgroundColor;
     }
 
-    if(tx){
-      if(flashTx){
-        tx.style.backgroundColor = styles.tx.backgroundColor;
-      } else {
-        tx.style.backgroundColor = styles.indicator.backgroundColor;
-      }
+    if(flashTx){
+      tx.style.backgroundColor = styles.tx.backgroundColor;
+    } else {
+      tx.style.backgroundColor = styles.indicator.backgroundColor;
     }
-  });
+  }
 
   app.view('editor', function(el, cb){
 
@@ -93,6 +89,8 @@ function rxtxBar(app, opts, done){
       applyStyles(rx, styles.indicator);
 
       el.appendChild(bottomBar);
+
+      consoleStore.subscribe(onConsoleChange);
     }
 
     cb();

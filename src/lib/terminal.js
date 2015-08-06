@@ -8,7 +8,6 @@ class Terminal {
   constructor() {
     this.state = {
       lastRefresh: 0,
-      // length: 0,
       lines: [''],
       lineWrap: 256,
       maxLines: 2048,
@@ -16,7 +15,6 @@ class Terminal {
       pointerColumn: 0,
       refreshDelayMillis: 64,
       refreshQueued: null,
-      // text: '',
       trimCount: 64
     };
 
@@ -24,7 +22,6 @@ class Terminal {
   }
 
   queue(cb){
-    // this.updateText();
     this.state.lastRefresh = Date.now();
     this.state.refreshQueued = null;
     cb();
@@ -33,21 +30,15 @@ class Terminal {
   clearAll(){
     const { refreshQueued } = this.state;
 
-    // this.setState({
-      // length: 0,
-      // text: '',
-      this.state.lines = [''];
-      this.state.pointerLine = 0;
-      this.state.pointerColumn = 0;
-    // });
+    this.state.lines = [''];
+    this.state.pointerLine = 0;
+    this.state.pointerColumn = 0;
 
     if(refreshQueued != null){
       clearInterval(refreshQueued);
       this.state.refreshQueued = null;
-      // this.setState({ refreshQueued: null });
     }
     this.state.lastRefresh = 0;
-    // this.setState({ lastRefreshs: 0 });
   }
 
   refreshBuffer(msg, cb) {
