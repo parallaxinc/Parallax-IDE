@@ -79,6 +79,7 @@ function handlers(app, opts, done){
     userConfig.set('last-file', builtName);
 
     documents.create(path.join(cwd, builtName), '');
+    documents.focus();
   }
 
   function saveFile(){
