@@ -30,6 +30,11 @@ class Documents {
     return this.swap(filename);
   }
 
+  remove(filename){
+    // TODO: remove something?
+    delete this._documents[filename];
+  }
+
   swap(filename) {
     this._filename = filename;
 

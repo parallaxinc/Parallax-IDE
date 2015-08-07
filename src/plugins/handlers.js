@@ -83,12 +83,15 @@ function handlers(app, opts, done){
   }
 
   function saveFile(){
-    const { filename, content, isNew } = workspace.getState();
+    const { filename, content, isNew, cwd } = workspace.getState();
 
     if(isNew){
       showSaveOverlay();
     } else {
-      workspace.saveFile(filename, content);
+      workspace.saveFile(filename, content)
+        .then(function(){
+          documents.swap(path.join(cwd, filename));
+        });
     }
   }
 
@@ -98,13 +101,14 @@ function handlers(app, opts, done){
     }
 
     const { nextFile } = store.getState();
-    const { content } = workspace.getState();
+    const { cwd, content } = workspace.getState();
 
     workspace.updateFilename(filename)
       .then(function(){
         return workspace.saveFile(filename, content);
       })
       .then(function(){
+        documents.swap(path.join(cwd, filename));
         if(nextFile){
           changeFile(nextFile);
         }
