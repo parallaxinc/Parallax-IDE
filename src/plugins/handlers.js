@@ -145,7 +145,7 @@ function handlers(app, opts, done){
 
     store.dispatch(creators.resetFileQueue());
 
-    if(isNew && content.length){
+    if(isNew && _.trim(content).length){
       store.dispatch(creators.queueFileChange(filename));
       showSaveOverlay();
       return;
