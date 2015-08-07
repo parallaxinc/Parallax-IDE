@@ -1,5 +1,5 @@
 # Parallax IDE
-Parallax microcontroller development environment based on Chrome applications.
+Write, compile, and download code to your Parallax BASIC Stamp microcontroller to drive your custom electronic creations.
 
 ## Quickstart
 

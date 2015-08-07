@@ -1,7 +1,7 @@
 {
   "name": "parallax-ide",
   "version": "0.6.0",
-  "description": "Parallax microcontroller development environment based on Chrome applications.",
+  "description": "Write, compile, and download code to your Parallax BASIC Stamp microcontroller to drive your custom electronic creations.",
   "main": "index.js",
   "directories": {
     "test": "test"
