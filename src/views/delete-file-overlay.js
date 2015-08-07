@@ -43,7 +43,7 @@ class DeleteFileOverlay extends React.Component {
 
     return (
       <Overlay>
-        <OverlayTitle>Are sure you want to delete {filename}?</OverlayTitle>
+        <OverlayTitle>Are you sure you want to delete {filename}?</OverlayTitle>
         <OverlayFooter>
           <Button onClick={this.delete}>Yes</Button>
           <Button onClick={hideOverlay}>No</Button>

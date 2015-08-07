@@ -22,7 +22,7 @@ class DeleteProjectOverlay extends React.Component {
 
     return (
       <Overlay>
-        <OverlayTitle>Are sure you want to delete {name}?</OverlayTitle>
+        <OverlayTitle>Are you sure you want to delete {name}?</OverlayTitle>
         <OverlayFooter>
           <Button onClick={() => deleteProject(name)}>Yes</Button>
           <Button onClick={showProjectsOverlay}>No</Button>
