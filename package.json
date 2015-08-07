@@ -1,6 +1,6 @@
 {
   "name": "parallax-ide",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Write, compile, and download code to your Parallax BASIC Stamp microcontroller to drive your custom electronic creations.",
   "main": "index.js",
   "directories": {
