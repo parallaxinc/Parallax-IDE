@@ -6,7 +6,8 @@ const reducers = {
   transmission: require('./transmission'),
   device: require('./device'),
   deviceList: require('./device-list'),
-  downloadProgress: require('./download-progress')
+  downloadProgress: require('./download-progress'),
+  nextFile: require('./next-file')
 };
 
 module.exports = reducers;

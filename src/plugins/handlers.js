@@ -96,16 +96,29 @@ function handlers(app, opts, done){
       return;
     }
 
+    const { nextFile } = store.getState();
     const { content } = workspace.getState();
 
-    workspace.updateFilename(filename);
-    workspace.saveFile(filename, content);
-      // .tap(() => {
-      //   this.setState({ isNewFile: false });
-      //   if(this.loadQueue.length){
-      //     this.onLoadFile(this.loadQueue.shift());
-      //   }
-      // });
+    workspace.updateFilename(filename)
+      .then(function(){
+        return workspace.saveFile(filename, content);
+      })
+      .then(function(){
+        if(nextFile){
+          changeFile(nextFile);
+        }
+      });
+  }
+
+  function dontSaveFile(){
+    const { nextFile } = store.getState();
+
+    workspace.resetFile()
+      .then(function(){
+        if(nextFile){
+          changeFile(nextFile);
+        }
+      });
   }
 
   function deleteFile(filename){
@@ -129,8 +142,11 @@ function handlers(app, opts, done){
       cwd
     } = workspace.getState();
 
+    store.dispatch(creators.resetFileQueue());
+
     if(isNew && content.length){
-      // TODO: prompt save
+      store.dispatch(creators.queueFileChange(filename));
+      showSaveOverlay();
       return;
     }
 
@@ -164,6 +180,7 @@ function handlers(app, opts, done){
     return workspace.changeDirectory(dirpath)
       .then(() => {
         userConfig.set('cwd', dirpath);
+        userConfig.set('last-file', '');
       });
   }
 
@@ -511,6 +528,7 @@ function handlers(app, opts, done){
     saveFileAs,
     deleteFile,
     changeFile,
+    dontSaveFile,
     // project methods
     changeProject,
     deleteProject,

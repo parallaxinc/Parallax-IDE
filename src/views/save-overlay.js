@@ -25,7 +25,8 @@ class SaveOverlay extends React.Component {
     const { defaultFilename } = this.props;
 
     this.state = {
-      filename: defaultFilename
+      filename: defaultFilename,
+      typing: false
     };
 
     this.save = this.save.bind(this);
@@ -43,9 +44,9 @@ class SaveOverlay extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const { filename } = this.state;
+    const { typing } = this.state;
 
-    if(!filename){
+    if(!typing){
       this.setState({ filename: nextProps.defaultFilename });
     }
   }
@@ -64,10 +65,12 @@ class SaveOverlay extends React.Component {
   }
 
   dontSave(){
-    const { hideOverlay } = this.props.handlers;
+    const {
+      hideOverlay,
+      dontSaveFile
+    } = this.props.handlers;
 
-    // TODO: implement don't save on file change transition
-    // hideSave({ trash: true });
+    dontSaveFile();
     hideOverlay();
     this.clearName();
   }
@@ -83,12 +86,16 @@ class SaveOverlay extends React.Component {
     const { value } = evt.target;
 
     this.setState({
-      filename: value
+      filename: value,
+      typing: true
     });
   }
 
   clearName(){
-    this.setState({ filename: '' });
+    this.setState({
+      filename: '',
+      typing: false
+    });
   }
 
   focusInput() {
@@ -96,7 +103,15 @@ class SaveOverlay extends React.Component {
   }
 
   render(){
+    const { isNew } = this.props;
     const { filename } = this.state;
+
+    let dontSaveButton;
+    if(isNew){
+      dontSaveButton = (
+        <Button onClick={this.dontSave}>Don't Save</Button>
+      );
+    }
 
     return (
       <Overlay>
@@ -110,7 +125,7 @@ class SaveOverlay extends React.Component {
           onChange={this.updateName} />
         <OverlayFooter>
           <Button onClick={this.save}>Save As</Button>
-          <Button onClick={this.dontSave}>Don't Save</Button>
+          {dontSaveButton}
           <Button onClick={this.cancel}>Cancel</Button>
         </OverlayFooter>
       </Overlay>
@@ -126,9 +141,13 @@ module.exports = createContainer(SaveOverlay, {
   },
 
   getPropsFromStores({ workspace }){
-    const { filename } = workspace.getState();
+    const {
+      isNew,
+      filename
+    } = workspace.getState();
 
     return {
+      isNew,
       defaultFilename: filename
     };
   }

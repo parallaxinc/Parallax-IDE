@@ -29,7 +29,10 @@ const creators = {
   clearSearchStatus: require('./clear-search-status'),
   updateSelectedDevice: require('./update-selected-device'),
   resetDownloadProgress: require('./reset-download-progress'),
-  updateDownloadProgress: require('./update-download-progress')
+  updateDownloadProgress: require('./update-download-progress'),
+  // file creators
+  resetFileQueue: require('./reset-file-queue'),
+  queueFileChange: require('./queue-file-change')
 };
 
 module.exports = creators;

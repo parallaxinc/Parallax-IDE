@@ -43,13 +43,15 @@ class ProjectOverlay extends React.Component {
     } = this.props;
 
     const {
+      hideOverlay,
       changeProject,
       deleteProjectConfirm
     } = handlers;
 
     function onAccept(){
-      self.clearName();
       changeProject(name);
+      hideOverlay();
+      self.clearName();
     }
 
     function onDelete(evt){
@@ -89,18 +91,23 @@ class ProjectOverlay extends React.Component {
   }
 
   create(){
-    const { changeProject } = this.props.handlers;
+    const {
+      changeProject,
+      hideOverlay
+    } = this.props.handlers;
+
     const { projectName } = this.state;
 
-    this.clearName();
     changeProject(projectName);
+    hideOverlay();
+    this.clearName();
   }
 
   close(){
     const { hideOverlay } = this.props.handlers;
 
-    this.clearName();
     hideOverlay();
+    this.clearName();
   }
 
   render(){
