@@ -4,7 +4,7 @@
         "description": "The name of the application"
     },
     "appDescription": {
-        "message": "Parallax microcontroller development environment based on Chrome applications.",
+        "message": "Write, compile, and download code to your Parallax BASIC Stamp microcontroller to drive your custom electronic creations.",
         "description": "The description of the application"
     }
 }

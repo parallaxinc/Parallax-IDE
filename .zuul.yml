@@ -1,3 +1,0 @@
-ui: mocha-bdd
-browserify:
-  - transform: babelify

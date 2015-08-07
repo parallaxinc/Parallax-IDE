@@ -2,8 +2,6 @@
 
 const Irken = require('irken');
 
-const { loadFile, newFile } = require('./src/actions/file');
-
 const app = new Irken();
 
 const plugins = [
@@ -29,16 +27,31 @@ const plugins = [
     register: require('iggins')
   },
   {
-    register: require('./plugins/appbar')
+    register: require('./src/plugins/handlers')
   },
   {
-    register: require('./plugins/editor')
+    register: require('./src/plugins/keyboard-shortcuts')
   },
   {
-    register: require('./plugins/sidebar')
+    register: require('./src/plugins/appbar')
   },
   {
-    register: require('./plugins/overlays')
+    register: require('./src/plugins/notifications')
+  },
+  {
+    register: require('./src/plugins/editor')
+  },
+  {
+    register: require('./src/plugins/terminal')
+  },
+  {
+    register: require('./src/plugins/rxtx')
+  },
+  {
+    register: require('./src/plugins/sidebar')
+  },
+  {
+    register: require('./src/plugins/overlays')
   }
 ];
 
@@ -51,21 +64,31 @@ function onRender(err){
     return;
   }
 
-  const { userConfig, workspace } = app;
+  const {
+    userConfig,
+    handlers
+  } = app;
+
+  const {
+    newFile,
+    changeFile,
+    changeProject
+  } = handlers;
 
   // Finish Loading Plugin
+  // TODO: encapsulate into a startup handler?
   const cwd = userConfig.get('cwd') || defaultProject;
   const lastFile = userConfig.get('last-file');
-  workspace.changeDir(cwd, (err) => {
-    console.log(err);
-    if(lastFile){
-      loadFile(lastFile);
-    } else {
-      newFile();
-    }
-
-    console.log('file loaded');
-  });
+  console.log(cwd, lastFile);
+  changeProject(cwd)
+    .then(() => {
+      if(lastFile){
+        changeFile(lastFile);
+      } else {
+        newFile();
+      }
+    })
+    .catch(console.error.bind(console));
 }
 
 function onRegister(err){
