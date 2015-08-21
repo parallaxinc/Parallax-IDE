@@ -172,7 +172,7 @@ class Terminal {
     const line = lines[pointerLine] || '';
     if(pointerColumn < line.length){
       const start = line.slice(0, pointerColumn);
-      const end = line.slice(pointerColumn);
+      const end = line.slice(pointerColumn + data.length);
       lines[pointerLine] = start + data + end;
     }else if(pointerColumn > line.length){
       lines[pointerLine] = _.padRight(line, pointerColumn) + data;
