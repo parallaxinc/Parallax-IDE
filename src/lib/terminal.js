@@ -186,8 +186,6 @@ class Terminal {
 
       lines[newPointerLine] = initial + newData + remainder;
 
-      console.log(lines[newPointerLine].length, leftOver.length, newPointerLine, newPointerColumn);
-
       newText = leftOver;
       if(newText.length > 0){
         newPointerLine++;
