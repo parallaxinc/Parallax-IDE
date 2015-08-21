@@ -168,25 +168,43 @@ class Terminal {
   }
 
   addText(data){
-    const { lines, pointerLine, pointerColumn, trimCount, maxLines } = this.state;
-    const line = lines[pointerLine] || '';
-    if(pointerColumn < line.length){
-      const start = line.slice(0, pointerColumn);
-      const end = line.slice(pointerColumn + data.length);
-      lines[pointerLine] = start + data + end;
-    }else if(pointerColumn > line.length){
-      lines[pointerLine] = _.padRight(line, pointerColumn) + data;
-    }else{
-      lines[pointerLine] = line + data;
+    const { lines, lineWrap, pointerLine, pointerColumn, trimCount, maxLines } = this.state;
+
+    var newPointerColumn = pointerColumn;
+    var newPointerLine = pointerLine;
+    var newText = data;
+
+    while(newText.length > 0){
+      var oldLine = lines[newPointerLine] || '';
+      var initial = _.padRight(oldLine.slice(0, newPointerColumn), newPointerColumn);
+
+      var newData = newText.slice(0, lineWrap - initial.length);
+
+      var remainder = oldLine.slice(newData.length + initial.length);
+
+      var leftOver = newText.slice(lineWrap - initial.length);
+
+      lines[newPointerLine] = initial + newData + remainder;
+
+      console.log(lines[newPointerLine].length, leftOver.length, newPointerLine, newPointerColumn);
+
+      newText = leftOver;
+      if(newText.length > 0){
+        newPointerLine++;
+        newPointerColumn = 0;
+      }else{
+        newPointerColumn = initial.length + newData.length;
+      }
     }
 
     if(lines.length > maxLines){
       const newLines = lines.slice(trimCount);
       this.state.lines = newLines;
-      this.state.pointerLine = Math.max(0, pointerLine - trimCount);
-      this.state.pointerColumn = pointerColumn + data.length;
+      this.state.pointerLine = Math.max(0, newPointerLine - trimCount);
+      this.state.pointerColumn = newPointerColumn;
     } else {
-      this.state.pointerColumn = pointerColumn + data.length;
+      this.state.pointerLine = newPointerLine;
+      this.state.pointerColumn = newPointerColumn;
     }
   }
 
