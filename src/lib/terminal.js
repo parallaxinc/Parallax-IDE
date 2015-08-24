@@ -167,42 +167,40 @@ class Terminal {
     }
   }
 
-  addText(data){
-    const { lines, lineWrap, pointerLine, pointerColumn, trimCount, maxLines } = this.state;
+  addText(newText){
+    const { lines, lineWrap, trimCount, maxLines } = this.state;
 
-    var newPointerColumn = pointerColumn;
-    var newPointerLine = pointerLine;
-    var newText = data;
+    let { pointerColumn, pointerLine } = this.state;
 
     while(newText.length > 0){
-      var oldLine = lines[newPointerLine] || '';
-      var initial = _.padRight(oldLine.slice(0, newPointerColumn), newPointerColumn);
+      let oldLine = lines[pointerLine] || '';
+      let initial = _.padRight(oldLine.slice(0, pointerColumn), pointerColumn);
 
-      var newData = newText.slice(0, lineWrap - initial.length);
+      let insert = newText.slice(0, Math.max(lineWrap - initial.length, 0));
 
-      var remainder = oldLine.slice(newData.length + initial.length);
+      let remainder = oldLine.slice(insert.length + initial.length);
 
-      var leftOver = newText.slice(lineWrap - initial.length);
+      let leftOver = newText.slice(insert.length);
 
-      lines[newPointerLine] = initial + newData + remainder;
+      lines[pointerLine] = initial + insert + remainder;
 
       newText = leftOver;
       if(newText.length > 0){
-        newPointerLine++;
-        newPointerColumn = 0;
+        pointerLine++;
+        pointerColumn = 0;
       }else{
-        newPointerColumn = initial.length + newData.length;
+        pointerColumn = initial.length + insert.length;
       }
     }
 
     if(lines.length > maxLines){
       const newLines = lines.slice(trimCount);
       this.state.lines = newLines;
-      this.state.pointerLine = Math.max(0, newPointerLine - trimCount);
-      this.state.pointerColumn = newPointerColumn;
+      this.state.pointerLine = Math.max(0, pointerLine - trimCount);
+      this.state.pointerColumn = pointerColumn;
     } else {
-      this.state.pointerLine = newPointerLine;
-      this.state.pointerColumn = newPointerColumn;
+      this.state.pointerLine = pointerLine;
+      this.state.pointerColumn = pointerColumn;
     }
   }
 
