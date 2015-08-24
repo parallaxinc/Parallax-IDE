@@ -77,8 +77,9 @@ function onRender(err){
 
   // Finish Loading Plugin
   // TODO: encapsulate into a startup handler?
-  const cwd = userConfig.get('cwd') || defaultProject;
-  const lastFile = userConfig.get('last-file');
+  const config = userConfig.getState();
+  const cwd = config.cwd || defaultProject;
+  const lastFile = config['last-file'];
   console.log(cwd, lastFile);
   changeProject(cwd)
     .then(() => {
