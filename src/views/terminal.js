@@ -15,7 +15,7 @@ const styles = {
     padding: '10px',
     margin: '0',
     overflow: 'auto',
-    whiteSpace: 'pre-wrap'
+    whiteSpace: 'pre'
   }
 };
 

@@ -167,26 +167,40 @@ class Terminal {
     }
   }
 
-  addText(data){
-    const { lines, pointerLine, pointerColumn, trimCount, maxLines } = this.state;
-    const line = lines[pointerLine] || '';
-    if(pointerColumn < line.length){
-      const start = line.slice(0, pointerColumn);
-      const end = line.slice(pointerColumn);
-      lines[pointerLine] = start + data + end;
-    }else if(pointerColumn > line.length){
-      lines[pointerLine] = _.padRight(line, pointerColumn) + data;
-    }else{
-      lines[pointerLine] = line + data;
+  addText(newText){
+    const { lines, lineWrap, trimCount, maxLines } = this.state;
+
+    let { pointerColumn, pointerLine } = this.state;
+
+    while(newText.length > 0){
+      let oldLine = lines[pointerLine] || '';
+      let initial = _.padRight(oldLine.slice(0, pointerColumn), pointerColumn);
+
+      let insert = newText.slice(0, Math.max(lineWrap - initial.length, 0));
+
+      let remainder = oldLine.slice(insert.length + initial.length);
+
+      let leftOver = newText.slice(insert.length);
+
+      lines[pointerLine] = initial + insert + remainder;
+
+      newText = leftOver;
+      if(newText.length > 0){
+        pointerLine++;
+        pointerColumn = 0;
+      }else{
+        pointerColumn = initial.length + insert.length;
+      }
     }
 
     if(lines.length > maxLines){
       const newLines = lines.slice(trimCount);
       this.state.lines = newLines;
       this.state.pointerLine = Math.max(0, pointerLine - trimCount);
-      this.state.pointerColumn = pointerColumn + data.length;
+      this.state.pointerColumn = pointerColumn;
     } else {
-      this.state.pointerColumn = pointerColumn + data.length;
+      this.state.pointerLine = pointerLine;
+      this.state.pointerColumn = pointerColumn;
     }
   }
 
