@@ -74,12 +74,12 @@ function handlers(app, opts, done){
 
     const builtName = `untitled${untitledLast + 1}`;
 
-    workspace.newFile(builtName, '');
-
-    userConfig.set('last-file', builtName);
-
-    documents.create(path.join(cwd, builtName), '');
-    documents.focus();
+    workspace.newFile(builtName, '')
+      .then(() => userConfig.set('last-file', builtName))
+      .then(function(){
+        documents.create(path.join(cwd, builtName), '');
+        documents.focus();
+      });
   }
 
   function saveFile(){
@@ -165,10 +165,9 @@ function handlers(app, opts, done){
 
     // TODO: handle error
     workspace.changeFile(filename)
+      .then(() => userConfig.set('last-file', filename))
       .then(() => {
         const { content } = workspace.getState();
-        userConfig.set('last-file', filename);
-
         documents.create(path.join(cwd, filename), content);
         documents.focus();
       });
@@ -183,10 +182,8 @@ function handlers(app, opts, done){
     const dirpath = path.join('/', projectName);
 
     return workspace.changeDirectory(dirpath)
-      .then(() => {
-        userConfig.set('cwd', dirpath);
-        userConfig.set('last-file', '');
-      });
+      .then(() => userConfig.set('cwd', dirpath))
+      .then(() => userConfig.unset('last-file'));
   }
 
   function deleteProject(projectName){
