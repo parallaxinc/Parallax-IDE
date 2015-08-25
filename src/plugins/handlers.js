@@ -13,6 +13,11 @@ const Terminal = require('../lib/terminal');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
 
+const {
+  NEW_FILE,
+  CHANGE_FILE
+} = require('../constants/queued-action-types');
+
 // TODO: move somewhere else?
 const red = '#da2100';
 const green = '#159600';
@@ -56,8 +61,21 @@ function handlers(app, opts, done){
     userConfig
   } = app;
 
+  function handleActionQueue(){
+    const { nextAction, nextFile } = store.getState();
+
+    store.dispatch(creators.resetActionQueue());
+
+    switch(nextAction){
+      case NEW_FILE:
+        return newFile();
+      case CHANGE_FILE:
+        return changeFile(nextFile);
+    }
+  }
+
   function newFile(){
-    const { cwd, directory } = workspace.getState();
+    const { cwd, directory, isNew, content } = workspace.getState();
 
     // TODO: utility function
     const untitledNums = _.reduce(directory, function(untitled, dirfile) {
@@ -73,6 +91,13 @@ function handlers(app, opts, done){
     const untitledLast = _.max(untitledNums);
 
     const builtName = `untitled${untitledLast + 1}`;
+
+    // TODO: DRY this up
+    if(isNew && _.trim(content).length){
+      store.dispatch(creators.queueNewFile());
+      showSaveOverlay();
+      return;
+    }
 
     workspace.newFile(builtName, '')
       .then(() => userConfig.set('last-file', builtName))
@@ -100,30 +125,22 @@ function handlers(app, opts, done){
       return;
     }
 
-    const { nextFile } = store.getState();
     const { cwd, content } = workspace.getState();
 
     workspace.updateFilename(filename)
-      .then(function(){
-        return workspace.saveFile(filename, content);
-      })
+      .then(() => workspace.saveFile(filename, content))
       .then(function(){
         documents.swap(path.join(cwd, filename));
-        if(nextFile){
-          changeFile(nextFile);
-        }
+        handleActionQueue();
       });
   }
 
   function dontSaveFile(){
     const { nextFile } = store.getState();
 
+    // TODO: handle error
     workspace.resetFile()
-      .then(function(){
-        if(nextFile){
-          changeFile(nextFile);
-        }
-      });
+      .then(handleActionQueue);
   }
 
   function deleteFile(filename){
@@ -147,19 +164,20 @@ function handlers(app, opts, done){
       cwd
     } = workspace.getState();
 
-    store.dispatch(creators.resetFileQueue());
-
+    // TODO: DRY this up
     if(isNew && _.trim(content).length){
-      store.dispatch(creators.queueFileChange(filename));
+      store.dispatch(creators.queueChangeFile(filename));
       showSaveOverlay();
       return;
     }
 
     const doc = documents.swap(path.join(cwd, filename));
     if(doc){
-      workspace.updateFilename(filename);
-      workspace.updateContent(doc.getValue());
-      documents.focus();
+      workspace.changeFile(filename)
+        .then(() => workspace.updateContent(doc.getValue()))
+        .then(function(){
+          documents.focus();
+        });
       return;
     }
 

@@ -1,16 +1,16 @@
 'use strict';
 
 const {
-  QUEUE_FILE_CHANGE
+  QUEUE_CHANGE_FILE
 } = require('../constants/action-types');
 
-function queueFileChange(filename){
+function queueChangeFile(filename){
   return {
-    type: QUEUE_FILE_CHANGE,
+    type: QUEUE_CHANGE_FILE,
     payload: {
       filename
     }
   };
 }
 
-module.exports = queueFileChange;
+module.exports = queueChangeFile;
