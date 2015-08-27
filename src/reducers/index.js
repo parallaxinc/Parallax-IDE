@@ -7,7 +7,8 @@ const reducers = {
   device: require('./device'),
   deviceList: require('./device-list'),
   downloadProgress: require('./download-progress'),
-  nextFile: require('./next-file')
+  nextFile: require('./next-file'),
+  nextAction: require('./next-action')
 };
 
 module.exports = reducers;

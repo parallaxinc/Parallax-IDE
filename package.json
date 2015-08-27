@@ -26,6 +26,7 @@
     "when": "^3.7.2"
   },
   "devDependencies": {
+    "@phated/eslint-config-iceddev": "^0.2.1",
     "babel-core": "^4.5.1",
     "babel-loader": "^4.0.0",
     "babel-runtime": "^4.7.16",
@@ -34,8 +35,9 @@
     "css-loader": "^0.9.1",
     "del": "^1.1.1",
     "electron-prebuilt": "^0.30.2",
-    "eslint": "^0.24.0",
-    "eslint-plugin-react": "^2.6.3",
+    "eslint": "^1.2.1",
+    "eslint-plugin-mocha": "^0.5.1",
+    "eslint-plugin-react": "^3.2.3",
     "expect": "^1.8.0",
     "gulp": "git://github.com/gulpjs/gulp#4.0",
     "gulp-util": "^3.0.4",

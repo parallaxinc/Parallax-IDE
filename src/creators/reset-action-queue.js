@@ -1,12 +1,12 @@
 'use strict';
 
 const {
-  RESET_FILE_QUEUE
+  RESET_ACTION_QUEUE
 } = require('../constants/action-types');
 
 function resetFileQueue(){
   return {
-    type: RESET_FILE_QUEUE,
+    type: RESET_ACTION_QUEUE,
     payload: {}
   };
 }

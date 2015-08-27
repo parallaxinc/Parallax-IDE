@@ -30,9 +30,10 @@ const creators = {
   updateSelectedDevice: require('./update-selected-device'),
   resetDownloadProgress: require('./reset-download-progress'),
   updateDownloadProgress: require('./update-download-progress'),
-  // file creators
-  resetFileQueue: require('./reset-file-queue'),
-  queueFileChange: require('./queue-file-change')
+  // action queue creators
+  queueNewFile: require('./queue-new-file'),
+  queueChangeFile: require('./queue-change-file'),
+  resetActionQueue: require('./reset-action-queue')
 };
 
 module.exports = creators;

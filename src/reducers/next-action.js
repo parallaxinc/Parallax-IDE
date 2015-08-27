@@ -1,16 +1,24 @@
 'use strict';
 
 const {
+  QUEUE_NEW_FILE,
   QUEUE_CHANGE_FILE,
   RESET_ACTION_QUEUE
 } = require('../constants/action-types');
 
+const {
+  NEW_FILE,
+  CHANGE_FILE
+} = require('../constants/queued-action-types');
+
 const initial = '';
 
-function nextFile(state = initial, { type, payload }){
+function nextAction(state = initial, { type }){
   switch(type){
+    case QUEUE_NEW_FILE:
+      return NEW_FILE;
     case QUEUE_CHANGE_FILE:
-      return payload.filename;
+      return CHANGE_FILE;
     case RESET_ACTION_QUEUE:
       return initial;
     default:
@@ -18,4 +26,4 @@ function nextFile(state = initial, { type, payload }){
   }
 }
 
-module.exports = nextFile;
+module.exports = nextAction;
