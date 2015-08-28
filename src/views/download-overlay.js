@@ -13,11 +13,16 @@ const ProgressBar = require('../components/progress-bar');
 
 const styles = {
   overlay: {
-    paddingBottom: 40
+    paddingBottom: 40,
+    width: 600
   },
   overlayFooter: {
     marginLeft: 0,
     display: 'flex'
+  },
+  errorSpan: {
+    color: '#FF0000',
+    display: 'inline-block'
   },
   deviceTable: {
     width: '100%',
@@ -38,6 +43,25 @@ const styles = {
     borderSpacing: 'collapse',
     verticalAlign: 'top',
     borderTop: '1px solid #ddd'
+  },
+  statusTh: {
+    padding: '8px 8px 8px 0',
+    textAlign: 'left',
+    borderTop: 0,
+    borderBottom: '2px solid #ddd',
+    verticalAlign: 'bottom',
+    fontWeight: 'bold',
+    maxWidth: 160
+  },
+  statusTd: {
+    padding: '8px 8px 8px 0',
+    borderSpacing: 'collapse',
+    verticalAlign: 'top',
+    borderTop: '1px solid #ddd',
+    maxWidth: 160,
+    overflow: 'auto',
+    whiteSpace: 'nowrap',
+    color: '#333333'
   },
   scrollingContainer: {
     height: 325,
@@ -94,6 +118,7 @@ class DownloadOverlay extends React.Component {
         <td style={styles.deviceTd}>{device.name}</td>
         <td style={styles.deviceTd}>{device.version}</td>
         <td style={styles.deviceTd}>{device.path}</td>
+        <td style={styles.statusTd}>{device.displayError}</td>
       </tr>
     );
   }
@@ -136,6 +161,7 @@ class DownloadOverlay extends React.Component {
                   <th style={styles.deviceTh}>Device</th>
                   <th style={styles.deviceTh}>Version</th>
                   <th style={styles.deviceTh}>Port</th>
+                  <th style={styles.statusTh}>Status</th>
                 </tr>
               </thead>
               <tbody>
