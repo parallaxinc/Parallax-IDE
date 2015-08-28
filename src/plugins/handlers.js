@@ -524,7 +524,8 @@ function handlers(app, opts, done){
   function selectDevice(device) {
     const { content } = workspace.getState();
 
-    if(!device.match) {
+    // need to make sure we have all the information before rewriting the source
+    if(!device.match && device.name && device.program) {
       const { name } = device;
       // TODO: handle unnamed device
       const { TargetStart } = device.program.raw;
