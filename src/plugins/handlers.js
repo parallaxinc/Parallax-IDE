@@ -287,15 +287,19 @@ function handlers(app, opts, done){
     workspace.updateContent(cm.getValue());
   }
 
-  function syntaxCheck() {
+  function compile(){
     const { content } = workspace.getState();
     // TODO: it is a pain that compile requires `this`
     const result = app.compile({
       type: 'bs2',
       source: content
     });
-    if(result.error){
-      const err = result.error;
+
+    return result.error;
+  }
+
+  function handleError(err){
+    if(err){
       // leaving this in for better debugging of errors
       console.log(err);
 
@@ -308,6 +312,11 @@ function handlers(app, opts, done){
       toast.clear();
       toast.show('Tokenization successful!', successToastOpts);
     }
+  }
+
+  function syntaxCheck(){
+    const err = compile();
+    handleError(err);
   }
 
   function transmitInput(value){
@@ -446,16 +455,7 @@ function handlers(app, opts, done){
 
         toast.show(`'${filename}' downloaded successfully`, successToastOpts);
       })
-      .catch(function(err){
-        // TODO: this is used twice, should be a util or something
-        // leaving this in for better debugging of errors
-        console.log(err);
-        toast.show(err.message, errorToastOpts);
-
-        if(err && err.errorLength){
-          highlighter(err.errorPosition, err.errorLength);
-        }
-      })
+      .catch(handleError)
       .finally(function(){
         board.removeListener('progress', onProgress);
         resetDownloadProgress();
@@ -488,6 +488,16 @@ function handlers(app, opts, done){
     const { device } = store.getState();
     const { autoDownload } = device;
     const { content } = workspace.getState();
+
+    if(autoDownload){
+      const err = compile();
+
+      if(err){
+        handleError(err);
+        hideOverlay();
+        return;
+      }
+    }
 
     const scanOpts = {
       reject: [
