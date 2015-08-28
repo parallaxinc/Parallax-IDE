@@ -129,6 +129,7 @@ function handlers(app, opts, done){
 
     workspace.updateFilename(filename)
       .then(() => workspace.saveFile(filename, content))
+      .then(() => userConfig.set('last-file', filename))
       .then(function(){
         documents.swap(path.join(cwd, filename));
         handleActionQueue();
@@ -148,8 +149,13 @@ function handlers(app, opts, done){
       return;
     }
 
+    const { cwd } = workspace.getState();
+
     // TODO: switch userConfig last-file
     workspace.deleteFile(filename)
+      .then(function(){
+        documents.remove(path.join(cwd, filename));
+      })
       .then(newFile);
   }
 
