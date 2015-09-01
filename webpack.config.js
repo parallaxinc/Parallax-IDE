@@ -55,8 +55,7 @@ module.exports = {
     // inside a symlinked subdependency
     root: path.join(__dirname, 'node_modules'),
     alias: {
-      memdown: 'level-js',
-      serialport: 'browser-serialport'
+      memdown: 'level-js'
     }
   },
   bail: true,
