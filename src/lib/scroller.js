@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+const _ = require('lodash');
 
 function generateContent(lines, start, end, minLength) {
   return _(lines)
@@ -29,8 +29,9 @@ function generateContent(lines, start, end, minLength) {
 
 function Scroller(consoleElement) {
   this.lines = [];
-  this.minVisible = 30;
+  this.visibleCount = 50;
   this.startPosition = 0;
+  this.endPosition = 0;
   this.animateRequest = null;
   this.sticky = true;
   this.jumpToBottom = true;
@@ -40,17 +41,18 @@ function Scroller(consoleElement) {
   //pre-bind functions and throttle expansion
   this.refresh = this._renderVisible.bind(this);
   this.scroll = this._onScroll.bind(this);
-  this.expand = _.throttle(this._expand.bind(this), 150, {
+  this.expandTop = _.throttle(this._expandTop.bind(this), 150, {
     leading: true,
     trailing: true
   });
 }
 
 Scroller.prototype.setLines = function(newLines) {
-  var len = newLines.length;
+  const len = newLines.length;
   this.lines = newLines;
   if(this.sticky){
-    this.startPosition = Math.max(0, len - this.minVisible);
+    this.startPosition = Math.max(0, len - this.visibleCount);
+    this.endPosition = len;
   }else if(len === 1 && newLines[0].length === 0){
     // ^^ `lines` is reset to an array with one empty line. ugh.
 
@@ -58,14 +60,16 @@ Scroller.prototype.setLines = function(newLines) {
     // we don't have a direct event that can call this
     this.reset();
   }else if(len < this.startPosition){
-    // handle buffer rollover, where number of lines will go from 2048 to ~1900
-    this.startPosition = Math.max(0, len - this.minVisible);
+    // handle buffer trim, where number of lines will go from 2048 to ~1900
+    this.startPosition = Math.max(0, len - this.visibleCount);
+    this.endPosition = len;
   }
   this.dirty = true;
 };
 
 Scroller.prototype.reset = function(){
-  this.startPosition = Math.max(0, this.lines.length - this.minVisible);
+  this.startPosition = Math.max(0, this.lines.length - this.visibleCount);
+  this.endPosition = Math.max(0, this.lines.length);
   this.jumpToBottom = true;
   this.sticky = true;
   this.dirty = true;
@@ -80,34 +84,59 @@ Scroller.prototype.requestRefresh = function(){
 Scroller.prototype._renderVisible = function(){
   this.animateRequest = null;
   if(this.dirty && this.console){
-    var top = this.console.scrollTop;
+    const top = this.console.scrollTop;
     if(this.sticky){
-      this.startPosition = Math.max(0, this.lines.length - this.minVisible);
+      this.startPosition = Math.max(0, this.lines.length - this.visibleCount);
+      this.endPosition = this.lines.length;
     }
-    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.lines.length, this.minVisible);
+    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
     if(this.jumpToBottom){
       this.console.scrollTop = 2000;
       this.jumpToBottom = false;
     }else if(!this.sticky && this.startPosition > 0 && top === 0){
       //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
-      requestAnimationFrame(this.expand);
+      requestAnimationFrame(this.expandTop);
     }
     this.dirty = false;
   }
 };
 
-Scroller.prototype._expand = function(){
-  this.startPosition = Math.max(0, this.startPosition - this.minVisible);
-  this.sticky = false;
+Scroller.prototype._expandTop = function(){
+  this.startPosition = Math.max(0, this.startPosition - this.visibleCount);
   if(this.console){
-    var scrollHeight = this.console.scrollHeight;
-    var scrollTop = this.console.scrollTop;
+    this.sticky = false;
+    const scrollHeight = this.console.scrollHeight;
+    const scrollTop = this.console.scrollTop;
 
     // do an inline scroll to avoid potential scroll interleaving
-    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.lines.length, this.minVisible);
-    var newScrollHeight = this.console.scrollHeight;
+    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
+    const newScrollHeight = this.console.scrollHeight;
     this.console.scrollTop = scrollTop + newScrollHeight - scrollHeight;
 
+    const oldEndPos = this.endPosition;
+    this.endPosition = Math.min(this.endPosition, this.startPosition + (this.visibleCount * 2));
+
+    this.dirty = oldEndPos !== this.endPosition;
+    if(this.dirty && !this.animateRequest){
+      this.animateRequest = requestAnimationFrame(this.refresh);
+    }
+  }
+};
+
+Scroller.prototype._expandBottom = function(){
+  this.startPosition = Math.max(0, this.startPosition + this.visibleCount);
+  this.endPosition = Math.min(this.lines.length, this.endPosition + this.visibleCount);
+  if(this.console){
+    this.sticky = false;
+    const scrollHeight = this.console.scrollHeight;
+    const scrollTop = this.console.scrollTop;
+
+    // do an inline scroll to avoid potential scroll interleaving
+    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
+    const newScrollHeight = this.console.scrollHeight;
+    this.console.scrollTop = scrollTop + newScrollHeight - scrollHeight;
+
+    this.endPosition = Math.min(this.endPosition, this.startPosition + (this.visibleCount * 2));
     this.dirty = false;
   }
 };
@@ -117,16 +146,16 @@ Scroller.prototype._onScroll = function(){
     // do nothing, prepare to jump
     return;
   }
-  var height = this.console.offsetHeight;
-  var scrollHeight = this.console.scrollHeight;
-  var scrollTop = this.console.scrollTop;
+  const height = this.console.offsetHeight;
+  const scrollHeight = this.console.scrollHeight;
+  const scrollTop = this.console.scrollTop;
   if(this.sticky){
     if(scrollTop + height < scrollHeight - 30){
       this.sticky = false;
     }
   }else{
     if(scrollTop < 15 && this.startPosition > 0){
-      this.expand();
+      this.expandTop();
     }else if(scrollTop + height > scrollHeight - 30){
       this.jumpToBottom = true;
       this.sticky = true;
