@@ -12,7 +12,9 @@ const {
 const initial = {
   input: '',
   // output is an array of lines
-  output: []
+  output: [],
+  // offset is number of lines cleared from console buffer
+  offset: 0
 };
 
 function transmission(state = initial, { type, payload }){
@@ -20,7 +22,7 @@ function transmission(state = initial, { type, payload }){
     case CONNECT:
       return _.assign({}, state, { input: '' });
     case RECEIVE:
-      return _.assign({}, state, { output: payload.output });
+      return _.assign({}, state, { output: payload.output, offset: payload.offset });
     case TRANSMIT:
       return _.assign({}, state, { input: payload.input });
     case CLEAR_TRANSMISSION:

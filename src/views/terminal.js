@@ -22,8 +22,8 @@ const styles = {
 class TermnialView extends React.Component {
 
   componentWillReceiveProps(nextProps){
-    const { output } = nextProps;
-    this.scroller.setLines(output);
+    const { output, offset } = nextProps;
+    this.scroller.setLines(output, offset);
     this.scroller.requestRefresh();
   }
 
@@ -72,13 +72,14 @@ module.exports = createContainer(TermnialView, {
 
   getPropsFromStores({ store }){
     const { transmission, device } = store.getState();
-    const { input, output } = transmission;
+    const { input, output, offset } = transmission;
     const { connected } = device;
 
     return {
       connected,
       input,
-      output
+      output,
+      offset
     };
   }
 });

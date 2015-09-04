@@ -2,33 +2,9 @@
 
 const _ = require('lodash');
 
-function generateContent(lines, start, end, minLength) {
-  return _(lines)
-    .slice(start, end)
-    .thru(function(array){
-      if(array.length < minLength){
-        // pad whitespace at top of array
-        return _(new Array(minLength - array.length))
-          .fill('\u2009')
-          .concat(array)
-          .value();
-      }else{
-        return array;
-      }
-    })
-    .map(function(line){
-      if(line.length === 0){
-        // insert a blank space to prevent pre omitting a trailing newline,
-        // even though pre/pre-nowrap/pre-line are specified.
-        return '\u2009';
-      }
-      return line;
-    })
-    .join('\n');
-}
-
 function Scroller(consoleElement) {
   this.lines = [];
+  this.lineOffset = 0;
   this.visibleCount = 50;
   this.startPosition = 0;
   this.endPosition = 0;
@@ -45,31 +21,67 @@ function Scroller(consoleElement) {
     leading: true,
     trailing: true
   });
+  this.expandBottom = _.throttle(this._expandBottom.bind(this), 150, {
+    leading: true,
+    trailing: true
+  });
 }
 
-Scroller.prototype.setLines = function(newLines) {
-  const len = newLines.length;
+Scroller.prototype._generateContent = function(){
+  const visible = this.visibleCount;
+  return _(this.lines)
+    .slice(this.startPosition - this.lineOffset, this.endPosition - this.lineOffset)
+    .thru(function(array){
+      if(array.length < visible){
+        // pad whitespace at top of array
+        return _(new Array(visible - array.length))
+          .fill('\u2009')
+          .concat(array)
+          .value();
+      }else{
+        return array;
+      }
+    })
+    .map(function(line){
+      if(line.length === 0){
+        // insert a blank space to prevent pre omitting a trailing newline,
+        // even though pre/pre-nowrap/pre-line are specified.
+        return '\u2009';
+      }
+      return line;
+    })
+    .join('\n');
+};
+
+Scroller.prototype.setLines = function(newLines, offset) {
   this.lines = newLines;
+  this.lineOffset = offset;
   if(this.sticky){
-    this.startPosition = Math.max(0, len - this.visibleCount);
-    this.endPosition = len;
-  }else if(len === 1 && newLines[0].length === 0){
+    this.startPosition = Math.max(this.lineOffset, this.lineCount() - this.visibleCount);
+    this.endPosition = this.lineCount();
+  }else if(newLines.length === 1 && newLines[0].length === 0){
     // ^^ `lines` is reset to an array with one empty line. ugh.
 
     // handle the reset case when lines is replaced with an empty array
     // we don't have a direct event that can call this
     this.reset();
-  }else if(len < this.startPosition){
-    // handle buffer trim, where number of lines will go from 2048 to ~1900
-    this.startPosition = Math.max(0, len - this.visibleCount);
-    this.endPosition = len;
+  }else if(this.lineOffset > this.startPosition){
+    // when buffer trims and we are now below the trimmed area, move up by difference
+    const lineDiff = this.lineOffset - this.startPosition;
+    this.startPosition += lineDiff;
+    this.endPosition += lineDiff;
   }
   this.dirty = true;
 };
 
+Scroller.prototype.lineCount = function(){
+  return this.lines.length + this.lineOffset;
+};
+
 Scroller.prototype.reset = function(){
-  this.startPosition = Math.max(0, this.lines.length - this.visibleCount);
-  this.endPosition = Math.max(0, this.lines.length);
+  this.startPosition = Math.max(0, this.lineCount() - this.visibleCount);
+  this.endPosition = Math.max(0, this.lineCount());
+  this.lineOffset = 0;
   this.jumpToBottom = true;
   this.sticky = true;
   this.dirty = true;
@@ -86,14 +98,14 @@ Scroller.prototype._renderVisible = function(){
   if(this.dirty && this.console){
     const top = this.console.scrollTop;
     if(this.sticky){
-      this.startPosition = Math.max(0, this.lines.length - this.visibleCount);
-      this.endPosition = this.lines.length;
+      this.startPosition = Math.max(this.lineOffset, this.lineCount() - this.visibleCount);
+      this.endPosition = this.lineCount();
     }
-    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
+    this.console.innerHTML = this._generateContent();
     if(this.jumpToBottom){
       this.console.scrollTop = 2000;
       this.jumpToBottom = false;
-    }else if(!this.sticky && this.startPosition > 0 && top === 0){
+    }else if(!this.sticky && this.startPosition > this.lineOffset && top === this.lineOffset){
       //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
       requestAnimationFrame(this.expandTop);
     }
@@ -102,14 +114,14 @@ Scroller.prototype._renderVisible = function(){
 };
 
 Scroller.prototype._expandTop = function(){
-  this.startPosition = Math.max(0, this.startPosition - this.visibleCount);
+  this.startPosition = Math.max(this.lineOffset, this.startPosition - this.visibleCount);
   if(this.console){
     this.sticky = false;
     const scrollHeight = this.console.scrollHeight;
     const scrollTop = this.console.scrollTop;
 
     // do an inline scroll to avoid potential scroll interleaving
-    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
+    this.console.innerHTML = this._generateContent();
     const newScrollHeight = this.console.scrollHeight;
     this.console.scrollTop = scrollTop + newScrollHeight - scrollHeight;
 
@@ -124,19 +136,21 @@ Scroller.prototype._expandTop = function(){
 };
 
 Scroller.prototype._expandBottom = function(){
-  this.startPosition = Math.max(0, this.startPosition + this.visibleCount);
-  this.endPosition = Math.min(this.lines.length, this.endPosition + this.visibleCount);
+  this.endPosition = Math.min(this.lineCount(), this.endPosition + this.visibleCount);
   if(this.console){
-    this.sticky = false;
+    // add the new content to the bottom, then get scroll position to remove content
+    this.console.innerHTML = this._generateContent();
     const scrollHeight = this.console.scrollHeight;
     const scrollTop = this.console.scrollTop;
 
-    // do an inline scroll to avoid potential scroll interleaving
-    this.console.innerHTML = generateContent(this.lines, this.startPosition, this.endPosition, this.visibleCount);
-    const newScrollHeight = this.console.scrollHeight;
-    this.console.scrollTop = scrollTop + newScrollHeight - scrollHeight;
+    // update start position and render
+    this.startPosition = Math.max(this.lineOffset, Math.min(this.lineCount() - (this.visibleCount * 2), this.endPosition - (this.visibleCount * 2)));
+    this.console.innerHTML = this._generateContent();
 
-    this.endPosition = Math.min(this.endPosition, this.startPosition + (this.visibleCount * 2));
+    // use difference to scroll offset
+    const newScrollHeight = this.console.scrollHeight;
+    this.console.scrollTop = scrollTop - (scrollHeight - newScrollHeight);
+
     this.dirty = false;
   }
 };
@@ -154,12 +168,16 @@ Scroller.prototype._onScroll = function(){
       this.sticky = false;
     }
   }else{
-    if(scrollTop < 15 && this.startPosition > 0){
+    if(scrollTop < 15 && this.startPosition > this.lineOffset){
       this.expandTop();
     }else if(scrollTop + height > scrollHeight - 30){
-      this.jumpToBottom = true;
-      this.sticky = true;
-      this.dirty = true;
+      if(this.endPosition < this.lineCount() - 2){
+        this.expandBottom();
+      }else{
+        this.jumpToBottom = true;
+        this.sticky = true;
+        this.dirty = true;
+      }
     }
   }
 

@@ -10,7 +10,8 @@ class Terminal {
       lastRefresh: 0,
       lines: [''],
       lineWrap: 256,
-      maxLines: 2048,
+      lineOffset: 0,
+      maxLines: 8096,
       pointerLine: 0,
       pointerColumn: 0,
       refreshDelayMillis: 64,
@@ -31,6 +32,7 @@ class Terminal {
     const { refreshQueued } = this.state;
 
     this.state.lines = [''];
+    this.state.lineOffset = 0;
     this.state.pointerLine = 0;
     this.state.pointerColumn = 0;
 
@@ -68,7 +70,7 @@ class Terminal {
 
   setCursorPosition(line, col){
     const { lines } = this.state;
-    for(var ix = lines.length; ix <= line; ix++){
+    for(let ix = lines.length; ix <= line; ix++){
       lines[ix] = '';
     }
     this.state.pointerLine = Math.max(0, line);
@@ -196,6 +198,7 @@ class Terminal {
     if(lines.length > maxLines){
       const newLines = lines.slice(trimCount);
       this.state.lines = newLines;
+      this.state.lineOffset = this.state.lineOffset + trimCount;
       this.state.pointerLine = Math.max(0, pointerLine - trimCount);
       this.state.pointerColumn = pointerColumn;
     } else {
@@ -206,6 +209,10 @@ class Terminal {
 
   getLines(){
     return this.state.lines;
+  }
+
+  getOffset(){
+    return this.state.lineOffset;
   }
 
 }

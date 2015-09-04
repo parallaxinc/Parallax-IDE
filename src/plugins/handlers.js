@@ -403,7 +403,8 @@ function handlers(app, opts, done){
   function updateTerminal(msg){
     terminal.refreshBuffer(msg, function(){
       const output = terminal.getLines();
-      store.dispatch(creators.receive(output));
+      const offset = terminal.getOffset();
+      store.dispatch(creators.receive(output, offset));
     });
   }
 
