@@ -28,20 +28,8 @@ function Scroller(consoleElement) {
 }
 
 Scroller.prototype._generateContent = function(){
-  const visible = this.visibleCount;
   return _(this.lines)
     .slice(this.startPosition - this.lineOffset, this.endPosition - this.lineOffset)
-    .thru(function(array){
-      if(array.length < visible){
-        // pad whitespace at top of array
-        return _(new Array(visible - array.length))
-          .fill('\u2009')
-          .concat(array)
-          .value();
-      }else{
-        return array;
-      }
-    })
     .map(function(line){
       if(line.length === 0){
         // insert a blank space to prevent pre omitting a trailing newline,
@@ -59,6 +47,10 @@ Scroller.prototype.setLines = function(newLines, offset) {
   if(this.sticky){
     this.startPosition = Math.max(this.lineOffset, this.lineCount() - this.visibleCount);
     this.endPosition = this.lineCount();
+    if(this.endPosition <= this.visibleCount){
+      // follow text during initial 50 lines
+      this.jumpToBottom = true;
+    }
   }else if(newLines.length === 1 && newLines[0].length === 0){
     // ^^ `lines` is reset to an array with one empty line. ugh.
 
@@ -103,7 +95,7 @@ Scroller.prototype._renderVisible = function(){
     }
     this.console.innerHTML = this._generateContent();
     if(this.jumpToBottom){
-      this.console.scrollTop = 2000;
+      this.console.scrollTop = 4000;
       this.jumpToBottom = false;
     }else if(!this.sticky && this.startPosition > this.lineOffset && top === this.lineOffset){
       //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
@@ -163,23 +155,29 @@ Scroller.prototype._onScroll = function(){
   const height = this.console.offsetHeight;
   const scrollHeight = this.console.scrollHeight;
   const scrollTop = this.console.scrollTop;
+  const nearTop = scrollTop < 100;
+  const nearBottom = scrollTop + height > scrollHeight - 100;
+  const nearSticky = scrollTop + height > scrollHeight - 10;
+
   if(this.sticky){
-    if(scrollTop + height < scrollHeight - 30){
+    if(!nearSticky){
       this.sticky = false;
     }
   }else{
-    if(scrollTop < 15 && this.startPosition > this.lineOffset){
+    if(nearTop && this.startPosition > this.lineOffset){
       this.expandTop();
-    }else if(scrollTop + height > scrollHeight - 30){
+    }else if(nearBottom){
       if(this.endPosition < this.lineCount() - 2){
         this.expandBottom();
-      }else{
+      }else if(nearSticky){
         this.jumpToBottom = true;
         this.sticky = true;
         this.dirty = true;
       }
     }
   }
+
+  
 
   if(this.dirty && !this.animateRequest){
     this.animateRequest = requestAnimationFrame(this.refresh);
