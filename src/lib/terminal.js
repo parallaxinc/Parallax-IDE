@@ -103,9 +103,7 @@ class Terminal {
 
   clearBelow(){
     const { lines, pointerLine } = this.state;
-    for(let ix = pointerLine+1; ix < lines.length; ix++){
-      lines[ix] = '';
-    }
+    _.fill(lines, '', pointerLine + 1, lines.length);
   }
 
   tab(){
