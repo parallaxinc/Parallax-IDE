@@ -11,7 +11,7 @@ class Terminal {
       lines: [''],
       lineWrap: 256,
       lineOffset: 0,
-      maxLines: 8096,
+      maxLines: 10000,
       pointerLine: 0,
       pointerColumn: 0,
       refreshDelayMillis: 64,
