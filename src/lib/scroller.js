@@ -45,8 +45,8 @@ Scroller.prototype.setLines = function(newLines, offset) {
   this.lines = newLines;
   this.lineOffset = offset;
   if(this.sticky){
-    this.startPosition = Math.max(this.lineOffset, this.lineCount() - this.visibleCount);
     this.endPosition = this.lineCount();
+    this.startPosition = Math.max(this.lineOffset, this.endPosition - this.visibleCount);
     if(this.endPosition <= this.visibleCount){
       // follow text during initial 50 lines
       this.jumpToBottom = true;
@@ -71,8 +71,8 @@ Scroller.prototype.lineCount = function(){
 };
 
 Scroller.prototype.reset = function(){
-  this.startPosition = Math.max(0, this.lineCount() - this.visibleCount);
   this.endPosition = Math.max(0, this.lineCount());
+  this.startPosition = Math.max(0, this.endPosition - this.visibleCount);
   this.lineOffset = 0;
   this.jumpToBottom = true;
   this.sticky = true;
@@ -90,8 +90,8 @@ Scroller.prototype._renderVisible = function(){
   if(this.dirty && this.console){
     const top = this.console.scrollTop;
     if(this.sticky){
-      this.startPosition = Math.max(this.lineOffset, this.lineCount() - this.visibleCount);
       this.endPosition = this.lineCount();
+      this.startPosition = Math.max(this.lineOffset, this.endPosition - this.visibleCount);
     }
     this.console.innerHTML = this._generateContent();
     if(this.jumpToBottom){
