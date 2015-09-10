@@ -13,6 +13,7 @@ function Scroller(consoleElement) {
   this.jumpToBottom = true;
   this.dirty = false;
   this.console = consoleElement;
+  this.expandDistance = 200;
 
   //pre-bind functions and throttle expansion
   this.refresh = this._renderVisible.bind(this);
@@ -155,8 +156,8 @@ Scroller.prototype._onScroll = function(){
   const height = this.console.offsetHeight;
   const scrollHeight = this.console.scrollHeight;
   const scrollTop = this.console.scrollTop;
-  const nearTop = scrollTop < 100;
-  const nearBottom = scrollTop + height > scrollHeight - 100;
+  const nearTop = scrollTop < this.expandDistance;
+  const nearBottom = scrollTop + height > scrollHeight - this.expandDistance;
   const nearSticky = scrollTop + height > scrollHeight - 10;
 
   if(this.sticky){
