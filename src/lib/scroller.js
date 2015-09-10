@@ -15,17 +15,11 @@ function Scroller(consoleElement) {
   this.console = consoleElement;
   this.expandDistance = 200;
 
-  //pre-bind functions and throttle expansion
+  //pre-bind functions
   this.refresh = this._renderVisible.bind(this);
   this.scroll = this._onScroll.bind(this);
-  this.expandTop = _.throttle(this._expandTop.bind(this), 150, {
-    leading: true,
-    trailing: true
-  });
-  this.expandBottom = _.throttle(this._expandBottom.bind(this), 150, {
-    leading: true,
-    trailing: true
-  });
+  this.expandTop = this._expandTop.bind(this);
+  this.expandBottom = this._expandBottom.bind(this);
 }
 
 Scroller.prototype._generateContent = function(){
@@ -89,7 +83,6 @@ Scroller.prototype.requestRefresh = function(){
 Scroller.prototype._renderVisible = function(){
   this.animateRequest = null;
   if(this.dirty && this.console){
-    const top = this.console.scrollTop;
     if(this.sticky){
       this.endPosition = this.lineCount();
       this.startPosition = Math.max(this.lineOffset, this.endPosition - this.visibleCount);
@@ -98,9 +91,6 @@ Scroller.prototype._renderVisible = function(){
     if(this.jumpToBottom){
       this.console.scrollTop = 4000;
       this.jumpToBottom = false;
-    }else if(!this.sticky && this.startPosition > this.lineOffset && top === this.lineOffset){
-      //cover the situation where the window was fully scrolled faster than expand could keep up and locked to the top
-      requestAnimationFrame(this.expandTop);
     }
     this.dirty = false;
   }
