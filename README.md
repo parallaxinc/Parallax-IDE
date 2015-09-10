@@ -1,5 +1,5 @@
 # Parallax IDE
-Write, compile, and download code to your Parallax BASIC Stamp microcontroller to drive your custom electronic creations.
+Write, compile, and download code to your Parallax Boe-Bot Robot or your custom BASIC Stamp microcontroller-based electronic creations.
 
 ## Quickstart
 
