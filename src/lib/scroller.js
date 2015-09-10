@@ -42,8 +42,8 @@ Scroller.prototype.setLines = function(newLines, offset) {
   if(this.sticky){
     this.endPosition = this.lineCount();
     this.startPosition = Math.max(this.lineOffset, this.endPosition - this.visibleCount);
-    if(this.endPosition <= this.visibleCount){
-      // follow text during initial 50 lines
+    if(this.endPosition <= this.visibleCount * 2){
+      // follow text during initial lines (console can show up to twice the visibleCount when expanding)
       this.jumpToBottom = true;
     }
   }else if(newLines.length === 1 && newLines[0].length === 0){
