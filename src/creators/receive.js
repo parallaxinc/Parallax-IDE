@@ -4,11 +4,12 @@ const {
   RECEIVE
 } = require('../constants/action-types');
 
-function receive(output){
+function receive(output, offset){
   return {
     type: RECEIVE,
     payload: {
-      output
+      output,
+      offset
     }
   };
 }
