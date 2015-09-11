@@ -38,6 +38,9 @@ const styles = {
     verticalAlign: 'bottom',
     fontWeight: 'bold'
   },
+  deviceTr:{
+    height: '3rem'
+  },
   deviceTd: {
     padding: '8px 8px 8px 0',
     borderSpacing: 'collapse',
@@ -113,8 +116,9 @@ class DownloadOverlay extends React.Component {
     } = handlers;
 
     const highlight = device.path === path ? 'active' : 'inactive';
+    const deviceRowStyle = _.assign({}, styles.deviceTr, styles[highlight]);
     return (
-      <tr style={styles[highlight]} onClick={() => selectDevice(device)}>
+      <tr style={deviceRowStyle} onClick={() => selectDevice(device)}>
         <td style={styles.deviceTd}>{device.name}</td>
         <td style={styles.deviceTd}>{device.version}</td>
         <td style={styles.deviceTd}>{device.path}</td>
