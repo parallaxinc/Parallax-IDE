@@ -30,3 +30,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
     win.onClosed.addListener(closeSerialPorts);
   });
 });
+
+chrome.runtime.onInstalled.addListener(function(evt){
+  chrome.storage.local.set({newVersion: 'newVersion'}, function() {});
+});
