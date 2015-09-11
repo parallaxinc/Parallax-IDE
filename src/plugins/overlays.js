@@ -2,6 +2,7 @@
 
 const React = require('react');
 
+const HelpOverlay = require('../views/help-overlay');
 const SaveOverlay = require('../views/save-overlay');
 const ProjectOverlay = require('../views/project-overlay');
 const DownloadOverlay = require('../views/download-overlay');
@@ -12,6 +13,7 @@ const store = require('../store');
 
 const {
   NO_OVERLAY,
+  HELP_OVERLAY,
   SAVE_OVERLAY,
   DOWNLOAD_OVERLAY,
   PROJECTS_OVERLAY,
@@ -35,6 +37,9 @@ function overlays(app, opts, done){
     const { overlayState } = store.getState();
 
     switch(overlayState){
+      case HELP_OVERLAY:
+        renderOverlay(<HelpOverlay workspace={workspace} handlers={handlers} />);
+        break;
       case SAVE_OVERLAY:
         renderOverlay(<SaveOverlay workspace={workspace} handlers={handlers} />);
         break;

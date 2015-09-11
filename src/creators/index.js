@@ -8,6 +8,7 @@ const creators = {
   showDownloadOverlay: require('./show-download-overlay'),
   showProjectsOverlay: require('./show-projects-overlay'),
   showSaveOverlay: require('./show-save-overlay'),
+  showHelpOverlay: require('./show-help-overlay'),
   hideOverlay: require('./hide-overlay'),
   // terminal creators
   rxOn: require('./rx-on'),
