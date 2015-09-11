@@ -103,13 +103,15 @@ function handlers(app, opts, done){
       return;
     }
 
-    const directive = `${boards.bs2}\n${languages.pbasic2_5}`
+    const directive =
+    `${boards.bs2}\r${languages.pbasic2_5}\r\r`;
 
     workspace.newFile(builtName, '')
       .then(() => userConfig.set('last-file', builtName))
       .then(function(){
         documents.create(path.join(cwd, builtName), directive);
         documents.focus();
+        goToEnd();
       });
   }
 
@@ -293,6 +295,10 @@ function handlers(app, opts, done){
 
   function replace(){
     cm.execCommand('replace');
+  }
+
+  function goToEnd(){
+    cm.execCommand('goDocEnd');
   }
 
   function moveByScrollUpLine(){
