@@ -12,6 +12,7 @@ const consoleStore = require('../console-store');
 const Terminal = require('../lib/terminal');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
+const { boards, languages } = require('../lib/directives');
 
 const {
   NEW_FILE,
@@ -99,10 +100,12 @@ function handlers(app, opts, done){
       return;
     }
 
+    const directive = `${boards.bs2}\n${languages.pbasic2_5}`
+
     workspace.newFile(builtName, '')
       .then(() => userConfig.set('last-file', builtName))
       .then(function(){
-        documents.create(path.join(cwd, builtName), '');
+        documents.create(path.join(cwd, builtName), directive);
         documents.focus();
       });
   }
