@@ -98,7 +98,7 @@ function handlers(app, opts, done){
     // TODO: DRY this up
     if(isNew && _.trim(content).length){
       store.dispatch(creators.queueNewFile());
-      showSaveOverlay();
+      showSaveOverlay(false);
       return;
     }
 
@@ -114,7 +114,7 @@ function handlers(app, opts, done){
     const { filename, content, isNew, cwd } = workspace.getState();
 
     if(isNew){
-      showSaveOverlay();
+      showSaveOverlay(false);
     } else {
       workspace.saveFile(filename, content)
         .then(function(){
@@ -185,7 +185,7 @@ function handlers(app, opts, done){
     // TODO: DRY this up
     if(isNew && _.trim(content).length){
       store.dispatch(creators.queueChangeFile(filename));
-      showSaveOverlay();
+      showSaveOverlay(true);
       return;
     }
 

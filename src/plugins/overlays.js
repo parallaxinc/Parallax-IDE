@@ -22,6 +22,7 @@ const {
   OVERWRITE_OVERLAY,
   NEW_VERSION_OVERLAY,
   DELETE_FILE_OVERLAY,
+  SAVE_ON_CHANGE_OVERLAY,
   DELETE_PROJECT_OVERLAY
 } = require('../constants/overlay-states');
 
@@ -46,6 +47,9 @@ function overlays(app, opts, done){
         break;
       case SAVE_OVERLAY:
         renderOverlay(<SaveOverlay workspace={workspace} handlers={handlers} />);
+        break;
+      case SAVE_ON_CHANGE_OVERLAY:
+        renderOverlay(<SaveOverlay workspace={workspace} handlers={handlers} showDontSaveButton={true} />);
         break;
       case OVERWRITE_OVERLAY:
         renderOverlay(<OverwriteOverlay store={store} handlers={handlers} />);

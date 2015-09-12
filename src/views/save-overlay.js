@@ -106,7 +106,7 @@ class SaveOverlay extends React.Component {
     const { filename } = this.state;
 
     let dontSaveButton;
-    if(isNew){
+    if(isNew && this.props.showDontSaveButton){
       dontSaveButton = (
         <Button onClick={this.dontSave}>Don't Save</Button>
       );
