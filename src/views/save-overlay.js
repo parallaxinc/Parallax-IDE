@@ -60,7 +60,6 @@ class SaveOverlay extends React.Component {
     } = this.props.handlers;
 
     saveFileAs(filename);
-    hideOverlay();
     this.clearName();
   }
 

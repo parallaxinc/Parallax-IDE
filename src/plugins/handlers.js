@@ -15,7 +15,8 @@ const highlighter = require('../lib/highlighter');
 
 const {
   NEW_FILE,
-  CHANGE_FILE
+  CHANGE_FILE,
+  OVERWRITE_FILE
 } = require('../constants/queued-action-types');
 
 // TODO: move somewhere else?
@@ -71,6 +72,8 @@ function handlers(app, opts, done){
         return newFile();
       case CHANGE_FILE:
         return changeFile(nextFile);
+      case OVERWRITE_FILE:
+        return saveFileAs(nextFile, true);
     }
   }
 
@@ -117,23 +120,32 @@ function handlers(app, opts, done){
         .then(function(){
           documents.swap(path.join(cwd, filename));
         });
+      store.dispatch(creators.hideOverlay());
     }
   }
 
-  function saveFileAs(filename){
+  function saveFileAs(filename, overwrite){
     if(!filename){
       return;
     }
 
-    const { cwd, content } = workspace.getState();
+    const { cwd, content, directory } = workspace.getState();
+    if(!overwrite && _.filter(directory, {name: filename}).length){
+      return showOverwriteOverlay(filename);
+    }
 
     workspace.updateFilename(filename)
       .then(() => workspace.saveFile(filename, content))
       .then(() => userConfig.set('last-file', filename))
       .then(function(){
-        documents.swap(path.join(cwd, filename));
+        documents.replace(path.join(cwd, filename));
         handleActionQueue();
       });
+    store.dispatch(creators.hideOverlay());
+  }
+
+  function overwriteFile(){
+    handleActionQueue();
   }
 
   function dontSaveFile(){
@@ -227,6 +239,11 @@ function handlers(app, opts, done){
 
   function showSaveOverlay(){
     store.dispatch(creators.showSaveOverlay());
+  }
+
+  function showOverwriteOverlay(name){
+    store.dispatch(creators.queueOverwriteFile(name));
+    store.dispatch(creators.showOverwriteOverlay());
   }
 
   function showDownloadOverlay(){
@@ -567,6 +584,7 @@ function handlers(app, opts, done){
     deleteFile,
     changeFile,
     dontSaveFile,
+    overwriteFile,
     // project methods
     changeProject,
     deleteProject,
