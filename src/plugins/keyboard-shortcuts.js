@@ -37,10 +37,10 @@ function keyboardShortcuts(app, opts, done){
   } = keypress;
 
   const {
-    showHelpOverlay,
     newFile,
     saveFile,
     hideOverlay,
+    showHelpOverlay,
     showSaveOverlay,
     showDownloadOverlay,
     showProjectsOverlay,

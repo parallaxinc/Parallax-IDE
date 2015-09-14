@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const { createContainer } = require('sovereign');
 const Button = require('react-material/components/Button');
 
 const Overlay = require('../components/overlay');
@@ -16,9 +15,6 @@ const helpLink = 'http://www.parallax.com/go/PBASICHelp';
 
 class HelpOverlay extends React.Component {
 
-  constructor(...args){
-    super(...args);
-  }
 
   render(){
     const {
@@ -43,19 +39,4 @@ class HelpOverlay extends React.Component {
   }
 }
 
-module.exports = createContainer(HelpOverlay, {
-  getStores({ workspace }){
-    return {
-      workspace
-    };
-  },
-
-  getPropsFromStores({ workspace }){
-    const { cwd, projects } = workspace.getState();
-
-    return {
-      cwd,
-      projects
-    };
-  }
-});
+module.exports = HelpOverlay;
