@@ -7,6 +7,7 @@ const creators = {
   showDeleteProjectOverlay: require('./show-delete-project-overlay'),
   showDownloadOverlay: require('./show-download-overlay'),
   showProjectsOverlay: require('./show-projects-overlay'),
+  showOverwriteOverlay: require('./show-overwrite-overlay'),
   showSaveOverlay: require('./show-save-overlay'),
   showHelpOverlay: require('./show-help-overlay'),
   hideOverlay: require('./hide-overlay'),
@@ -34,6 +35,7 @@ const creators = {
   // action queue creators
   queueNewFile: require('./queue-new-file'),
   queueChangeFile: require('./queue-change-file'),
+  queueOverwriteFile: require('./queue-overwrite-file'),
   resetActionQueue: require('./reset-action-queue')
 };
 

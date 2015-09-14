@@ -47,6 +47,10 @@ class Documents {
     this._editor.swapDoc(doc);
     return doc;
   }
+
+  replace(filename){
+    this._documents[filename] = this._editor.getDoc();
+  }
 }
 
 module.exports = Documents;
