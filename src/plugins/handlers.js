@@ -12,6 +12,7 @@ const consoleStore = require('../console-store');
 const Terminal = require('../lib/terminal');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
+const directive = require('../lib/directive');
 
 const {
   NEW_FILE,
@@ -102,11 +103,14 @@ function handlers(app, opts, done){
       return;
     }
 
-    workspace.newFile(builtName, '')
+    const insertDirective = directive('BS2', 2.5);
+
+    workspace.newFile(builtName, insertDirective)
       .then(() => userConfig.set('last-file', builtName))
       .then(function(){
-        documents.create(path.join(cwd, builtName), '');
+        documents.create(path.join(cwd, builtName), insertDirective);
         documents.focus();
+        goDocEnd();
       });
   }
 
@@ -294,6 +298,10 @@ function handlers(app, opts, done){
 
   function replace(){
     cm.execCommand('replace');
+  }
+
+  function goDocEnd(){
+    cm.execCommand('goDocEnd');
   }
 
   function moveByScrollUpLine(){
