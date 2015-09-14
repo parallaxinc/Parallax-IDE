@@ -225,6 +225,10 @@ function handlers(app, opts, done){
     store.dispatch(creators.showDeleteProjectOverlay());
   }
 
+  function showHelpOverlay(){
+    store.dispatch(creators.showHelpOverlay());
+  }
+
   function showSaveOverlay(){
     store.dispatch(creators.showSaveOverlay());
   }
@@ -572,6 +576,7 @@ function handlers(app, opts, done){
     deleteProject,
     deleteProjectConfirm,
     // overlay methods
+    showHelpOverlay,
     showSaveOverlay,
     showDownloadOverlay,
     showProjectsOverlay,

@@ -14,6 +14,7 @@ function keyboardShortcuts(app, opts, done){
   const { keypress, handlers } = app;
 
   const {
+    F1,
     F3,
     F6,
     F7,
@@ -39,6 +40,7 @@ function keyboardShortcuts(app, opts, done){
     newFile,
     saveFile,
     hideOverlay,
+    showHelpOverlay,
     showSaveOverlay,
     showDownloadOverlay,
     showProjectsOverlay,
@@ -79,6 +81,11 @@ function keyboardShortcuts(app, opts, done){
     evt.preventDefault();
     // TODO: this won't clear text in a textbox, need to move to store?
     hideOverlay();
+  });
+
+  keypress(F1, function(evt){
+    evt.preventDefault();
+    showHelpOverlay();
   });
 
   keypress(F3, function(evt){
