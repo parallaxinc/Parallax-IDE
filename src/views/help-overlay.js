@@ -8,7 +8,8 @@ const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
 
 const helpStyle = {
-  position: 'relative'
+  position: 'relative',
+  marginTop: '25px'
 };
 
 const helpLink = 'http://www.parallax.com/go/PBASICHelp';

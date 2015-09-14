@@ -8,7 +8,8 @@ const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
 
 const contentStyle = {
-  position: 'relative'
+  position: 'relative',
+  marginTop: '25px'
 };
 
 const releaseNotesLink = 'https://github.com/parallaxinc/Parallax-IDE/releases';
