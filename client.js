@@ -71,6 +71,7 @@ function onRender(err){
 
   const {
     newFile,
+    showNewVersionOverlay,
     changeFile,
     changeProject
   } = handlers;
@@ -88,6 +89,7 @@ function onRender(err){
       } else {
         newFile();
       }
+      showNewVersionOverlay();
     })
     .catch(console.error.bind(console));
 }

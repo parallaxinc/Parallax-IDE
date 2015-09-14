@@ -265,6 +265,16 @@ function handlers(app, opts, done){
     store.dispatch(creators.showDeleteFileOverlay());
   }
 
+  function showNewVersionOverlay(){
+    chrome.storage.local.get('newVersion', function(val) {
+      if(val.newVersion){
+        chrome.storage.local.remove('newVersion', function() {
+          store.dispatch(creators.showNewVersionOverlay());
+        });
+      }
+    });
+  }
+
   function hideOverlay(){
     store.dispatch(creators.hideOverlay());
   }
@@ -596,6 +606,7 @@ function handlers(app, opts, done){
     // overlay methods
     showHelpOverlay,
     showSaveOverlay,
+    showNewVersionOverlay,
     showDownloadOverlay,
     showProjectsOverlay,
     showDeleteFileOverlay,

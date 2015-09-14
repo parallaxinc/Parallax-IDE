@@ -4,6 +4,7 @@ const React = require('react');
 
 const HelpOverlay = require('../views/help-overlay');
 const SaveOverlay = require('../views/save-overlay');
+const NewVersionOverlay = require('../views/new-version-overlay');
 const ProjectOverlay = require('../views/project-overlay');
 const DownloadOverlay = require('../views/download-overlay');
 const OverwriteOverlay = require('../views/overwrite-overlay');
@@ -19,6 +20,7 @@ const {
   DOWNLOAD_OVERLAY,
   PROJECTS_OVERLAY,
   OVERWRITE_OVERLAY,
+  NEW_VERSION_OVERLAY,
   DELETE_FILE_OVERLAY,
   DELETE_PROJECT_OVERLAY
 } = require('../constants/overlay-states');
@@ -47,6 +49,9 @@ function overlays(app, opts, done){
         break;
       case OVERWRITE_OVERLAY:
         renderOverlay(<OverwriteOverlay store={store} handlers={handlers} />);
+        break;
+      case NEW_VERSION_OVERLAY:
+        renderOverlay(<NewVersionOverlay handlers={handlers} />);
         break;
       case DOWNLOAD_OVERLAY:
         renderOverlay(<DownloadOverlay store={store} handlers={handlers} />);
