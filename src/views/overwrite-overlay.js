@@ -18,7 +18,6 @@ class OverwriteOverlay extends React.Component {
 
   overwrite(){
     const {
-      filename,
       handlers
     } = this.props;
 
@@ -36,7 +35,7 @@ class OverwriteOverlay extends React.Component {
     } = this.props;
 
     const {
-      hideOverlay
+      showSaveOverlay
     } = handlers;
 
     return (
@@ -44,7 +43,7 @@ class OverwriteOverlay extends React.Component {
         <OverlayTitle>File '{filename}' already exists. Overwrite anyway?</OverlayTitle>
         <OverlayFooter>
           <Button onClick={this.overwrite}>Overwrite</Button>
-          <Button onClick={hideOverlay}>Cancel</Button>
+          <Button onClick={showSaveOverlay}>Cancel</Button>
         </OverlayFooter>
       </Overlay>
     );
