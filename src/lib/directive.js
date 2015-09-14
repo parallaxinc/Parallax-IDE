@@ -9,7 +9,7 @@ function pbasic(ver){
 }
 
 function directive(board, language){
-  return `${device(board)}\r${pbasic(language)}\r\r`;
+  return `${device(board)}\n${pbasic(language)}\n\n`;
 }
 
 module.exports = directive;
