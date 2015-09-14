@@ -185,7 +185,7 @@ function handlers(app, opts, done){
     // TODO: DRY this up
     if(isNew && _.trim(content).length){
       store.dispatch(creators.queueChangeFile(filename));
-      showSaveOverlay();
+      showSaveOnChangeOverlay();
       return;
     }
 
@@ -244,6 +244,10 @@ function handlers(app, opts, done){
 
   function showSaveOverlay(){
     store.dispatch(creators.showSaveOverlay());
+  }
+
+  function showSaveOnChangeOverlay(){
+    store.dispatch(creators.showSaveOnChangeOverlay());
   }
 
   function showOverwriteOverlay(name){
@@ -607,6 +611,7 @@ function handlers(app, opts, done){
     // overlay methods
     showHelpOverlay,
     showSaveOverlay,
+    showSaveOnChangeOverlay,
     showNewVersionOverlay,
     showDownloadOverlay,
     showProjectsOverlay,
