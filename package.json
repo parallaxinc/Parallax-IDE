@@ -10,7 +10,7 @@
     "@phated/redux-create-store": "^0.3.0",
     "bs2-serial": "^0.12.0",
     "codemirror": "^4.13.0",
-    "frylord": "^0.7.1",
+    "frylord": "^0.7.4",
     "holovisor": "^0.2.0",
     "iggins": "^0.4.0",
     "irken": "^0.8.0",
