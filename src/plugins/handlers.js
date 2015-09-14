@@ -192,6 +192,7 @@ function handlers(app, opts, done){
     const doc = documents.swap(path.join(cwd, filename));
     if(doc){
       workspace.changeFile(filename)
+        .then(() => userConfig.set('last-file', filename))
         .then(() => workspace.updateContent(doc.getValue()))
         .then(function(){
           documents.focus();
