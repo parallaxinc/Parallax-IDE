@@ -10,6 +10,7 @@ const creators = {
   showOverwriteOverlay: require('./show-overwrite-overlay'),
   showNewVersionOverlay: require('./show-new-version-overlay'),
   showSaveOverlay: require('./show-save-overlay'),
+  showSaveOnChangeOverlay: require('./show-save-on-change-overlay'),
   showHelpOverlay: require('./show-help-overlay'),
   hideOverlay: require('./hide-overlay'),
   // terminal creators
