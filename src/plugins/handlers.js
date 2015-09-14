@@ -267,9 +267,8 @@ function handlers(app, opts, done){
 
   function showNewVersionOverlay(){
     chrome.storage.local.get('newVersion', function(val) {
-      console.log('newVersion', val.newVersion);
       if(val.newVersion){
-        chrome.storage.local.remove('newVersion', function(val) {
+        chrome.storage.local.remove('newVersion', function() {
           store.dispatch(creators.showNewVersionOverlay());
         });
       }

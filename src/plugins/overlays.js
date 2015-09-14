@@ -51,7 +51,7 @@ function overlays(app, opts, done){
         renderOverlay(<OverwriteOverlay store={store} handlers={handlers} />);
         break;
       case NEW_VERSION_OVERLAY:
-        renderOverlay(<NewVersionOverlay workspace={workspace} handlers={handlers} />);
+        renderOverlay(<NewVersionOverlay handlers={handlers} />);
         break;
       case DOWNLOAD_OVERLAY:
         renderOverlay(<DownloadOverlay store={store} handlers={handlers} />);

@@ -32,5 +32,5 @@ chrome.app.runtime.onLaunched.addListener(function() {
 });
 
 chrome.runtime.onInstalled.addListener(function(evt){
-  chrome.storage.local.set({newVersion: 'newVersion'}, function() {});
+  chrome.storage.local.set({newVersion: 'newVersion'});
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const { createContainer } = require('sovereign');
 const Button = require('react-material/components/Button');
 
 const Overlay = require('../components/overlay');
@@ -16,10 +15,6 @@ const releaseNotesLink = 'https://github.com/parallaxinc/Parallax-IDE/releases';
 const installationNotesLink = 'https://www.parallax.com/downloads/parallax-ide-chrome';
 
 class NewVersionOverlay extends React.Component {
-
-  constructor(...args){
-    super(...args);
-  }
 
   render(){
 
@@ -53,19 +48,4 @@ class NewVersionOverlay extends React.Component {
   }
 }
 
-module.exports = createContainer(NewVersionOverlay, {
-  getStores({ workspace }){
-    return {
-      workspace
-    };
-  },
-
-  getPropsFromStores({ workspace }){
-    const { cwd, projects } = workspace.getState();
-
-    return {
-      cwd,
-      projects
-    };
-  }
-});
+module.exports = NewVersionOverlay;
