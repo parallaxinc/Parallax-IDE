@@ -55,6 +55,7 @@
     "test": "zuul test/*.js --local --open",
     "ci": "zuul test/*.js --electron",
     "build": "gulp",
+    "version": "gulp version && git add manifest.json",
     "release": "gulp gh-release",
     "postinstall": "gulp postinstall",
     "serve": "webpack-dev-server"
