@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs');
+
 const del = require('del');
 const gulp = require('gulp');
 const chalk = require('chalk');
@@ -41,6 +43,15 @@ function postinstall(cb){
   del('node_modules/**/*.pem', cb);
 }
 
+function version(cb){
+  const pkg = require('./package.json');
+  const manifest = require('./manifest.json');
+  manifest.version = pkg.version;
+  const content = `${JSON.stringify(manifest, null, 2)}\n`;
+  fs.writeFile('./manifest.json', content, cb);
+}
+
+gulp.task(version);
 gulp.task(release);
 gulp.task(postinstall);
 
