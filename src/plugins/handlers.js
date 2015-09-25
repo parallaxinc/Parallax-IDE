@@ -99,7 +99,7 @@ function handlers(app, opts, done){
     // TODO: DRY this up
     if(isNew && _.trim(content).length){
       store.dispatch(creators.queueNewFile());
-      showSaveOverlay();
+      showSaveOnChangeOverlay();
       return;
     }
 
