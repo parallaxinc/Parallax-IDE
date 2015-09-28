@@ -98,7 +98,11 @@ class SaveOverlay extends React.Component {
   }
 
   focusInput() {
-    React.findDOMNode(this.refs.filename).getElementsByTagName('input')[0].focus();
+    const input = React.findDOMNode(this.refs.filename).getElementsByTagName('input')[0];
+    const val = input.value;
+    input.value = '';
+    input.focus();
+    input.value = val;
   }
 
   render(){
