@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@phated/redux-create-store": "^0.3.0",
-    "bs2-serial": "git://github.com/irkenjs/bs2-serial#experimental-break",
+    "bs2-serial": "^0.14.0",
     "codemirror": "^4.13.0",
     "frylord": "^0.7.4",
     "holovisor": "^0.2.0",
