@@ -6,7 +6,14 @@ const app = new Irken();
 
 const plugins = [
   {
-    register: require('bs2-serial')
+    register: require('bs2-serial'),
+    options: {
+      programmer: require('bs2-programmer'),
+      protocol: require('bs2-serial-protocol'),
+      //TODO break chrome transport into separate project?
+      transport: require('bs2-serial-protocol/transport'),
+      tokenizer: require('pbasic-tokenizer')
+    }
   },
   {
     register: require('frylord'),
