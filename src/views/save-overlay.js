@@ -39,14 +39,11 @@ class SaveOverlay extends React.Component {
     this.focusInput();
   }
 
-  componentDidUpdate() {
-    this.focusInput();
-  }
-
   componentWillReceiveProps(nextProps){
     const { typing } = this.state;
 
     if(!typing){
+      this.focusInput();
       this.setState({ filename: nextProps.defaultFilename });
     }
   }
@@ -55,8 +52,7 @@ class SaveOverlay extends React.Component {
     const { filename } = this.state;
 
     const {
-      saveFileAs,
-      hideOverlay
+      saveFileAs
     } = this.props.handlers;
 
     saveFileAs(filename);
