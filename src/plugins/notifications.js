@@ -20,6 +20,7 @@ function notifications({ workspace, toast }, opts, done){
     DELETE_FILE_SUCCESS,
     DELETE_FILE_FAILURE,
     CHANGE_FILE_FAILURE,
+    DELETE_DIRECTORY_SUCCESS,
     DELETE_DIRECTORY_FAILURE,
     CHANGE_DIRECTORY_FAILURE
   } = workspace.STATUS_CONSTANTS;
@@ -30,6 +31,7 @@ function notifications({ workspace, toast }, opts, done){
     switch(status){
       case SAVE_FILE_SUCCESS:
       case DELETE_FILE_SUCCESS:
+      case DELETE_DIRECTORY_SUCCESS:
         toast.show(notification, { style: styles.successToast, timeout: 5000 });
         break;
       case SAVE_FILE_FAILURE:
