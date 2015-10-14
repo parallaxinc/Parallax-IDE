@@ -615,6 +615,33 @@ function handlers(app, opts, done){
     download();
   }
 
+  function deviceAdded(device){
+    const { device } = store.getState();
+    const { content } = workspace.getState();
+
+    const scanOpts = {
+      reject: [
+        /Bluetooth-Incoming-Port/,
+        /Bluetooth-Modem/,
+        /dev\/cu\./
+      ],
+      source: content
+    };
+
+    app.scanBoards(scanOpts)
+      .then(function(devices){
+        store.dispatch(creators.updateDevices(devices));
+        if(device.selected && device.path && !device.connected && _.some(devices, 'path', device.selected.path)){
+          var board = app.getBoard(device.selected);
+          if(board){
+            console.log('opening', board);
+            board.open();
+            connect();
+          }
+        }
+      });
+  }
+
   function enableAutoDownload(){
     store.dispatch(creators.enableAutoDownload());
   }
@@ -672,7 +699,8 @@ function handlers(app, opts, done){
     download,
     toggleEcho,
     enableAutoDownload,
-    disableAutoDownload
+    disableAutoDownload,
+    deviceAdded
   });
 
   done();

@@ -73,7 +73,8 @@ function onRender(err){
     newFile,
     showNewVersionOverlay,
     changeFile,
-    changeProject
+    changeProject,
+    deviceAdded
   } = handlers;
 
   // Finish Loading Plugin
@@ -92,6 +93,15 @@ function onRender(err){
       showNewVersionOverlay();
     })
     .catch(console.error.bind(console));
+
+  chrome.usb.onDeviceAdded.addListener(function(device){
+    console.log('device added: ', device);
+    deviceAdded(device);
+  });
+
+  chrome.usb.onDeviceRemoved.addListener(function(device){
+    console.log('device removed: ', device);
+  });
 }
 
 function onRegister(err){

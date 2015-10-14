@@ -8,7 +8,14 @@
     "serial",
     "unlimitedStorage",
     "syncFileSystem",
-    "storage"
+    "storage",
+    "usb",
+    {
+      "usbDevices": [
+        { "vendorId": 1027, "productId": 24577 },
+        { "vendorId": 1027, "productId": 24597 }
+      ]
+    }
   ],
   "icons": {
     "16": "icons/icon16.png",
