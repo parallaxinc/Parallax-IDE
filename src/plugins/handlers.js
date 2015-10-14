@@ -234,7 +234,10 @@ function handlers(app, opts, done){
 
     const dirpath = path.join('/', projectName);
 
-    workspace.deleteDirectory(dirpath);
+    workspace.deleteDirectory(dirpath)
+      .finally(function(){
+        showProjectsOverlay();
+      });
   }
 
   function deleteProjectConfirm(name){
