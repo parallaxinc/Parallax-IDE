@@ -615,17 +615,15 @@ function handlers(app, opts, done){
     download();
   }
 
-  function deviceAdded(device){
+  function deviceAdded(){
     const { device } = store.getState();
-    const { content } = workspace.getState();
 
     const scanOpts = {
       reject: [
         /Bluetooth-Incoming-Port/,
         /Bluetooth-Modem/,
         /dev\/cu\./
-      ],
-      source: content
+      ]
     };
 
     app.scanBoards(scanOpts)
@@ -635,10 +633,12 @@ function handlers(app, opts, done){
           var board = app.getBoard(device.selected);
           if(board){
             board.removeListener('terminal', onTerminal);
+            board.removeListener('close', onClose);
             board.open()
               .then(function(){
                 connect();
                 board.on('terminal', onTerminal);
+                board.on('close', onClose);
               });
           }
         }

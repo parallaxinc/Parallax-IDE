@@ -94,9 +94,7 @@ function onRender(err){
     })
     .catch(console.error.bind(console));
 
-  chrome.usb.onDeviceAdded.addListener(function(device){
-    deviceAdded(device);
-  });
+  chrome.usb.onDeviceAdded.addListener(deviceAdded);
 }
 
 function onRegister(err){
