@@ -634,9 +634,12 @@ function handlers(app, opts, done){
         if(device.selected && device.path && !device.connected && _.some(devices, 'path', device.selected.path)){
           var board = app.getBoard(device.selected);
           if(board){
-            console.log('opening', board);
-            board.open();
-            connect();
+            board.removeListener('terminal', onTerminal);
+            board.open()
+              .then(function(){
+                connect();
+                board.on('terminal', onTerminal);
+              });
           }
         }
       });

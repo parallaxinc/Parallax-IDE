@@ -95,12 +95,7 @@ function onRender(err){
     .catch(console.error.bind(console));
 
   chrome.usb.onDeviceAdded.addListener(function(device){
-    console.log('device added: ', device);
     deviceAdded(device);
-  });
-
-  chrome.usb.onDeviceRemoved.addListener(function(device){
-    console.log('device removed: ', device);
   });
 }
 
