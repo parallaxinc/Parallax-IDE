@@ -13,11 +13,11 @@ const defaultStyle = {
 class Card extends React.Component {
   render(){
     const {
-      style,
+      style = {},
       children
     } = this.props;
 
-    const styles = _.assign(defaultStyle, style || {});
+    const styles = _.assign({}, defaultStyle, style);
 
     return (
       <div style={styles}>
