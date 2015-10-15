@@ -1,7 +1,8 @@
 'use strict';
 
 const React = require('react');
-const Card = require('react-material/components/Card');
+
+const Card = require('./card');
 
 const styles = {
   card: {
@@ -20,7 +21,7 @@ class Sidebar extends React.Component {
     } = this.props;
 
     return (
-      <Card styles={styles.card}>
+      <Card style={styles.card}>
         {children}
       </Card>
     );

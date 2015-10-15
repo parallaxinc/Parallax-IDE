@@ -2,7 +2,8 @@
 
 const _ = require('lodash');
 const React = require('react');
-const Card = require('react-material/components/Card');
+
+const Card = require('./card');
 
 const styles = {
   overlay: {
@@ -31,7 +32,7 @@ class Overlay extends React.Component {
     }
 
     return (
-      <Card styles={cardStyle}>
+      <Card style={cardStyle}>
         {children}
       </Card>
     );

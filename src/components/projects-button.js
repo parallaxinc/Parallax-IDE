@@ -6,10 +6,9 @@ const { MainButton } = require('react-mfb-iceddev');
 const styles = {
   changeFolderButton: {
     position: 'absolute',
-    top: -28,
+    top: 28,
     margin: 0,
-    right: 19,
-    left: 'auto',
+    left: 140,
     transform: 'none'
   }
 };
