@@ -14,7 +14,9 @@ const ProgressBar = require('../components/progress-bar');
 const styles = {
   overlay: {
     paddingBottom: 40,
-    width: 600
+    width: 600,
+    // keep the download progress pinned to the bottom
+    position: 'relative'
   },
   overlayFooter: {
     marginLeft: 0,
