@@ -486,13 +486,13 @@ function handlers(app, opts, done){
     const { device } = store.getState();
     const { echo } = consoleStore.getState();
     const { selected, connected } = device;
+    if(echo){
+      consoleStore.dispatch(creators.echoOff());
+    }else{
+      consoleStore.dispatch(creators.echoOn());
+    }
     if(selected && connected){
       const board = app.getBoard(selected);
-      if(echo){
-        consoleStore.dispatch(creators.echoOff());
-      }else{
-        consoleStore.dispatch(creators.echoOn());
-      }
       board.setEcho(!echo);
     }
   }
@@ -501,6 +501,7 @@ function handlers(app, opts, done){
     const { device } = store.getState();
     const { selected } = device;
     const { filename, content } = workspace.getState();
+    const { echo } = consoleStore.getState();
 
     if(!selected){
       return;
@@ -529,6 +530,7 @@ function handlers(app, opts, done){
         board.removeListener('progress', onProgress);
         resetDownloadProgress();
         connect();
+        board.setEcho(echo);
         hideOverlay();
       });
   }
