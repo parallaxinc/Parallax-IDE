@@ -615,6 +615,36 @@ function handlers(app, opts, done){
     download();
   }
 
+  function deviceAdded(){
+    const { device } = store.getState();
+
+    const scanOpts = {
+      reject: [
+        /Bluetooth-Incoming-Port/,
+        /Bluetooth-Modem/,
+        /dev\/cu\./
+      ]
+    };
+
+    app.scanBoards(scanOpts)
+      .then(function(devices){
+        store.dispatch(creators.updateDevices(devices));
+        if(device.selected && device.path && !device.connected && _.some(devices, 'path', device.selected.path)){
+          var board = app.getBoard(device.selected);
+          if(board){
+            board.removeListener('terminal', onTerminal);
+            board.removeListener('close', onClose);
+            board.open()
+              .then(function(){
+                connect();
+                board.on('terminal', onTerminal);
+                board.on('close', onClose);
+              });
+          }
+        }
+      });
+  }
+
   function enableAutoDownload(){
     store.dispatch(creators.enableAutoDownload());
   }
@@ -672,7 +702,8 @@ function handlers(app, opts, done){
     download,
     toggleEcho,
     enableAutoDownload,
-    disableAutoDownload
+    disableAutoDownload,
+    deviceAdded
   });
 
   done();
