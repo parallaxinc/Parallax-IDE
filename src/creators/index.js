@@ -16,8 +16,10 @@ const creators = {
   // terminal creators
   rxOn: require('./rx-on'),
   rxOff: require('./rx-off'),
+  rxClearTimeout: require('./rx-clear-timeout'),
   txOn: require('./tx-on'),
   txOff: require('./tx-off'),
+  txClearTimeout: require('./tx-clear-timeout'),
   receive: require('./receive'),
   transmit: require('./transmit'),
   updateDuration: require('./update-duration'),

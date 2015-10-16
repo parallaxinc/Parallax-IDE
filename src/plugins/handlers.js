@@ -403,8 +403,15 @@ function handlers(app, opts, done){
       // .catch((err) => this._handleError(err));
   }
 
+  function rxClearTimeout(){
+    consoleStore.dispatch(creators.rxClearTimeout());
+  }
+
   function rxOff(){
+    const { rxtx } = consoleStore.getState();
+    const { offDuration } = rxtx;
     consoleStore.dispatch(creators.rxOff());
+    setTimeout(rxClearTimeout, offDuration);
   }
 
   function rxOn(){
@@ -414,13 +421,20 @@ function handlers(app, opts, done){
     let timeout;
     if(!rxTimeout){
       timeout = setTimeout(rxOff, duration);
+      consoleStore.dispatch(creators.rxOn(timeout));
     }
 
-    consoleStore.dispatch(creators.rxOn(timeout));
+  }
+
+  function txClearTimeout(){
+    consoleStore.dispatch(creators.txClearTimeout());
   }
 
   function txOff(){
+    const { rxtx } = consoleStore.getState();
+    const { offDuration } = rxtx;
     consoleStore.dispatch(creators.txOff());
+    setTimeout(txClearTimeout, offDuration);
   }
 
   function txOn(){
@@ -430,9 +444,9 @@ function handlers(app, opts, done){
     let timeout;
     if(!txTimeout){
       timeout = setTimeout(txOff, duration);
+      consoleStore.dispatch(creators.txOn(timeout));
     }
 
-    consoleStore.dispatch(creators.txOn(timeout));
   }
 
   function updateDuration(duration){
