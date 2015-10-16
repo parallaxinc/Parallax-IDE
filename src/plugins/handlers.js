@@ -620,8 +620,15 @@ function handlers(app, opts, done){
       const post = content.substring(end, content.length);
       const newSource = pre + name + post;
 
-      documents.update(newSource);
-      workspace.updateContent(newSource);
+      workspace.updateContent(newSource)
+        .then(function(){
+          documents.update(newSource);
+          store.dispatch(creators.updateSelectedDevice(device));
+          download();
+        });
+      // workspace.updateContent is a promise returning function
+      // so we handle the other stuff in a .then and return here
+      return;
     }
 
     store.dispatch(creators.updateSelectedDevice(device));
