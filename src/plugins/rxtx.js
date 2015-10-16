@@ -56,6 +56,7 @@ function applyStyles(el, stylesToApply){
 }
 
 function rxtxBar(app, opts, done){
+  const { toggleEcho } = app.handlers;
 
   let bottomBar;
   let rx;
@@ -100,6 +101,8 @@ function rxtxBar(app, opts, done){
 
       echoLabel = document.createTextNode('Echo Off');
       echoContainer.appendChild(echoLabel);
+
+      echoContainer.addEventListener('click', toggleEcho, false);
 
       const rxtxContainer = document.createElement('span');
       applyStyles(rxtxContainer, styles.rxtx);

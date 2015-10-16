@@ -482,6 +482,21 @@ function handlers(app, opts, done){
     txOn();
   }
 
+  function toggleEcho(){
+    const { device } = store.getState();
+    const { echo } = consoleStore.getState();
+    const { selected, connected } = device;
+    if(selected && connected){
+      const board = app.getBoard(selected);
+      if(echo){
+        consoleStore.dispatch(creators.echoOff());
+      }else{
+        consoleStore.dispatch(creators.echoOn());
+      }
+      board.setEcho(!echo);
+    }
+  }
+
   function download() {
     const { device } = store.getState();
     const { selected } = device;
@@ -653,6 +668,7 @@ function handlers(app, opts, done){
     reloadDevices,
     selectDevice,
     download,
+    toggleEcho,
     enableAutoDownload,
     disableAutoDownload
   });
