@@ -9,6 +9,7 @@
 const createStore = require('@phated/redux-create-store');
 
 const reducers = {
+  echo: require('./reducers/echo'),
   rxtx: require('./reducers/rxtx')
 };
 

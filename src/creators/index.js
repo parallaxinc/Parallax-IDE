@@ -22,6 +22,8 @@ const creators = {
   transmit: require('./transmit'),
   updateDuration: require('./update-duration'),
   clearTransmission: require('./clear-transmission'),
+  echoOn: require('./echo-on'),
+  echoOff: require('./echo-off'),
   // device creators
   connect: require('./connect'),
   disconnect: require('./disconnect'),
