@@ -1,8 +1,15 @@
 'use strict';
 
+const _ = require('lodash');
 const Irken = require('irken');
 
 const app = new Irken();
+
+const examples = _.map(EXAMPLES_LIST, function(name){
+  return require('./examples/'+name);
+});
+
+console.log(examples);
 
 const plugins = [
   {

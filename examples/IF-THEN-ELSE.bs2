@@ -1,0 +1,36 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: IF-THEN-ELSE
+'This program is an expansion on IF-THEN.  It generates a series of 16-bit
+'random numbers and tests each to determine whether they're evenly divisible
+'by 3. If a number is evenly divisible by 3, then it is printed, otherwise,
+'the program generates another random number. The program quits when it's
+'printed 10 numbers.  It also displays the tallied up Hits, Misses, and Samples.
+
+sample          VAR     Word            'Random number to be tested
+hits            VAR     Nib             'Number of hits
+misses          VAR     Word            'Number of misses
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  sample = 11500
+
+Main:
+  DO
+    RANDOM sample                       'Put a random number into sample
+    IF ((sample // 3) = 0) THEN         'divisible by 3?
+      DEBUG DEC5 sample,                '- yes, print value and message
+            " is divisible by 3", CR
+      hits = hits + 1                   'count hits (divisble by 3)
+    ELSE
+      misses = misses + 1               'count misses
+    ENDIF
+  LOOP UNTIL (hits = 10)                'quit after 10 hits
+
+  DEBUG CR,
+        "All done.", CR, CR,            'display results
+        "Hits:    ", DEC hits, CR,
+        "Misses:  ", DEC misses, CR,
+        "Samples: ", DEC (hits + misses)
+  END

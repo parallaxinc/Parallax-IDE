@@ -1,0 +1,59 @@
+'{$STAMP BS2p}
+'{$PBASIC 2.5}
+
+'SOURCE: I2C
+'This program demonstrates writing and reading every location in a 24LC16B
+'EEPROM using the BS2p/BS2pe's I2C commands.  Connect the BS2p, BS2pe,  or
+'BS2px to the 24LC16B DIP EEPROM as shown in the diagram in the I2CIN OR
+'I2COUT command description.
+
+#IF ($STAMP < BS2P) #THEN               'Notify of module requirements
+  #ERROR "Program requires BS2p, BS2pe, or BS2px."
+#ENDIF
+
+SDA             PIN     0               'I2C SDA pin
+SCL             PIN     SDA + 1
+
+addr            VAR     Word            'internal address
+block           VAR     Nib             'block address in 24LC16
+value           VAR     Byte            'value to write
+check           VAR     Nib             'for checking retuned values
+result          VAR     Byte(16)        'array for returned value
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Write_To_EEPROM:
+  DEBUG "Writing...", CR
+  PAUSE 2000
+  FOR addr = 0 TO 2047 STEP 16          'loop through all addresses
+    block = addr.NIB2 << 1              'calculate block address
+    value = addr >> 4                   'create value from upper 8 bits
+    'write 16 bytes
+    I2COUT SDA, $A0 | block, addr, [REP value\16]
+    PAUSE 5
+    DEBUG "Addr: ", DEC4 addr, "-", DEC4 addr + 15, "  ",
+          "Value: ", DEC3 value, CR
+  NEXT
+  PAUSE 2000
+
+Read_From_EEPROM:
+  DEBUG CR, "Reading...", CR
+  PAUSE  2000
+  FOR addr = 0 TO 2047 STEP 16
+    block = addr.NIB2 << 1
+    value = addr >> 4
+    I2CIN SDA, $A1 | block, addr, [STR result\16]
+    FOR check = 0 TO 15
+      IF (result(check) <> value) THEN Error
+    NEXT
+    DEBUG "Addr: ", DEC4 addr, "-", DEC4 addr + 15, "  ",
+          "Value: ", DEC3 result, CR
+  NEXT
+  PAUSE 100
+  DEBUG CR, "All locations passed"
+  END
+
+Error:
+  DEBUG "Error at location: ", DEC4 addr + check, CR,
+        "Found: ", DEC3 result(check), ", Expected: ", DEC3 value

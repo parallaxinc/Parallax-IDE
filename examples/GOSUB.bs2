@@ -1,0 +1,44 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: GOSUB
+'This program is a guessing game that generates a random number in a
+'subroutine called Pick_A_Number.  It is written to stop after three
+'guesses. To see a common bug associated with GOSUB, delete or comment
+'out the line beginning with END after the FOR-NEXT loop.  This means
+'that after the loop is finished, the program will wander into the
+'Pick_A_Number subroutine.  When the RETURN at the source's end executes,
+'the program will go back to the beginning.  This will cause the program
+'to execute endlessly.  Make sure that your programs can't accidentally
+'execute subroutines!
+
+rounds          VAR     Byte            'number of reps
+numGen          VAR     Word            'random number holder
+myNum           VAR     Byte            'random number, 1-10
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  numGen = 11500                        'initialize random "seed"
+
+Main:
+  FOR rounds = 1 TO 3
+    DEBUG CLS, "Think of a number from 1 to 10", CR
+    GOSUB Pick_A_Number
+    PAUSE 2000                          'dramatic pause
+    DEBUG "My number was: ", DEC myNum  'show the number
+    PAUSE 1000                          'another pause.
+  NEXT
+  DEBUG CLS, "Done"
+  END                                   'end program
+
+'Random-number subroutine. A subroutine is just a piece of code with
+'the RETURN instruction at the end. Always make sure your program enters
+'subroutines with a GOSUB. If you don't, the RETURN won't have the
+'correct address, and your program will have a bug!
+
+Pick_A_Number:
+  RANDOM numGen                         'stir up the bits of NumGen.
+  DEBUG "  (random value = ", DEC numGen, ")", CR, CR
+  myNum = numGen / 6550 MIN 1           'scale to fit 1-10 range.
+  RETURN                                'go back to instruction after
+                                        'the GOSUB that got us here

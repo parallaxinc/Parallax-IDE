@@ -1,0 +1,51 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: SELECT-CASE
+'This program generates a series of 16-bit random numbers and tests each
+'to determine odd or even, and where it falls in the possible range:
+'lower third, middle third, or upper third.  The program is useful for
+'testing various seed values for RANDOM.
+
+test            VAR     Byte            'counter for tests
+sample          VAR     Word            'random number to be tested
+odd             VAR     Byte            'odd throws
+even            VAR     Byte            'even throws
+isLo            VAR     Byte            'sample in lower third
+isMid           VAR     Byte            '       in middle thrid
+isHi            VAR     Byte            '       in upper third
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  sample = 11000                        'initialize seed
+  FOR test = 1 TO 100                   '"throw" 100 times
+    RANDOM sample                       'randomize
+
+    IF (sample.BIT0) THEN               'check odd/even bit
+      odd = odd + 1                     'increment odd count
+    ELSE
+      even = even + 1                   'increment even count
+    ENDIF
+
+    SELECT sample
+      CASE <= 21845                     'test lower third
+        isLo = isLo + 1
+
+      CASE 21846 TO 43691               'test middle third
+        isMid = isMid + 1
+
+      CASE ELSE                         'otherwise upper third
+        isHi = isHi + 1
+    ENDSELECT
+  NEXT
+
+Show_Results:
+  DEBUG CLS,
+        "Odd Throws.... ", DEC odd, "%", CR,
+        "Even Throws... ", DEC even, "%", CR,
+        "Low........... ", DEC isLo, "%", CR,
+        "Mid........... ", DEC isMid, "%", CR,
+        "High.......... ", DEC isHi, "%", CR
+  END

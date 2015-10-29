@@ -1,0 +1,12 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: STOP
+'This program is similar to END, NAP, and SLEEP except that the LED 
+'will not blink since the STOP command prevents the BASIC Stamp from
+'entering low power mode at the end of the code.  Use the circuit 
+'shown in the description of the SLEEP command for this example.
+
+Main:
+  LOW 0                                 'turn LED on
+  STOP                                  'stop program

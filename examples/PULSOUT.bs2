@@ -1,0 +1,25 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: PULSOUT
+'This program blinks an LED on for 25 ms at 1-second intervals. Connect an
+'LED (active-low) to I/O pin 0.
+
+#SELECT $STAMP                          'Set Scale according to module type
+  #CASE BS2, BS2E, BS2PE
+    Scale       CON     500             'to ms for 2 us per unit
+  #CASE BS2SX, BS2P, BS2PX
+    Scale       CON     1250            'to ms for 0.8 us per unit
+#ENDSELECT
+
+Flash           CON     25 * Scale      '25 milliseconds
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  HIGH 0                                'make P0 high (LED off)
+
+Main:
+  DO
+    PULSOUT 0, Flash                    'flash LED
+    PAUSE 1000                          'one second delay
+  LOOP

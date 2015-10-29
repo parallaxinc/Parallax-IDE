@@ -1,0 +1,30 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: READ
+'This program reads a string of data stored in EEPROM. The EEPROM data is
+'downloaded to the BS2 at compile-time and remains there (even with the
+'power off) until overwritten. Put ASCII characters into EEPROM, followed
+'by 0, which will serve as the end-of-message marker.
+
+strAddr         VAR     Word
+char            VAR     Byte
+
+Msg1            DATA    "BS2", CR, "EEPROM Storage!", 0
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  strAddr = Msg1                        'set to start of message
+  GOSUB String_Out
+  END
+
+String_Out:
+  DO
+    READ strAddr, char                  'read byte from EEPROM
+    strAddr = strAddr + 1               'point to next character
+    IF (char = 0) THEN EXIT             'if 0, exit routine
+    DEBUG char                          'otherwise print char
+  LOOP
+  RETURN

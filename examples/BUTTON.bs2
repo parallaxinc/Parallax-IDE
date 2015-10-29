@@ -1,0 +1,30 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: BUTTON
+'Connect an active-low circuit (shown in the BUTTON command description) to pin P0
+'of the BASIC Stamp.  When you press the button, the BUTTON command will detect the
+'low signal and then the DEBUG command will execute to display an asterisk (*) on
+'the Debug Terminal.  After the first button press, then BUTTON command will delay
+'approximately one second (200 x 5 ms) before auto-repeating at a rate of 
+'approximately 100 ms (20 x 5 ms).  
+
+Btn             PIN     0
+btnWrk          VAR     Byte
+
+Init:
+  PAUSE 200                                     'short startup-pause
+
+Main:
+  'Try changing the Delay parameter (3rd value) in BUTTON to see the effect:
+  '0 = no delay; 1-254 = varying delays before auto-repeat; 255 = no auto-repeat
+  '(only one action per button press)
+  '
+  'The BUTTON instruction makes the program branch to No_Press unless P0 = 0
+
+  PAUSE 5
+  BUTTON Btn, 0, 200, 20, btnWrk, 0, No_Press
+  DEBUG "*"
+
+No_Press:
+  GOTO Main

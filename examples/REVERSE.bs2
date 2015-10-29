@@ -1,0 +1,24 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: REVERSE
+'Connect the circuit shown in the REVERSE command description to I/O pin
+'0 and run this program.  The LED will alternate between two states, dim
+'and bright. The BASIC Stamp is using the REVERSE command to toggle I/O
+'pin 0 between input and output states. When pin 0 is an input, current
+'flows through R1, through the LED, through R2 to ground. Pin 0 is
+'effectively disconnected and doesn't play a part in the circuit. The total
+'resistance encountered by current flowing through the LED is R1 + R2 = 1220
+'ohms. When pin 0 is reversed to an output, current flows through R1, through
+'the LED, and into pin 0 to ground (because of the 0 written to OUT0). The
+'total resistance encountered by current flowing through the LED is R1,
+'220 ohms. With only 20% of the resistance, the LED glows brighter.
+
+Setup:
+  OUT0 = 0                              'Put a low in the pin 0
+                                        ' output driver
+Main:
+  DO
+    PAUSE 250                             '1/4th second pause
+    REVERSE 0                             'reverse pin 0 I/O direction
+  LOOP                                    'do forever

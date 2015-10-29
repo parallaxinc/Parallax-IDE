@@ -1,0 +1,15 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: HIGH_LOW
+'This simple program sets I/O pin 0 high for 1/2 second and low for
+'1/2 second in an endless loop.  Connect an LED to P0 for a simple
+'blinker.
+
+Main:
+  DO
+    HIGH 0
+    PAUSE 500
+    LOW 0
+    PAUSE 500
+  LOOP

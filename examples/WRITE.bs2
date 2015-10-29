@@ -1,0 +1,40 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: WRITE
+'This program writes some data to EEPROM and then reads them back out
+'and displays the data in the Debug Terminal.  It also demonstrates
+'writing both bytes and words, and the results of reading values as
+'bytes or words.
+
+idx             VAR     Byte            'loop control
+value           VAR     Word(3)         'value(s)
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  WRITE 0, 100                          'single byte
+  WRITE 1, Word 1250                    'single word
+  WRITE 3, 45, 90, Word 725             'multi-value write
+
+Read_EE:
+  'read values as bytes only
+  DEBUG "Values as bytes:", CR
+  FOR idx = 0 TO 6                      
+    READ idx, value
+    DEBUG DEC1 idx, " : ", DEC value, CR
+  NEXT
+  DEBUG CR
+
+  'read values as stored
+  DEBUG "Values as written:", CR
+  READ 0, value
+  DEBUG DEC value, CR
+  READ 1, Word value
+  DEBUG DEC value, CR
+  READ 3, value(0), value(1), Word value(2)
+  FOR idx = 0 TO 2
+    DEBUG DEC value(idx), CR
+  NEXT
+  END

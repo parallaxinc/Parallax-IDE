@@ -1,0 +1,15 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: PAUSE
+'This program demonstrates the PAUSE command's time delays. Once a second,
+'the program will put the message, "Paused..." on the screen.
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    DEBUG "Paused...", CR
+    PAUSE 1000
+  LOOP

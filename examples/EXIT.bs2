@@ -1,0 +1,26 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: EXIT
+'This program demonstrates the early termination of DO...LOOP and
+'FOR..NEXT loop structures.  IF...THEN is used to test a condition,
+'and when true, EXIT will terminate the loop.
+
+col             VAR     Nib
+row             VAR     Nib
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  col = 0
+
+Main:
+  DO WHILE (col < 10)                   'attempt 10 iterations
+    FOR row = 0 TO 15                   'attempt 16 iterations
+      IF (row > 9) THEN EXIT            'terminate when row > 9
+      DEBUG CRSRXY, (col * 8), row,     'print col/row at location
+            DEC col, "/", DEC row, CR
+    NEXT
+    col = col + 1                       'update column
+    IF (col = 3) THEN EXIT              'terminate when col = 3
+  LOOP
+  END

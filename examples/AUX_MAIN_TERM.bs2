@@ -1,0 +1,37 @@
+'{$STAMP BS2p}
+'{$PBASIC 2.5}
+
+'SOURCE: AUX_MAIN_TERM
+'This program demonstrates the use of the AUXIO, MAINIO and IOTERM
+'commands to affect I/O pins in the auxiliary and main I/O groups.
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+#SELECT $STAMP                          'Notify of module requirements
+  #CASE BS2, BS2E, BS2SX
+    #ERROR "Program requires BS2p40"
+  #CASE BS2P, BS2PE, BS2PX
+    DEBUG "Note: This program is designed for the BS2p40.", CR
+#ENDSELECT
+
+port            VAR     Bit
+
+Main:
+  DO
+    MAINIO                              'Switch to main I/O pins
+    TOGGLE 0                            'Toggle state of I/O pin P0
+    PWM 1, 100, 40                      'Generate PWM on I/O pin P1
+
+    AUXIO                               'Switch to auxiliary I/O pins
+    TOGGLE 0                            'Toggle state of I/O pin X0
+    PULSOUT 1, 1000                     'Generate a pulse on I/O pin X1
+    PWM 2, 100, 40                      'Generate PWM on I/O pin X2
+
+    IOTERM port                         'Switch to main or aux I/Os
+                                        '-- depending on port
+    TOGGLE 3                            'Toggle state of I/O pin 3
+                                        '-- on main and aux, alternately
+    port = ~port                        'Invert port
+    PAUSE 1000                          '1 second delay
+  LOOP

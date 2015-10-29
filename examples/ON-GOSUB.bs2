@@ -1,0 +1,33 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: ON-GOSUB
+'This program demonstrates a simple task manager that can be used in
+'a variety of applications.  It is particularly useful in robotics and
+'industrial applications.  The advantage of this design is that task
+'code routines may be called from other places in the program, including
+'other tasks, and the overal program flow is maintained.
+
+task            VAR     Nib
+
+Init:
+  PAUSE 200                                     'short startup-pause
+
+Main:
+  DO
+    ON task GOSUB Task_0, Task_1, Task_2        'run current task
+    task = task + 1 // 3                        'update task pointer
+    PAUSE 1000
+  LOOP
+
+Task_0:
+  DEBUG "Running Task 0", CR
+  RETURN
+
+Task_1:
+  DEBUG "Running Task 1", CR
+  RETURN
+
+Task_2:
+  DEBUG "Running Task 2", CR
+  RETURN

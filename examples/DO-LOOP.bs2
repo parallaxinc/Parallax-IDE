@@ -1,0 +1,41 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: DO-LOOP
+'This program creates a little guessing game.  It starts by creating
+'a (psuedo) random number between 1 and 10.  The inner loop will run
+'until the answer is guessed or 3 tries have been attempted.  The
+'outer loop has no condition and will cause the inner loop code to
+'run until the BASIC Stamp is reprogrammed.
+
+rVal            VAR     Word            'random value
+answer          VAR     Byte            'game answer
+guess           VAR     Byte            'player guess
+tries           VAR     Nib             'number of tries
+
+Init: 
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    RANDOM rVal
+    answer = rVal.LOWBYTE */ 10 + 1     'create 1 - 10 answer
+    tries = 0
+
+    DO                                  'get answer until out of tries
+      DEBUG CLS, "Guess a number (1 - 10). ", CLREOL
+      DEBUGIN DEC guess                 'get new guess
+      tries = tries + 1                 'update tries count
+      IF (guess <> answer) THEN 
+        DEBUG CR, "Wrong."
+        PAUSE 500
+      ENDIF
+    LOOP UNTIL ((tries = 3) OR (guess = answer))
+
+    IF (guess = answer) THEN            ' test reason for loop end
+      DEBUG CR, "You got it!"
+    ELSE
+      DEBUG CR, "Sorry ... the answer was ", DEC answer, "."
+    ENDIF
+    PAUSE 1000
+  LOOP                                  ' run again

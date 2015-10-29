@@ -1,0 +1,52 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: SERIN_SEROUT2
+'Using two BS2-IC's, connect the circuit shown in the SERIN command
+'description and run this program on the BASIC Stamp designated as the
+'Receiver.  This program demonstrates the use of Flow Control (FPin).
+'Without flow control, the sender would transmit the whole word "Hello!"
+'in about 1.5 ms. The receiver would catch the first byte at most; by the
+'time it got back from the first 1-second PAUSE, the rest of the data
+'would be long gone. With flow control, communication is flawless since
+'the sender waits for the receiver to catch up.
+
+SI              PIN     1               'serial input
+FC              PIN     0               'flow control pin
+
+#SELECT $STAMP                          'Set values according to module type
+  #CASE BS2, BS2E, BS2PE
+    T1200       CON     813
+    T2400       CON     396
+    T9600       CON     84
+    T19K2       CON     32
+    T38K4       CON     6
+  #CASE BS2SX, BS2P
+    T1200       CON     2063
+    T2400       CON     1021
+    T9600       CON     240
+    T19K2       CON     110
+    T38K4       CON     45
+  #CASE BS2PX
+    T1200       CON     3313
+    T2400       CON     1646
+    T9600       CON     396
+    T19K2       CON     188
+    T38K4       CON     84
+#ENDSELECT
+
+Inverted        CON     $4000
+Open            CON     $8000
+Baud            CON     T9600 + Inverted
+
+letter          VAR     Byte
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    SERIN SI\FC, Baud, [letter]         'receive one byte
+    DEBUG letter                        'display on screen
+    PAUSE 1000                          'wait one second
+  LOOP                                  'repeat forever
