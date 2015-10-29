@@ -23,6 +23,21 @@ class SidebarView extends React.Component {
     this.componentizeFile = this.componentizeFile.bind(this);
   }
 
+  componentDidMount(){
+    const { workspace } = this.props;
+    // TODO: move into frylord?
+    if(typeof chrome !== 'undefined' && typeof chrome.syncFileSystem !== 'undefined'){
+      chrome.syncFileSystem.onFileStatusChanged.addListener(function(detail){
+        if(detail.direction === 'remote_to_local'){
+          workspace.refreshDirectory();
+        }
+      });
+      chrome.syncFileSystem.onServiceStatusChanged.addListener(function(){
+        workspace.refreshDirectory();
+      });
+    }
+  }
+
   download(){
     const {
       enableAutoDownload,

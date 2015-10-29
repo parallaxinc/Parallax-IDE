@@ -18,6 +18,7 @@ class HelpOverlay extends React.Component {
 
 
   render(){
+
     const {
       handlers
     } = this.props;
