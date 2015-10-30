@@ -520,6 +520,10 @@ function handlers(app, opts, done){
     txOn();
   }
 
+  function onTransmit(){
+    txOn();
+  }
+
   function toggleEcho(){
     const { device } = store.getState();
     const { echo } = consoleStore.getState();
@@ -548,6 +552,7 @@ function handlers(app, opts, done){
     const board = app.getBoard(selected);
 
     // safety remove attempt for progress
+    board.removeListener('transmit', onTransmit);
     board.removeListener('progress', onProgress);
     board.removeListener('terminal', onTerminal);
     board.removeListener('close', onClose);
@@ -559,6 +564,7 @@ function handlers(app, opts, done){
         clearTerminal();
         board.on('terminal', onTerminal);
         board.on('close', onClose);
+        board.on('transmit', onTransmit);
         toast.clear();
 
         toast.show(`'${filename}' downloaded successfully`, successToastOpts);
