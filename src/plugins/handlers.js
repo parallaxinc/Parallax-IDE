@@ -172,7 +172,8 @@ function handlers(app, opts, done){
   }
 
   function cancelOverwriteFile(){
-    store.dispatch(creators.resetActionQueue());
+    const { nextFile } = store.getState();
+    store.dispatch(creators.queueChangeFile(nextFile));
     history.goBack();
   }
 
