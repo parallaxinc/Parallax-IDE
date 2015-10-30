@@ -6,7 +6,7 @@ const Irken = require('irken');
 const app = new Irken();
 
 const examples = _.reduce(EXAMPLES_LIST, function(result, name){
-  result[name] = require('./examples/'+name);
+  result[name] = require(`./examples/${name}`);
   return result;
 }, {});
 
@@ -83,7 +83,6 @@ function onRender(err){
   } = app;
 
   const {
-    ensureExampleProject,
     newFile,
     showNewVersionOverlay,
     changeFile,
