@@ -27,19 +27,24 @@ function notifications({ workspace, toast }, opts, done){
 
   workspace.subscribe(() => {
     const { status, notification } = workspace.getState();
+    const { silent, message } = notification;
 
     switch(status){
       case SAVE_FILE_SUCCESS:
       case DELETE_FILE_SUCCESS:
       case DELETE_DIRECTORY_SUCCESS:
-        toast.show(notification, { style: styles.successToast, timeout: 5000 });
+        if(!silent){
+          toast.show(message, { style: styles.successToast, timeout: 5000 });
+        }
         break;
       case SAVE_FILE_FAILURE:
       case DELETE_FILE_FAILURE:
       case CHANGE_FILE_FAILURE:
       case DELETE_DIRECTORY_FAILURE:
       case CHANGE_DIRECTORY_FAILURE:
-        toast.show(notification, { style: styles.errorToast });
+        if(!silent){
+          toast.show(message, { style: styles.errorToast });
+        }
         break;
     }
   });

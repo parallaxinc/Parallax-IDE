@@ -3,6 +3,7 @@
 const path = require('path');
 
 const _ = require('lodash');
+const when = require('when');
 
 const cm = require('../code-mirror');
 const store = require('../store');
@@ -152,6 +153,17 @@ function handlers(app, opts, done){
     handleActionQueue();
   }
 
+  function ensureExampleProject(examples, dirname){
+    return workspace.listProjects()
+      .then(function(result){
+        const hasExamples = _.some(result.payload.projects, (project) => project === dirname);
+        if(!hasExamples){
+          return workspace.changeDirectory(dirname)
+            .then(() => when.map(examples, (content, name) => workspace.saveFile(name, content, true)));
+        }
+      });
+  }
+
   function dontSaveFile(){
     const { nextFile } = store.getState();
 
@@ -214,7 +226,6 @@ function handlers(app, opts, done){
       });
   }
 
-  // TODO: should return a promise
   function changeProject(projectName){
     if(!projectName){
       return;
@@ -687,6 +698,7 @@ function handlers(app, opts, done){
     changeProject,
     deleteProject,
     deleteProjectConfirm,
+    ensureExampleProject,
     // overlay methods
     showHelpOverlay,
     showSaveOverlay,

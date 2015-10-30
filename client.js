@@ -5,11 +5,10 @@ const Irken = require('irken');
 
 const app = new Irken();
 
-const examples = _.map(EXAMPLES_LIST, function(name){
-  return require('./examples/'+name);
-});
-
-console.log(examples);
+const examples = _.reduce(EXAMPLES_LIST, function(result, name){
+  result[name] = require('./examples/'+name);
+  return result;
+}, {});
 
 const plugins = [
   {
@@ -62,7 +61,7 @@ const plugins = [
   }
 ];
 
-const defaultProject = 'new-project';
+const exampleFolder = 'examples';
 
 function onRender(err){
   console.log('rendered', err);
@@ -77,6 +76,7 @@ function onRender(err){
   } = app;
 
   const {
+    ensureExampleProject,
     newFile,
     showNewVersionOverlay,
     changeFile,
@@ -87,10 +87,13 @@ function onRender(err){
   // Finish Loading Plugin
   // TODO: encapsulate into a startup handler?
   const config = userConfig.getState();
-  const cwd = config.cwd || defaultProject;
+  const cwd = config.cwd || exampleFolder;
   const lastFile = config['last-file'];
   console.log(cwd, lastFile);
-  changeProject(cwd)
+  ensureExampleProject(examples, exampleFolder)
+    .then(function(){
+      return changeProject(cwd);
+    })
     .then(() => {
       if(lastFile){
         changeFile(lastFile);
