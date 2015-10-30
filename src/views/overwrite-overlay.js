@@ -29,6 +29,18 @@ class OverwriteOverlay extends React.Component {
     overwriteFile();
   }
 
+  cancelOverwrite(){
+    const {
+      handlers
+    } = this.props;
+
+    const {
+      cancelOverwriteFile
+    } = handlers;
+
+    cancelOverwriteFile();
+  }
+
   render(){
     const {
       filename,

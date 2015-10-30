@@ -171,6 +171,11 @@ function handlers(app, opts, done){
       });
   }
 
+  function cancelOverwriteFile(){
+    store.dispatch(creators.resetActionQueue());
+    history.goBack();
+  }
+
   function dontSaveFile(){
     const { nextFile } = store.getState();
 
@@ -708,6 +713,7 @@ function handlers(app, opts, done){
     changeFile,
     dontSaveFile,
     overwriteFile,
+    cancelOverwriteFile,
     // project methods
     changeProject,
     deleteProject,
