@@ -154,12 +154,18 @@ function handlers(app, opts, done){
   }
 
   function ensureExampleProject(examples, dirname){
-    return workspace.listProjects()
-      .then(function(result){
-        const hasExamples = _.some(result.payload.projects, (project) => project === dirname);
-        if(!hasExamples){
-          return workspace.changeDirectory(dirname)
-            .then(() => when.map(examples, (content, name) => workspace.saveFile(name, content, true)));
+    return workspace.changeDirectory(dirname)
+      .then(function(){
+        const { directory } = workspace.getState();
+        const missing = _.reduce(examples, (result, content, name) => {
+          const baseName = path.basename(name, '.bs2');
+          if(!_.some(directory, 'name', baseName)){
+            result[baseName] = content;
+          }
+          return result;
+        }, {});
+        if(_.size(missing) > 0){
+          return when.settle(_.map(missing, (content, name) => workspace.saveFile(name, content)));
         }
       });
   }

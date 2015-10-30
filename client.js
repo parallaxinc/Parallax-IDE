@@ -10,6 +10,8 @@ const examples = _.reduce(EXAMPLES_LIST, function(result, name){
   return result;
 }, {});
 
+const exampleFolder = 'examples';
+
 const plugins = [
   {
     register: require('bs2-serial')
@@ -36,6 +38,13 @@ const plugins = [
     register: require('./src/plugins/handlers')
   },
   {
+    register: require('./src/plugins/examples'),
+    options: {
+      examples,
+      folder: exampleFolder
+    }
+  },
+  {
     register: require('./src/plugins/keyboard-shortcuts')
   },
   {
@@ -60,8 +69,6 @@ const plugins = [
     register: require('./src/plugins/overlays')
   }
 ];
-
-const exampleFolder = 'examples';
 
 function onRender(err){
   console.log('rendered', err);
@@ -90,10 +97,7 @@ function onRender(err){
   const cwd = config.cwd || exampleFolder;
   const lastFile = config['last-file'];
   console.log(cwd, lastFile);
-  ensureExampleProject(examples, exampleFolder)
-    .then(function(){
-      return changeProject(cwd);
-    })
+  changeProject(cwd)
     .then(() => {
       if(lastFile){
         changeFile(lastFile);
