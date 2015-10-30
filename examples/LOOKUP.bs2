@@ -1,0 +1,22 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: LOOKUP
+'This program uses LOOKUP to create a Debug Terminal animation of a spinning
+'propeller.  The animation consists of the four ASCII characters | / - \
+'which, when printed rapidly in order at a fixed location, appears to spin.
+'A little imagination helps a lot here....
+
+idx             VAR     Nib
+frame           VAR     Byte
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Spinner:
+  DO
+    LOOKUP idx, ["|/-\"], frame         'lookup current frame character
+    DEBUG HOME, "Spinner: ", frame      'display
+    PAUSE 150                           'pause between frames
+    idx = idx + 1 // 4                  'update frame index (0..3)
+  LOOP                                  'loop forever

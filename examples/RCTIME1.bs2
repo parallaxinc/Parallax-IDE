@@ -1,0 +1,25 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: RCTIME1
+'This program shows the standard use of the RCTIME command measuring an
+'RC charge/discharge time. Use the circuit in the RCTIME description
+'(in the manual) with R = 10K pot and C = 0.1 uF. Connect the circuit to
+'pin 7 and run the program.  Adjust the pot and watch the value change in
+'the Debug Terminal.
+
+RC              PIN     7
+
+result          VAR     Word
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    HIGH RC                             'charge the cap
+    PAUSE 1                             '  for 1 ms
+    RCTIME RC, 1, result                'measure RC discharge time
+    DEBUG HOME, DEC result              'display value
+    PAUSE 50
+  LOOP

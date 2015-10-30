@@ -1,0 +1,53 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: FREQOUT
+'This program demonstrates sound-effects generation by the BASIC Stamp.
+'Conditional compilation sets timing and frequency adjustment factors so
+'that the output will sound the same on any BS2 model.
+
+Spkr            PIN     10              'output pin for FREQOUT
+
+#SELECT $STAMP                          'Set TmAdj and FrAdj according to module type
+  #CASE BS2, BS2E
+    TmAdj       CON     $100            'x 1.0 (time adjust)
+    FrAdj       CON     $100            'x 1.0 (freq adjust)
+  #CASE BS2SX
+    TmAdj       CON     $280            'x 2.5
+    FrAdj       CON     $066            'x 0.4
+  #CASE BS2P
+    TmAdj       CON     $3C5            'x 3.77
+    FrAdj       CON     $044            'x 0.265
+  #CASE BS2PE
+    TmAdj       CON     $100            'x 1.0
+    FrAdj       CON     $0A9            'x 0.662
+  #CASE BS2PX
+    TmAdj       CON     $607            'x 6.03
+    FrAdj       CON     $2A             'x 0.166
+#ENDSELECT
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DEBUG "Let's make a call...", CR
+  'combine 350 Hz & 440 Hz
+  FREQOUT Spkr, 2000 */ TmAdj, 350 */ FrAdj, 440 */ FrAdj
+  'dial number (digits 150 ms on, 25 ms off)
+  DTMFOUT Spkr, 150 */ TmAdj, 25, [5, 5, 5, 1, 2, 1, 2]
+  PAUSE 500
+
+  'bad connection (SIT sequence)
+  FREQOUT Spkr, 375 */ TmAdj, 985 */ FrAdj
+  FREQOUT Spkr, 375 */ TmAdj, 1371 */ FrAdj
+  FREQOUT Spkr, 375 */ TmAdj, 1777 */ FrAdj
+
+  DEBUG "Oops! -- try again...", CR
+  PAUSE 1000
+  DTMFOUT Spkr, 150 */ TmAdj, 25, [5, 5, 5, 2, 2, 2, 2]
+  DEBUG "Ringing"
+  FREQOUT Spkr, 2000 */ TmAdj, 440 */ FrAdj, 480 */ FrAdj
+  PAUSE 4000
+  FREQOUT Spkr, 2000 */ TmAdj, 440 */ FrAdj, 480 */ FrAdj
+  INPUT Spkr
+  END

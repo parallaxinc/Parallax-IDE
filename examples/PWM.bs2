@@ -1,0 +1,31 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: PWM
+'Connect a voltmeter (such as a digital multimeter set to its voltage
+'range) to the output of the circuit shown in the figure for the PWM
+'command.  Run the program and observe the readings on the meter. They
+'should come very close to 1.96V, then decrease slightly as the capacitor
+'discharges. Try varying the interval between PWM bursts (by changing the
+'PAUSE value) and the number of PWM cycles to see their effect.
+
+#SELECT $stamp                          'Set CycAdj according to module type
+  #CASE BS2, BS2E
+    CycAdj      CON     $100            'x 1.0, cycle adjustment (for ms)
+  #CASE BS2SX
+    CycAdj      CON     $280            'x 2.5
+  #CASE BS2P
+    CycAdj      CON     $187            'x 1.53
+  #CASE BS2PE
+    CycAdj      CON     $09E            'x 0.62
+  #CASE BS2PX
+    CycAdj      CON     $280            'x 2.5
+#ENDSELECT
+
+Cycles          CON     50
+
+Main:
+  DO
+    PWM 0, 100, (Cycles */ CycAdj)      'PWM at 100/255 duty (~50 ms)
+    PAUSE 1000                          'wait one second
+  LOOP

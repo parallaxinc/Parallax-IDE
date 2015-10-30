@@ -1,0 +1,17 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: SLEEP
+'This program lights an LED and then goes to sleep. Connect an LED to pin
+'0 as shown in the description of SLEEP in the manual and run the program.
+'The LED will turn on, then the BASIC Stamp will go to sleep. During sleep,
+'the LED will remain on, but will blink at intervals of approximately 2.3
+'seconds due to the watchdog timeout and reset.
+
+Main:
+  LOW 0                                 'turn LED on
+
+Snooze:
+  DO
+    SLEEP 10                            'sleep for about 10 seconds
+  LOOP

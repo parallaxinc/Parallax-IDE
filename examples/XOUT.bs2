@@ -1,0 +1,46 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: XOUT
+'This program--really two program fragments--demonstrates the syntax and
+'use of the XOUT command. XOUT works like pressing the buttons on an X-10
+'control box; first you press one of 16 keys to identify the unit you want
+'to control, then you press the key for the action you want that unit to
+'take (turn ON, OFF, Bright, or Dim). There are also two group-action keys,
+'Lights ON and All OFF. Lights ON turns all lamp modules on without
+'affecting appliance modules. All OFF turns off all modules, both lamp and
+'appliance types.  Connect the BASIC Stamp to a power-line interface as
+'shown in the XOUT command description in the manual.
+
+Mpin            PIN     1               'modulation pin
+Zpin            PIN     0               'zero-cross input
+
+HouseA          CON     0               'House code A = 0
+Unit1           CON     0               'Unit code 1 = 0
+Unit2           CON     1               'Unit code 2 = 1
+
+'This first example turns a standard (appliance or non-dimmer lamp) module
+'ON, then OFF. Note that once the Unit code is sent, it need not be repeated
+'--subsequent instructions are understood to be addressed to that unit.
+
+Main:
+  XOUT Mpin, Zpin, [HouseA\Unit1\2]     'select Unit1 (appliance module)
+  XOUT Mpin, Zpin, [HouseA\UNITON]      'turn it on
+
+  PAUSE 1000                            'wait one second
+
+  XOUT Mpin, Zpin, [HouseA\UNITOFF]     'then turn it off
+
+'The next example talks to a lamp module using the dimmer feature. Dimmers
+'go from full ON to dimmed OFF in 19 steps. Because dimming is relative to
+'the current state of the lamp, the only guaranteed way to set a predefined
+'brightness level is to turn the dimmer fully OFF, then ON, then dim to the
+'desired level.
+
+  XOUT Mpin, Zpin, [HouseA\Unit2\2]     'select Unit2 (lamp module)
+
+'This example shows the use of the optional Cycles argument.  Here we DIM
+'for 10 cycles.
+
+  XOUT Mpin, Zpin, [HouseA\UNITOFF\2, HouseA\DIM\10]
+  STOP

@@ -1,10 +1,14 @@
 'use strict';
 
+var fs = require('fs');
 var path = require('path');
 
 var webpack = require('webpack');
 
 var shouldWatch = (process.argv.indexOf('--watch') !== -1);
+
+var examplesDir = './examples';
+var examples = fs.readdirSync(examplesDir);
 
 module.exports = {
   devtool: 'source-map',
@@ -31,6 +35,10 @@ module.exports = {
         loader: 'json-loader'
       },
       {
+        test: /\.bs2$/,
+        loader: 'raw-loader'
+      },
+      {
         test: /\.js$/,
         exclude: [
           /node_modules/,
@@ -43,7 +51,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.optimize.DedupePlugin()
+    new webpack.optimize.DedupePlugin(),
+    new webpack.DefinePlugin({
+      EXAMPLES_LIST: JSON.stringify(examples)
+    })
   ],
   resolveLoader: {
     // this is a workaround for loaders being applied

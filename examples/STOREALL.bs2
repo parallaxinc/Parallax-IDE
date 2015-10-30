@@ -1,0 +1,75 @@
+'{$STAMP BS2p}
+'{$PBASIC 2.5}
+
+'SOURCE: STOREALL
+'This program demonstrates the STORE command and how it can be used to
+'"flatten" the EEPROM space for applications requiring a lot of storage.
+'This program writes to EEPROM locations within program slots 1 though 7
+'on the BS2p and BS2px, and 1 through 15 on the BS2pe, thus, has access to
+'14 or 30 kBytes of space.
+
+#SELECT $STAMP                                  'Notify of module requirements
+  #CASE BS2, BS2E, BS2SX
+    #ERROR "Program requires BS2p, BS2pe or BS2px."
+  #CASE BS2P, BS2PX
+    HiSlot      CON     7
+  #CASE BS2PE
+    HiSlot      CON     15
+#ENDSELECT
+
+LoSlot          CON     1                       'first slot for "flat" EE
+MemSize         CON     HiSlot - LoSlot + 1 * 2048
+
+eeAddr          VAR     Word                    'address pointer
+value           VAR     Word                    'cell value
+slot            VAR     Byte                    'current R/W slot
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DEBUG "Flat Memory", CR,
+        "---------------------", CR,
+        "First Slot..... ", DEC LoSlot, CR,
+        "Last Slot...... ", DEC HiSlot, CR,
+        "Flat EE Size... ", DEC MemSize, CR, CR
+
+  PAUSE 2000
+  DEBUG "Writing to flat Memory...", CR
+  PAUSE 1000
+  FOR eeAddr = 0 TO (MemSize - 1) STEP 128      'step through "flat" EE
+    value = eeAddr * 2                          'generate value
+    GOSUB Write_Word                            'write it
+    GET 127, slot                               'get R/W slot
+    DEBUG "--> Location: ", DEC5 eeAddr, "   ", 'show "flat" address
+          "Value: ", DEC5 value, "   ",         'show value
+          "(", DEC slot.NIB1, ")", CR           'show slot
+  NEXT
+  DEBUG CR
+
+  DEBUG "Reading from flat Memory...", CR
+  PAUSE 1000
+  FOR eeAddr = 0 TO (MemSize - 1) STEP 128
+    GOSUB Read_Word                             'read value from EE
+    GET 127, slot                               'get W/R slot
+    DEBUG "<-- Location: ", DEC5 eeAddr, "   ",
+          "Value: ", DEC5 value, "   ",
+          "(", DEC slot.NIB1, ")  "
+     IF (value <> (2 * eeAddr)) THEN            'verify location
+      DEBUG "- Error"
+    ENDIF
+    DEBUG CR
+  NEXT
+  END
+
+Write_Word:
+'NOTE: only use even-byte eeAddr with this routine
+  STORE (eeAddr >> 11) + LoSlot                 'set slot
+  WRITE eeAddr, Word value                      'write value
+  RETURN
+
+Read_Word:
+'NOTE: only use even-byte eeAddr with this routine
+  STORE (eeAddr >> 11) + LoSlot                 'set slot
+  READ eeAddr, Word value                       'read value
+  RETURN

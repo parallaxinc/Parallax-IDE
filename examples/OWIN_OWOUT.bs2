@@ -1,0 +1,63 @@
+'{$STAMP BS2p}
+'{$PBASIC 2.5}
+
+'SOURCE: OWIN_OWOUT
+'This program demonstrates interfacing to a Dallas Semiconductor DS1822
+'1-Wire Digital Thermometer chip using the BS2p's 1-Wire commands. Connect
+'the BS2p, BS2pe, or BS2px to the DS1822 as shown in the diagram in the
+'OWIN or OWOUT command description. This program uses a simplified
+'approach that ignores the fractional portion of the temperature.
+
+#IF ($STAMP < BS2P) #THEN               'Notify of module requirements
+  #ERROR "Program requires BS2p, BS2pe or BS2px."
+#ENDIF
+
+DQ              PIN     0               '1-Wire buss pin
+
+RdROM           CON     $33             'read serial number
+MatchROM        CON     $55             'match SN -- for multiple devices
+SkipROM         CON     $CC             'ignore SN -- use for one device
+CvrtTmp         CON     $44             'start temperature conversion
+RdSP            CON     $BE             'read DS1822 scratch pad
+
+tempIn          VAR     Word            'raw temperature
+sign            VAR     tempIn.BIT11    '1 = negative temperature
+tLo             VAR     tempIn.BYTE0
+tHi             VAR     tempIn.BYTE1
+tSign           VAR     Bit             'saved sign bit
+tempC           VAR     Word            'final Celsius temp
+tempF           VAR     Word            'final Fahrenheit temp
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    GOSUB Get_Temperature               'read temperature from DS1822
+    DEBUG HOME,                         'display
+          "DS1822", CR,
+          "------", CR,
+          SDEC tempC, " C ", CR,
+          SDEC tempF, " F "
+     PAUSE 1000
+  LOOP
+  END
+
+Get_Temperature:
+  OWOUT DQ, 1, [SkipROM, CvrtTmp]       'send convert temperature command
+  DO                                    'wait on conversion
+    PAUSE 25                            'small loop pad
+    OWIN DQ, 4, [tempIn]                'check status (bit transfer)
+  LOOP UNTIL (tempIn)                   '1 when complete
+  OWOUT DQ, 1, [SkipROM, RdSP]          'read DS1822 scratch pad
+  OWIN  DQ, 2, [tLo, tHi]               'get raw temp data
+  tSign = sign                          'save sign bit
+  tempC = tempIn >> 4                   'round to whole degrees
+  tempC.BYTE1 = $FF * tSign             'correct twos complement bits
+  tempF = (ABS tempC) * 9 / 5           'start F conversion
+  IF (tSign) THEN                       'finish F conversion
+    tempF = 32 - tempF                  'C was negative
+  ELSE
+    tempF = tempF + 32                  'C was positive
+  ENDIF
+  RETURN

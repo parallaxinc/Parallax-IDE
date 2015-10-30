@@ -1,8 +1,16 @@
 'use strict';
 
+const _ = require('lodash');
 const Irken = require('irken');
 
 const app = new Irken();
+
+const examples = _.reduce(EXAMPLES_LIST, function(result, name){
+  result[name] = require(`./examples/${name}`);
+  return result;
+}, {});
+
+const exampleFolder = 'examples';
 
 const plugins = [
   {
@@ -30,6 +38,13 @@ const plugins = [
     register: require('./src/plugins/handlers')
   },
   {
+    register: require('./src/plugins/examples'),
+    options: {
+      examples,
+      folder: exampleFolder
+    }
+  },
+  {
     register: require('./src/plugins/keyboard-shortcuts')
   },
   {
@@ -55,8 +70,6 @@ const plugins = [
   }
 ];
 
-const defaultProject = 'new-project';
-
 function onRender(err){
   console.log('rendered', err);
 
@@ -80,7 +93,7 @@ function onRender(err){
   // Finish Loading Plugin
   // TODO: encapsulate into a startup handler?
   const config = userConfig.getState();
-  const cwd = config.cwd || defaultProject;
+  const cwd = config.cwd || exampleFolder;
   const lastFile = config['last-file'];
   console.log(cwd, lastFile);
   changeProject(cwd)

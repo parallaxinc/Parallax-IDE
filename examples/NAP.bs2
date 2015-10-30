@@ -1,0 +1,17 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: NAP
+'This program lights an LED setting pin 0 low. This completes the circuit 
+'from +5V, through the LED and resistor, to ground. During the NAP interval,
+'the LED stays lit, but blinks off for a fraction of a second.  This blink
+'is caused by the NAP wake-up mechanism.  During wake-up, all pins briefly
+'slip into input mode, effectively disconnecting them from loads.
+
+Setup:
+  LOW 0                                 'turn LED on
+
+Snooze:
+  DO
+    NAP 4                               'nap for fraction of a second
+  LOOP

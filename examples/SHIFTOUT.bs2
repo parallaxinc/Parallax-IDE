@@ -1,0 +1,37 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: SHIFTOUT
+'This program uses the SHIFTOUT command to interface to the 74HC595 shift
+'register as an 8-bit output port.  The 74HC595 requires a minimum of three
+'inputs: data, clock, and latch.  See the figure in the SHIFTOUT command
+'description for wiring information. SHIFTOUT automatically handles the data
+'and clock, pulsing the clock to shift data bits into the 74HC595. An extra
+'step (pulsing the latch input) is required to move the shifted bits in
+'parallel onto the 74HC595's output pins.  Note: this code does not control
+'the output-enable or reset lines of the 74HC595.  This means that before the
+'BASIC Stamp first sends, the 74HC595's output latches are turned on and may
+'contain random data.  In critical applications, you should hold output-enable
+'high (disabled) until the BASIC Stamp can take control.
+
+Dpin            PIN     0                       'data pin to 74HC595
+Clk             PIN     1                       'shift clock to 74HC595
+Latch           PIN     2                       'latch 74HC595 outputs
+
+counter         VAR     Byte
+
+Setup:
+  LOW Latch                                     'initialize latch output
+
+'This loop moves the 8-bit value 'counter' onto the output lines of the
+'74HC595, pauses, then increments counter and repeats.  The data is shifted
+'msb first so that the msb appears on pin QH and the lsb on QA. Changing
+'MSBFIRST to LSBFIRST causes the data to appear backwards on the outputs.
+
+Main:
+  DO
+    SHIFTOUT Dpin, Clk, MSBFIRST, [counter]     'send the bits
+    PULSOUT Latch, 1                            'transfer to outputs
+    PAUSE 100                                   'Wait 0.1 seconds
+    counter = counter + 1                       'increment counter
+  LOOP

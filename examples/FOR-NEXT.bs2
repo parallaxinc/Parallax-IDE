@@ -1,0 +1,24 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: FOR-NEXT
+'This example uses a FOR...NEXT loop to churn out a series of sequential
+'squares (numbers 1, 2, 3, 4... raised to the second power) by using a
+'variable to set the FOR...NEXT's StepValue parameter, and incrementing 
+'StepValue within the loop.  Sir Isaac Newton is generally credited with
+'the discovery of this technique.
+
+square          VAR     Byte            'FOR/NEXT counter
+stepSize        VAR     Byte            'step size, increase by 2 each loop
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  stepSize = 1
+  square = 1
+
+Main:
+  FOR square = 1 TO 250 STEP stepSize   'show squares up to 250
+    DEBUG DEC ? square                  'display on screen
+    stepSize = stepSize + 2             'add 2 to stepSize
+  NEXT                                  'loop until square > 250
+  END

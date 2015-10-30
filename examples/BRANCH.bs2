@@ -1,0 +1,33 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: BRANCH
+'This program shows how the value of an index variable (idx) controls the 
+'destination of the BRANCH instruction.
+
+idx       VAR  Byte
+
+Init:
+  PAUSE 200                                     'short startup-pause
+
+Main:
+  DEBUG "idx: ", DEC idx, " "
+  BRANCH idx, [Task_0, Task_1, Task_2]          'branch to task
+  DEBUG "BRANCH target error...", CR, CR        '... unless out of range
+
+Next_Task:
+  idx = idx + 1 // 4                            'force idx to be 0..3
+  PAUSE 250
+  GOTO Main
+
+Task_0:
+  DEBUG "BRANCHed to Task_0", CR
+  GOTO Next_Task
+
+Task_1:
+  DEBUG "BRANCHed to Task_1", CR
+  GOTO Next_Task
+
+Task_2:
+  DEBUG "BRANCHed to Task_2", CR
+  GOTO Next_Task

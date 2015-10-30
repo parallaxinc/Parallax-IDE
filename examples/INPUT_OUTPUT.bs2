@@ -1,0 +1,30 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: INPUT_OUTPUT
+'This program demonstrates how the input/output direction of a pin is
+'determined by the corresponding bit of DIRS. It also shows that the
+'state of the pin itself (as reflected by the corresponding bit of INx)
+'is determined by the outside world when the pin is an input, and by the
+'corresponding bit of INx when it's an output. To set up the demo,
+'connect a 10k resistor from +5V to P7 on the BASIC Stamp. The resistor
+'to +5V puts a high (1) on the pin when it's an input. The BASIC Stamp
+'can override this state by writing a low (0) to bit 7 of OUTS and
+'changing the pin to output.
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  INPUT 7                               'Make P7 an input
+  DEBUG "State of P7: ",
+        BIN1 IN7, CR
+
+  OUT7 = 0                              'Write 0 to output latch
+  DEBUG "After 0 written to OUT7: ",
+        BIN1 IN7, CR
+
+  OUTPUT 7                              'Make P7 an output
+  DEBUG "After P7 changed to output: ",
+        BIN1 IN7
+  END

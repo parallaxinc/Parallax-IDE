@@ -1,0 +1,54 @@
+'{$STAMP BS2p}
+'{$PBASIC 2.5}
+
+'SOURCE: LCDIN
+'This program demonstrates initialization, printing and reading
+'from a 2 x 16 character LCD display.
+
+#IF ($STAMP < BS2P) #THEN       'Notify of module requirements
+  #ERROR "Program requires BS2p, BS2pe or BS2px."
+#ENDIF
+
+Lcd             PIN     0
+
+LcdCls          CON     $01     'clear the LCD
+LcdHome         CON     $02     'move cursor home
+LcdCrsrL        CON     $10     'move cursor left
+LcdCrsrR        CON     $14     'move cursor right
+LcdDispL        CON     $18     'shift chars left
+LcdDispR        CON     $1C     'shift chars right
+LcdDDRam        CON     $80     'Display Data RAM
+LcdCGRam        CON     $40     'Character Generator RAM
+LcdLine1        CON     $80     'DDRAM address of line 1
+LcdLine2        CON     $C0     'DDRAM address of line 2
+
+char            VAR     Byte(16)
+
+Init_LCD:
+  PAUSE 1000                    'allow LCD to self-initialize first
+  LCDCMD Lcd, %00110000         'send wakeup sequence to LCD
+  PAUSE 5                       'pause required by LCD specs
+  LCDCMD Lcd, %00110000
+  PAUSE 0                       'pause required by LCD specs
+  LCDCMD Lcd, %00110000
+  PAUSE 0                       'pause required by LCD specs
+  LCDCMD Lcd, %00100000         'set data bus to 4-bit mode
+  LCDCMD Lcd, %00101000         'set to 2-line mode with 5x8 font
+  LCDCMD Lcd, %00001100         'display on without cursor
+  LCDCMD Lcd, %00000110         'auto-increment cursor
+
+Main:
+  DO
+    LCDOUT Lcd, LcdCls, ["Hello!"]
+    GOSUB Read_LCD_Screen
+    PAUSE 3000
+    LCDOUT Lcd, LcdCls, ["I'm a 2x16 LCD!"]
+    GOSUB Read_LCD_Screen
+    PAUSE 3000
+  LOOP
+
+Read_LCD_Screen:
+  DEBUG "LCD now says: "
+  LCDIN Lcd, LcdLine1, [STR char\16]
+  DEBUG STR char\16, CR
+  RETURN

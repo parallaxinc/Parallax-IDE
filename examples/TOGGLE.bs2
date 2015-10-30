@@ -1,0 +1,24 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: TOGGLE
+'Connect LEDs to pins 0 through 3 as shown in the TOGGLE command description
+'and run this program. The TOGGLE command will treat you to a light show.
+'You may also run the demo without LEDs; the Debug Terminal will show you the
+'states of pins 0 through 3.
+
+thePin          VAR     Nib             'pin 0 - 3
+
+Setup:
+  PAUSE 200                             'short startup-pause
+  DIRA = %1111                          'make LEDs output, low
+
+Main:
+  DEBUG "LED States: "
+  DO
+    FOR thePin = 0 TO 3                 'loop through pins
+      TOGGLE thePin                     'toggle current pin
+      DEBUG CRSRXY, 12, 0, BIN4 OUTA    'show on Debug Terminal
+      PAUSE 250                         'short delay
+    NEXT
+  LOOP                                  'repeat forever

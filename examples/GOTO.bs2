@@ -1,0 +1,29 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: GOTO
+'This program isn't practical at all, but demonstrates the use of GOTO to
+'jump around the code.  This code jumps between three different routines,
+'each of which print something different on the screen.  The routines are
+'out of order for sake of example.
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Start:
+  GOTO Routine1
+
+Routine2:
+  DEBUG "We're in routine #2", CR
+  PAUSE 1000
+  GOTO Routine3
+
+Routine1:
+  DEBUG "We're in routine #1", CR
+  PAUSE 1000
+  GOTO Routine2
+
+Routine3:
+  DEBUG "We're in routine #3", CR
+  PAUSE 1000
+  GOTO Routine1

@@ -1,0 +1,70 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: DATA
+'This program stores a number of large text strings into EEPROM with the DATA
+'directive and then sends them, one character at a time via the DEBUG command.
+'This is a good demonstration of how to save program space by storing large
+'amounts of data in EEPROM directly, rather than embedding the data into separate
+'DEBUG commands.
+
+idx             VAR     Word            'current location number
+phrase          VAR     Nib             'current phrase number
+char            VAR     Byte            'character to print
+
+' ----- Define all text phrases (out of order, just for fun!) -----
+'
+Text1           DATA    "Here is the first part of a large chunk of text "
+                DATA    "data ", CR, "that needs to be transmitted.  There's "
+                DATA    "a 5 second delay", CR, "between text paragraphs. ", CR
+                DATA    CR, 0
+
+Text3           DATA    "The alternative (having multiple DEBUGs or SEROUTs, "
+                DATA    "each ", CR, "with their own line of text) consumes "
+                DATA    "MUCH more EEPROM ", CR, "(program/data) space. ", CR
+                DATA    CR, 0
+
+Text6           DATA    "The 0 at the end of data blocks is used by this program " 
+                DATA    "to indicate", CR, "we've reached the End of Text.  The Main "
+                DATA    "routine pauses in-between each", CR, "block of text, "
+                DATA    "and then uses a LOOKUP command to retrieve the location", CR
+                DATA    "of the next desired block of text to print. ", 0
+
+Text4           DATA    CLS, "This program also demonstrates retrieving data "
+                DATA    "out of order ", CR, "in relation to the way it is "
+                DATA    "stored in EEPROM.  Additionally, ", CR, "control codes "
+                DATA    "(like carriage-returns, clear-screens, etc) can ", CR
+                DATA    "be embedded right in the data, as it is here. ", CR
+                DATA    CR, 0
+
+Text2           DATA    "This is an example of a good way to save space in "
+                DATA    "your ", CR, "BASIC Stamp's program by storing data "
+                DATA    "into EEPROM and ", CR, "retrieving it, one byte at a "
+                DATA    "time, and transmitting it ", CR, "with just a single "
+                DATA    "DEBUG (or SEROUT) command.", CR, CR, 0
+
+Text5           DATA    "The Print_It routine simply takes the idx variable, "
+                DATA    "retrieves ", CR, "the character at the EEPROM location "
+                DATA    "pointed to by it, and ", CR, "prints it to the screen "
+                DATA    "until it finds a byte with a value of 0.", CR, CR, 0
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DEBUG CLS                             'Clear DEBUG window
+  FOR phrase = 1 TO 6                   'Print blocks one by one
+    LOOKUP (phrase - 1), [Text1, Text2, Text3, Text4, Text5, Text6], idx
+    GOSUB Print_It
+    PAUSE 5000                          'Pause for 5 seconds
+  NEXT
+  END
+
+Print_It:
+  DO
+    READ idx, char                      'Get next character
+    idx = idx + 1                       'Point to next location
+    IF (char = 0) THEN EXIT             'If 0, we're done with block
+    DEBUG char                          'Otherwise, transmit it
+  LOOP
+  RETURN                                'Return to the main routine

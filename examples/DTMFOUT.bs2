@@ -1,0 +1,55 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: DTMFOUT
+'This demo program is a rudimentary memory dialer. Since DTMF digits fit
+'within a nibble (four bits), the program below packs two DTMF digits into
+'each byte of three EEPROM data tables. The end of phone number is marked
+'by the nibble $F, since this is not a valid phone-dialing digit.
+'Conditional compilation sets the timing adjustment factor so that the
+'output will sound the same on any BS2 model.
+
+Spkr            PIN     10              'DTMF output on pin 10
+
+#SELECT $STAMP                          'Set TmAdj according to module type
+  #CASE BS2, BS2E, BS2PE
+    TmAdj       CON     $100            'x 1.0 (time adjust)
+  #CASE BS2SX
+    TmAdj       CON     $280            'x 2.5
+  #CASE BS2P
+    TmAdj       CON     $3C5            'x 3.77
+  #CASE BS2PX
+    TmAdj       CON     $607            'x 6.03
+#ENDSELECT
+
+eeLoc           VAR     Byte            'EEPROM address of stored number
+eeByte          VAR     Byte            'Byte containing two DTMF digits
+dtDig           VAR     eeByte.NIB1     'Digit to dial
+phone           VAR     Nib             'Pick a phone #
+hiLo            VAR     Bit             'Bit to select upper and lower nib
+
+Parallax        DATA    $19,$16,$62,$48,$33,$3F  'Phone: 1-916-624-8333
+ParallaxFax     DATA    $19,$16,$62,$48,$00,$3F  'Phone: 1-916-624-8003
+Information     DATA    $15,$20,$55,$51,$21,$2F  'Phone: 1-520-555-1212
+
+Main:
+  FOR phone = 0 TO 2
+    'retrieve address
+    LOOKUP phone, [Parallax, ParallaxFax, Information], eeLoc
+    GOSUB Dial_Number
+    PAUSE 2000
+  NEXT
+  END
+
+Dial_Number:
+  DO
+    READ eeLoc, eeByte                  'Retrieve byte from EEPROM
+    eeLoc = eeLoc + 1                   'point to next pair of digits
+    FOR hiLo = 0 TO 1                   'Dial upper and lower digits
+      IF (dtDig = $F) THEN EXIT         'Hex $F is end-of-number flag
+      DTMFOUT Spkr,                     'dial digit
+              150 */ TmAdj, 25, [dtDig] '150 ms on, 25 ms off
+      eeByte = eeByte << 4              'Shift in next digit
+    NEXT
+  LOOP UNTIL (dtDig = $F)
+  RETURN

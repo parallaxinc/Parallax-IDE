@@ -1,0 +1,23 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: DEBUG_DEBUGIN
+'This program demonstrates the ability to accept user input from the
+'Debug Terminal, and to accept numeric entry in any valid format.
+
+myNum           VAR     Word
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    DEBUG CLS, "Enter a any number: "   'prompt user
+    DEBUGIN SNUM myNum                  'retrieve number in any format
+
+    DEBUG CRSRXY, 0, 2,                 'display number in all formats
+          SDEC ? myNum,
+          SHEX ? myNum,
+          SBIN ? myNum
+    PAUSE 3000
+  LOOP                                  'do it again

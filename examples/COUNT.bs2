@@ -1,0 +1,44 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: COUNT
+'Connect an active-low button (shown in the BUTTON command description) to pin P0 
+'of the BASIC Stamp. The Debug Terminal will prompt you to press the button as
+'quickly as possible for a 1-second period.  When the count is done, the screen 
+'will display your "score," the total number of cycles registered by COUNT.  Note
+'that this score will almost always be greater than the actual number of presses
+'because of mechanical switch contact bounce.
+
+PushBtn         PIN     0               'Button on P0
+
+Capture         CON     1000            '1 second
+
+#SELECT $STAMP                          'Set DurAdj according to module type
+  #CASE BS2, BS2E
+    DurAdj      CON     $100            '/ 1
+  #CASE BS2SX
+    DurAdj      CON     $280            '/ 0.400
+  #CASE BS2P, BS2PX
+    DurAdj      CON     $37B            '/ 0.287
+  #CASE BS2PE
+    DurAdj      CON     $163            '/ 0.720
+#ENDSELECT
+
+cycles          VAR     Word            'counted cycles
+
+Init:
+  PAUSE 200                             'short startup-pause
+
+Main:
+  DO
+    DEBUG CLS, "How many times can you press the button in 1 second?", CR
+    PAUSE 1000
+    DEBUG "Ready, set... "
+    PAUSE 500
+    DEBUG "GO!", CR
+    COUNT PushBtn, (Capture */ DurAdj), cycles
+    DEBUG CR, "Your score: ", DEC cycles, CR
+    PAUSE 3000
+    DEBUG "Press button to go again."
+    DO : LOOP UNTIL (PushBtn = 0)       'wait for button press
+  LOOP

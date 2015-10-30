@@ -1,0 +1,41 @@
+'{$STAMP BS2}
+'{$PBASIC 2.5}
+
+'SOURCE: RANDOM
+'This program uses RANDOM to simulate a coin toss. After 100 trials, it reports
+'the total number of heads and tails thrown.  Connect a button to I/O pin 7 as
+'shown in the RANDOM command description and run this program. 
+
+Btn             PIN     7                       'button input
+
+flip            VAR     Word                    'a random number
+coin            VAR     flip.BIT0               'Bit0 of the random number
+trials          VAR     Byte                    'number of flips
+heads           VAR     Byte                    'throws that come up heads
+tails           VAR     Byte                    'throws that come up tails
+btnWrk          VAR     Byte                    'workspace for BUTTON
+
+Init:
+  PAUSE 200                                     'short startup-pause
+
+Start:
+  DEBUG CLS, "Press button to start"
+
+Main:
+  FOR trials = 1 TO 100                         'flip coin 100 times
+
+Hold:
+    RANDOM flip                                 'randomize while waiting
+    BUTTON Btn, 0, 250, 100, btnWrk, 0, Hold    'wait for button press
+    IF (coin = 0) THEN                          '0 = heads, 1 = tails
+      DEBUG CR, "Heads!"
+      heads = heads + 1                         'increment heads counter
+    ELSE
+      DEBUG CR, "Tails..."
+      tails = tails + 1                         'increment tails counter
+    ENDIF
+  NEXT
+
+Done:
+  DEBUG CR, CR, "Heads: ", DEC heads, " Tails: ", DEC tails
+  END
