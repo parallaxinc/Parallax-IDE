@@ -1,6 +1,8 @@
 'use strict';
 
 const creators = {
+  // overlay creators
+  deleteProjectConfirm: require('./delete-project-confirm'),
   // terminal creators
   rxOn: require('./rx-on'),
   rxOff: require('./rx-off'),
