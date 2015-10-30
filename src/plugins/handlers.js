@@ -553,20 +553,27 @@ function handlers(app, opts, done){
     const { deviceList } = store.getState();
     const { none, noneMatched, multiple } = messages;
 
-    const hasMatch = _.some(deviceList, { match: true });
-    const matchedDevices = _.filter(deviceList, ({ match, name }) => match && name);
+    const typeMatches = _.filter(deviceList, ({ name, type }) => name && (type === 'bs2'));
+    const exactMatches = _.filter(deviceList, ({ match, name }) => match && name);
 
-    if (!hasMatch) {
-      store.dispatch(creators.updateSearchStatus(none));
-    } else if (matchedDevices.length === 0) {
-      store.dispatch(creators.updateSearchStatus(noneMatched));
-    } else if(matchedDevices.length === 1) {
+    if(exactMatches.length === 1){
       store.dispatch(creators.clearSearchStatus());
-      store.dispatch(creators.updateSelectedDevice(matchedDevices[0]));
+      store.dispatch(creators.updateSelectedDevice(exactMatches[0]));
       download();
-    } else {
-      store.dispatch(creators.updateSearchStatus(multiple));
+      return;
     }
+
+    if(exactMatches.length > 1){
+      store.dispatch(creators.updateSearchStatus(multiple));
+      return;
+    }
+
+    if(typeMatches.length > 0 && exactMatches.length === 0){
+      store.dispatch(creators.updateSearchStatus(noneMatched));
+      return;
+    }
+
+    store.dispatch(creators.updateSearchStatus(none));
   }
 
   function reloadDevices(){
