@@ -7,6 +7,7 @@ const Button = require('react-material/components/Button');
 const Overlay = require('../components/overlay');
 const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
+const history = require('../lib/history');
 
 class DeleteProjectOverlay extends React.Component {
   render(){
@@ -16,8 +17,7 @@ class DeleteProjectOverlay extends React.Component {
     } = this.props;
 
     const {
-      deleteProject,
-      showProjectsOverlay
+      deleteProject
     } = handlers;
 
     return (
@@ -25,7 +25,7 @@ class DeleteProjectOverlay extends React.Component {
         <OverlayTitle>Are you sure you want to delete {name}?</OverlayTitle>
         <OverlayFooter>
           <Button onClick={() => deleteProject(name)}>Yes</Button>
-          <Button onClick={showProjectsOverlay}>No</Button>
+          <Button onClick={history.goBack}>No</Button>
         </OverlayFooter>
       </Overlay>
     );
