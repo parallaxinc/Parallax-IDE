@@ -61,9 +61,6 @@ const plugins = [
   },
   {
     register: require('./src/plugins/notifications')
-  },
-  {
-    register: require('./src/plugins/overlays')
   }
 ];
 
