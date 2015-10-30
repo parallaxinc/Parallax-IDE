@@ -7,6 +7,8 @@
  */
 
 const _ = require('lodash');
+const React = require('react');
+
 
 const consoleStore = require('../console-store');
 
@@ -51,44 +53,46 @@ const styles = {
   }
 };
 
-function applyStyles(el, stylesToApply){
-  _.forEach(stylesToApply, (style, name) => el.style[name] = style);
-}
 
-function rxtxBar(app, opts, done){
-  const { toggleEcho } = app.handlers;
+class RxTx extends React.Component {
 
-  let bottomBar;
-  let rx;
-  let tx;
-  let echoContainer, echoLabel;
+  componentDidMount(){
+    const container = React.findDOMNode(this);
+    const { toggleEcho } = this.props.handlers;
 
-  function onConsoleChange(){
-    const { rxtx, echo } = consoleStore.getState();
-    const { flashRx, flashTx } = rxtx;
+    let bottomBar;
+    let rx;
+    let tx;
+    let echoContainer, echoLabel;
 
-    if(flashRx){
-      rx.style.backgroundColor = styles.rx.backgroundColor;
-    } else {
-      rx.style.backgroundColor = styles.indicator.backgroundColor;
+    function onConsoleChange(){
+      const { rxtx, echo } = consoleStore.getState();
+      const { flashRx, flashTx } = rxtx;
+
+      if(flashRx){
+        rx.style.backgroundColor = styles.rx.backgroundColor;
+      } else {
+        rx.style.backgroundColor = styles.indicator.backgroundColor;
+      }
+
+      if(flashTx){
+        tx.style.backgroundColor = styles.tx.backgroundColor;
+      } else {
+        tx.style.backgroundColor = styles.indicator.backgroundColor;
+      }
+
+      if(echo){
+        applyStyles(echoContainer, styles.echoOn);
+        echoLabel.nodeValue = 'Echo On';
+      }else{
+        applyStyles(echoContainer, styles.echoOff);
+        echoLabel.nodeValue = 'Echo Off';
+      }
     }
 
-    if(flashTx){
-      tx.style.backgroundColor = styles.tx.backgroundColor;
-    } else {
-      tx.style.backgroundColor = styles.indicator.backgroundColor;
+    function applyStyles(el, stylesToApply){
+      _.forEach(stylesToApply, (style, name) => el.style[name] = style);
     }
-
-    if(echo){
-      applyStyles(echoContainer, styles.echoOn);
-      echoLabel.nodeValue = 'Echo On';
-    }else{
-      applyStyles(echoContainer, styles.echoOff);
-      echoLabel.nodeValue = 'Echo Off';
-    }
-  }
-
-  app.view('editor', function(el, cb){
 
     if(!bottomBar){
       bottomBar = document.createElement('div');
@@ -119,15 +123,29 @@ function rxtxBar(app, opts, done){
       applyStyles(tx, styles.indicator);
       applyStyles(rx, styles.indicator);
 
-      el.appendChild(bottomBar);
+      container.appendChild(bottomBar);
 
       consoleStore.subscribe(onConsoleChange);
     }
+  }
 
-    cb();
-  });
+  componentWillUnmount(){
+    const container = React.findDOMNode(this);
+    container.removeAll();
+  }
 
-  done();
+
+  shouldComponentUpdate(){
+    return false;
+  }
+
+  render(){
+
+    return (
+      <div />
+    );
+  }
+
 }
 
-module.exports = rxtxBar;
+module.exports = RxTx;

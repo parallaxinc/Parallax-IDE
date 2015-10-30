@@ -2,6 +2,21 @@
 
 const _ = require('lodash');
 const Irken = require('irken');
+const React = require('react');
+const { Router, Route, History, Link } = require('react-router');
+const memoryHistory = require('./src/lib/history');
+
+const Layout = require('./src/views/layout');
+const HelpOverlay = require('./src/views/help-overlay');
+const SaveOverlay = require('./src/views/save-overlay');
+const NewVersionOverlay = require('./src/views/new-version-overlay');
+const ProjectOverlay = require('./src/views/project-overlay');
+const DownloadOverlay = require('./src/views/download-overlay');
+const OverwriteOverlay = require('./src/views/overwrite-overlay');
+const DeleteFileOverlay = require('./src/views/delete-file-overlay');
+const DeleteProjectOverlay = require('./src/views/delete-project-overlay');
+
+const store = require('./src/store');
 
 const app = new Irken();
 
@@ -26,9 +41,6 @@ const plugins = [
     register: require('snacks')
   },
   {
-    register: require('holovisor')
-  },
-  {
     register: require('skrim')
   },
   {
@@ -48,22 +60,7 @@ const plugins = [
     register: require('./src/plugins/keyboard-shortcuts')
   },
   {
-    register: require('./src/plugins/appbar')
-  },
-  {
     register: require('./src/plugins/notifications')
-  },
-  {
-    register: require('./src/plugins/editor')
-  },
-  {
-    register: require('./src/plugins/terminal')
-  },
-  {
-    register: require('./src/plugins/rxtx')
-  },
-  {
-    register: require('./src/plugins/sidebar')
   },
   {
     register: require('./src/plugins/overlays')
@@ -114,15 +111,44 @@ function onRender(err){
 
 function onRegister(err){
   console.log('registered', err, app);
+  const addMountpoint = app.addMountpoint.bind(app);
+  const removeMountpoint = app.removeMountpoint.bind(app);
+  const { workspace, handlers } = app;
 
   if(err){
     return;
   }
 
-  app.render(onRender);
+  const RouterLayout = React.createClass({
+    render() {
+      console.log('render layout', this.props);
+      return (<Layout addMountpoint={addMountpoint} removeMountpoint={removeMountpoint} app={app}>
+        {this.props.children && React.cloneElement(this.props.children, { handlers, workspace, store })}
+        </Layout>
+      );
+    }
+  });
+
+  const Component = (
+    <Router history={memoryHistory}>
+      <Route path="/" component={RouterLayout}>
+        <Route path="overlay/help" component={HelpOverlay} />
+        <Route path="overlay/save" component={SaveOverlay} />
+        <Route path="overlay/newversion" component={NewVersionOverlay} />
+        <Route path="overlay/project" component={ProjectOverlay} />
+        <Route path="overlay/download" component={DownloadOverlay} />
+        <Route path="overlay/overwrite" component={OverwriteOverlay} />
+        <Route path="overlay/deletefile" component={DeleteFileOverlay} />
+        <Route path="overlay/deleteproject" component={DeleteProjectOverlay} />
+      </Route>
+    </Router>
+  );
+
+  React.render(Component, document.body.firstChild, onRender);
 }
 
 app.register(plugins, onRegister);
 
 // for debugging purposes
 window.app = app;
+window.memoryHistory = memoryHistory;
