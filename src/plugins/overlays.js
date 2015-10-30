@@ -20,15 +20,7 @@ const {
 
 function overlays(app, opts, done){
 
-  const { overlay, workspace, handlers } = app;
-
-  function renderOverlay(component){
-    function renderer(el){
-      React.render(component, el);
-    }
-
-    overlay.render(renderer, { backdrop: true });
-  }
+  const { workspace, handlers } = app;
 
   function onOverlayChange(){
     const { overlayState } = store.getState();
