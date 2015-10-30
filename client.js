@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const Irken = require('irken');
 const React = require('react');
-const { Router, Route, History, Link} = require('react-router');
+const { Router, Route, History, Link } = require('react-router');
 const memoryHistory = require('./src/lib/history');
 
 const Layout = require('./src/views/layout');
@@ -17,7 +17,6 @@ const DeleteFileOverlay = require('./src/views/delete-file-overlay');
 const DeleteProjectOverlay = require('./src/views/delete-project-overlay');
 
 const store = require('./src/store');
-
 
 const app = new Irken();
 
@@ -71,8 +70,6 @@ const plugins = [
 function onRender(err){
   console.log('rendered', err);
 
-
-
   if(err){
     return;
   }
@@ -116,7 +113,7 @@ function onRegister(err){
   console.log('registered', err, app);
   const addMountpoint = app.addMountpoint.bind(app);
   const removeMountpoint = app.removeMountpoint.bind(app);
-  const {workspace, handlers} = app;
+  const { workspace, handlers } = app;
 
   if(err){
     return;
@@ -126,7 +123,7 @@ function onRegister(err){
     render() {
       console.log('render layout', this.props);
       return (<Layout addMountpoint={addMountpoint} removeMountpoint={removeMountpoint} app={app}>
-        {this.props.children && React.cloneElement(this.props.children, {handlers, workspace, store})}
+        {this.props.children && React.cloneElement(this.props.children, { handlers, workspace, store })}
         </Layout>
       );
     }
@@ -147,9 +144,7 @@ function onRegister(err){
     </Router>
   );
 
-
   React.render(Component, document.body.firstChild, onRender);
-
 }
 
 app.register(plugins, onRegister);
