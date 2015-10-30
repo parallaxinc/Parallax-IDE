@@ -11,48 +11,23 @@ const history = require('../lib/history');
 
 class OverwriteOverlay extends React.Component {
 
-  constructor(...args){
-    super(...args);
-
-    this.overwrite = this.overwrite.bind(this);
-  }
-
-  overwrite(){
-    const {
-      handlers
-    } = this.props;
-
-    const {
-      overwriteFile
-    } = handlers;
-
-    overwriteFile();
-  }
-
-  cancelOverwrite(){
-    const {
-      handlers
-    } = this.props;
-
-    const {
-      cancelOverwriteFile
-    } = handlers;
-
-    cancelOverwriteFile();
-  }
-
   render(){
     const {
       filename,
       handlers
     } = this.props;
 
+    const {
+      overwriteFile,
+      cancelOverwriteFile
+    } = handlers;
+
     return (
       <Overlay>
         <OverlayTitle>File '{filename}' already exists. Overwrite anyway?</OverlayTitle>
         <OverlayFooter>
-          <Button onClick={this.overwrite}>Overwrite</Button>
-          <Button onClick={history.goBack}>Cancel</Button>
+          <Button onClick={overwriteFile}>Overwrite</Button>
+          <Button onClick={cancelOverwriteFile}>Cancel</Button>
         </OverlayFooter>
       </Overlay>
     );
