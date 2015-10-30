@@ -7,6 +7,7 @@ const Button = require('react-material/components/Button');
 const Overlay = require('../components/overlay');
 const OverlayTitle = require('../components/overlay-title');
 const OverlayFooter = require('../components/overlay-footer');
+const history = require('../lib/history');
 
 class OverwriteOverlay extends React.Component {
 
@@ -34,16 +35,12 @@ class OverwriteOverlay extends React.Component {
       handlers
     } = this.props;
 
-    const {
-      showSaveOverlay
-    } = handlers;
-
     return (
       <Overlay>
         <OverlayTitle>File '{filename}' already exists. Overwrite anyway?</OverlayTitle>
         <OverlayFooter>
           <Button onClick={this.overwrite}>Overwrite</Button>
-          <Button onClick={showSaveOverlay}>Cancel</Button>
+          <Button onClick={history.goBack}>Cancel</Button>
         </OverlayFooter>
       </Overlay>
     );

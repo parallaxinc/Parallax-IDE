@@ -14,6 +14,7 @@ const Terminal = require('../lib/terminal');
 const Documents = require('../lib/documents');
 const highlighter = require('../lib/highlighter');
 const directive = require('../lib/directive');
+const history = require('../lib/history');
 
 const {
   NEW_FILE,
@@ -125,7 +126,7 @@ function handlers(app, opts, done){
         .then(function(){
           documents.swap(path.join(cwd, filename));
         });
-      store.dispatch(creators.hideOverlay());
+      hideOverlay();
     }
   }
 
@@ -146,7 +147,7 @@ function handlers(app, opts, done){
         documents.replace(path.join(cwd, filename));
         handleActionQueue();
       });
-    store.dispatch(creators.hideOverlay());
+    hideOverlay();
   }
 
   function overwriteFile(){
@@ -259,53 +260,53 @@ function handlers(app, opts, done){
 
   function deleteProjectConfirm(name){
     store.dispatch(creators.deleteProjectConfirm(name));
-    store.dispatch(creators.showDeleteProjectOverlay());
+    history.pushState({}, '/overlay/deleteproject');
   }
 
   function showHelpOverlay(){
-    store.dispatch(creators.showHelpOverlay());
+    history.pushState({}, '/overlay/help');
   }
 
   function showSaveOverlay(){
-    store.dispatch(creators.showSaveOverlay());
+    history.pushState({}, '/overlay/save');
   }
 
   function showSaveOnChangeOverlay(){
-    store.dispatch(creators.showSaveOnChangeOverlay());
+    history.pushState({}, '/overlay/save?showDontSaveButton=true');
   }
 
   function showOverwriteOverlay(name){
     store.dispatch(creators.queueOverwriteFile(name));
-    store.dispatch(creators.showOverwriteOverlay());
+    history.pushState({}, '/overlay/overwrite');
   }
 
   function showDownloadOverlay(){
-    store.dispatch(creators.showDownloadOverlay());
+    history.pushState({}, '/overlay/download');
     // TODO: is there ever a time when show download overlay doesn't reload devices?
     /* eslint no-use-before-define: false */
     reloadDevices();
   }
 
   function showProjectsOverlay(){
-    store.dispatch(creators.showProjectsOverlay());
+    history.pushState({}, '/overlay/project');
   }
 
   function showDeleteFileOverlay(){
-    store.dispatch(creators.showDeleteFileOverlay());
+    history.pushState({}, '/overlay/deletefile');
   }
 
   function showNewVersionOverlay(){
     chrome.storage.local.get('newVersion', function(val) {
       if(val.newVersion){
         chrome.storage.local.remove('newVersion', function() {
-          store.dispatch(creators.showNewVersionOverlay());
+          history.pushState({}, '/overlay/newversion');
         });
       }
     });
   }
 
   function hideOverlay(){
-    store.dispatch(creators.hideOverlay());
+    history.pushState({}, '/');
   }
 
   function findNext(){

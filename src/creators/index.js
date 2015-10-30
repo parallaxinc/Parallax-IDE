@@ -1,18 +1,6 @@
 'use strict';
 
 const creators = {
-  // overlay creators
-  deleteProjectConfirm: require('./delete-project-confirm'),
-  showDeleteFileOverlay: require('./show-delete-file-overlay'),
-  showDeleteProjectOverlay: require('./show-delete-project-overlay'),
-  showDownloadOverlay: require('./show-download-overlay'),
-  showProjectsOverlay: require('./show-projects-overlay'),
-  showOverwriteOverlay: require('./show-overwrite-overlay'),
-  showNewVersionOverlay: require('./show-new-version-overlay'),
-  showSaveOverlay: require('./show-save-overlay'),
-  showSaveOnChangeOverlay: require('./show-save-on-change-overlay'),
-  showHelpOverlay: require('./show-help-overlay'),
-  hideOverlay: require('./hide-overlay'),
   // terminal creators
   rxOn: require('./rx-on'),
   rxOff: require('./rx-off'),
