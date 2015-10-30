@@ -42,7 +42,7 @@ function overlays(app, opts, done){
         history.pushState({}, '/overlay/newversion');
         break;
       case DOWNLOAD_OVERLAY:
-        history.pushState({}, '/overlay/help');
+        history.pushState({}, '/overlay/download');
         break;
       case PROJECTS_OVERLAY:
         history.pushState({}, '/overlay/project');

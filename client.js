@@ -139,6 +139,7 @@ function onRegister(err){
         <Route path="overlay/save" component={SaveOverlay} />
         <Route path="overlay/newversion" component={NewVersionOverlay} />
         <Route path="overlay/project" component={ProjectOverlay} />
+        <Route path="overlay/download" component={DownloadOverlay} />
         <Route path="overlay/overwrite" component={OverwriteOverlay} />
         <Route path="overlay/deletefile" component={DeleteFileOverlay} />
         <Route path="overlay/deleteproject" component={DeleteProjectOverlay} />
