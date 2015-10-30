@@ -112,16 +112,6 @@ function onRender(err){
   });
 }
 
-function generateContainer(){
-  var container = document.createElement('div');
-  container.style.width = '100%';
-  container.style.height = '100%';
-  container.style.margin = 0;
-  container.style.padding = 0;
-  document.body.insertBefore(container, document.body.firstChild);
-  return container;
-}
-
 function onRegister(err){
   console.log('registered', err, app);
   const addMountpoint = app.addMountpoint.bind(app);
