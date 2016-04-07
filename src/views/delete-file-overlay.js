@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { createContainer } = require('sovereign');
-const Button = require('react-material/components/Button');
+const Button = require('../component/button');
 
 const Overlay = require('../components/overlay');
 const OverlayTitle = require('../components/overlay-title');

@@ -2,7 +2,7 @@
 
 const React = require('react');
 const { createContainer } = require('sovereign');
-const Button = require('react-material/components/Button');
+const Button = require('../components/button');
 const TextField = require('react-material/components/TextField');
 
 const Overlay = require('../components/overlay');
