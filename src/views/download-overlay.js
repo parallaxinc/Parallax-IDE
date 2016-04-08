@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const React = require('react');
-const Button = require('react-material/components/Button');
+const Button = require('../components/button');
 const Loader = require('react-loader');
 const { createContainer } = require('sovereign');
 

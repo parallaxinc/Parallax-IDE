@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const ListItem = require('react-material/components/ListItem');
 
 const red = '#da2100';
 const green = '#159600';
@@ -27,15 +26,20 @@ class FileListItem extends React.Component {
       onClick
     } = this.props;
 
+    const liStyle = {
+      listStyleType: 'none',
+      padding: "14px 16px 15px"
+    }
+
     const tempStyles = [styles.fileTempIndicator];
     if(temp){
       tempStyles.push(styles.fileHasTemp);
     }
 
     return (
-      <ListItem onClick={onClick}>
+      <li styles={liStyle} onClick={onClick}>
         <span styles={tempStyles} /> {filename}
-      </ListItem>
+      </li>
     );
   }
 }
