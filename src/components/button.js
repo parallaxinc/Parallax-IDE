@@ -11,7 +11,7 @@ export default class Button extends React.Component {
       } = this.props
 
       return(
-        <button onClick={onClick} className="mdl-button">{children}</button>
+        <button onClick={onClick} className="parallax-button">{children}</button>
       )
     }
 }

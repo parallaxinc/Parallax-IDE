@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const ListItem = require('react-material/components/ListItem');
 
 const red = '#da2100';
 const green = '#159600';

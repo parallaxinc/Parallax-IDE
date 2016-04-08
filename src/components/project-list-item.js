@@ -10,10 +10,15 @@ class Project extends React.Component {
       children
     } = this.props;
 
+    const liStyle = {
+      listStyleType: 'none',
+      padding: "14px 16px 15px"
+    }
+
     return (
-      <ListItem icon="folder" onClick={onClick}>
+      <li styles={liStyle} icon="folder" onClick={onClick}>
         {children}
-      </ListItem>
+      </li>
     );
   }
 }
