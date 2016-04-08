@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const ListItem = require('react-material/components/ListItem');
 
 class Project extends React.Component {
   render(){
