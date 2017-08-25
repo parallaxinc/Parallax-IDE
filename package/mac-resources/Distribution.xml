@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!-- THIS FILE REQUIRED FOR PACKAGE-SIGNING -->
+<!-- DO NOT EDIT OR REMOVE!                 -->
+
+<installer-gui-script minSpecVersion="1">
+
+    <!-- Define install parameters -->
+    <title>BlocklyProp Client</title>
+    <organization>com.ParallaxInc</organization>
+    
+    <!-- Allow module installs, no scripts & only install on boot vol -->
+    <options customize="allow" require-scripts="false" rootVolumeOnly="true" allow-external-scripts="no" />
+
+    <!-- Must quit the IDE, if it is running -->
+    <pkg-ref id="com.ParallaxInc.BlocklyPropClient.app">
+        <must-close>
+            <app id="com.ParallaxInc.BlocklyPropClient"/>
+        </must-close>
+    </pkg-ref>
+    
+    <!-- Define documents displayed at various steps -->
+    <welcome    file="welcome.html"         mime-type="text/html" />
+    <license    file="license.html"         mime-type="text/html" />
+    <background file="splash620x418.png"    mime-type="image/png" />
+    <conclusion file="conclusion.html"      mime-type="text/html" />
+
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.ParallaxInc.BlocklyPropClient.app"/>
+        </line>
+    </choices-outline>
+
+    <!-- Default complete package install -->
+    <choice
+        id="default"
+        visible="true"
+        title="BlocklyProp Client"
+        description="BlocklyProp Client installation">
+    </choice>
+
+    <!-- SimpleIDE App pkg -->
+    <choice
+        id="com.ParallaxInc.BlocklyPropClient.app" 
+        visible="true"
+        title="BlocklyProp Client Application"
+        description="The BlocklyProp assistant application">
+        <pkg-ref id="com.ParallaxInc.BlocklyPropClient.app"/>
+    </choice>
+    
+    <pkg-ref
+        id="com.ParallaxInc.BlocklyPropClient.app"
+        onConclusion="none">BlocklyPropClient.pkg
+    </pkg-ref>
+    
+</installer-gui-script>

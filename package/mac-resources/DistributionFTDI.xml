@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!-- THIS FILE REQUIRED FOR PACKAGE-SIGNING -->
+<!-- DO NOT EDIT OR REMOVE!                 -->
+
+<installer-gui-script minSpecVersion="1">
+
+    <!-- Define install parameters -->
+    <title>BlocklyProp Client</title>
+    <organization>com.ParallaxInc</organization>
+    
+    <!-- Allow module installs, no scripts -->
+    <options customize="allow" require-scripts="false" rootVolumeOnly="false" allow-external-scripts="no" />
+
+    <!-- Must quit the IDE, if it is running -->
+    <pkg-ref id="com.ParallaxInc.BlocklyPropClient.app">
+        <must-close>
+            <app id="com.ParallaxInc.BlocklyPropClient"/>
+        </must-close>
+    </pkg-ref>
+    
+    <!-- Define documents displayed at various steps -->
+    <welcome    file="welcomeFTDI.html"     mime-type="text/html" />
+    <license    file="license.html"         mime-type="text/html" />
+    <background file="splash620x418.png"    mime-type="image/png" />
+    <conclusion file="conclusion.html"      mime-type="text/html" />
+
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.ParallaxInc.BlocklyPropClient.app"/>
+            <line choice="com.FTDI.driver.FTDIUSBSerialDriver"/>
+        </line>
+    </choices-outline>
+
+    <!-- Default complete package install -->
+    <choice
+        id="default"
+        visible="true"
+        title="BlocklyProp Client with FTDI USB Serial Driver"
+        description="BlocklyProp Client with FTDI USB Serial Driver installation">
+    </choice>
+
+    <!-- SimpleIDE App pkg -->
+    <choice
+        id="com.ParallaxInc.BlocklyPropClient.app" 
+        visible="true"
+        title="BlocklyProp Client Application"
+        description="The BlocklyProp assistant application">
+        <pkg-ref id="com.ParallaxInc.BlocklyPropClient.app"/>
+    </choice>
+    
+    <pkg-ref
+        id="com.ParallaxInc.BlocklyPropClient.app"
+        onConclusion="none">BlocklyPropClient.pkg
+    </pkg-ref>
+
+    <!-- FTDI USB Serial Driver pkg -->
+    <choice
+        id="com.FTDI.driver.FTDIUSBSerialDriver" 
+        visible="true"
+        title="FTDI USB Serial Driver"
+        description="Future Technology Devices International USB Serial Driver">
+        <pkg-ref id="com.FTDI.driver.FTDIUSBSerialDriver"/>
+    </choice>
+    
+    <pkg-ref
+        id="com.FTDI.driver.FTDIUSBSerialDriver"
+        onConclusion="none">FTDIUSBSerialDriver.pkg
+    </pkg-ref>
+    
+</installer-gui-script>
