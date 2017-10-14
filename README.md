@@ -38,6 +38,13 @@ Most of below is a one-time procedure needed to build the application, unless ot
   To get dependencies, enter:
 
   ` npm install `
+  
+  _*Note:* To ensure all dependencies are updated, it's recommended to do the following_
+  
+  ``` 
+  npm cache clean
+  npm install
+  ```
 
 1. Build the application by entering. __This step must be run each time you update the repository (including pulling updates from GitHub).__
 
