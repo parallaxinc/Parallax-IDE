@@ -627,7 +627,8 @@ function handlers(app, opts, done){
         /Bluetooth-Modem/,
         /dev\/cu\./
       ],
-      source: content
+      source: content,
+      delay: 300
     };
 
     store.dispatch(creators.reloadDevices());
@@ -637,8 +638,10 @@ function handlers(app, opts, done){
         store.dispatch(creators.updateDevices(devices));
 
         if(autoDownload){
-          // TODO: how can I clean up this interaction?
-          checkAutoDownload();
+          // windows serial sometimes needs to wait after boards scanned.
+          setTimeout(function() {
+            checkAutoDownload();
+          }, 100);
         }
       });
   }
@@ -681,7 +684,8 @@ function handlers(app, opts, done){
         /Bluetooth-Incoming-Port/,
         /Bluetooth-Modem/,
         /dev\/cu\./
-      ]
+      ],
+      delay: 300
     };
 
     app.scanBoards(scanOpts)
