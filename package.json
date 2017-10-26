@@ -1,6 +1,6 @@
 {
   "name": "parallax-ide",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Write, compile, and download code to your Parallax Boe-Bot Robot or custom BASIC Stamp microcontroller-based electronic creations.",
   "main": "index.js",
   "directories": {
@@ -14,7 +14,7 @@
     "history": "^1.12.5",
     "iggins": "^0.4.0",
     "invariant": "^2.1.1",
-    "irken": "^0.8.0",
+    "irken": "^0.9.0",
     "lodash": "^3.9.1",
     "raw-loader": "^0.5.1",
     "react": "^0.13.1",

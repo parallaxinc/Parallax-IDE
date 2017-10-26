@@ -1,10 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-  - '0.10'
-  - '0.12'
+  - '6'
 before_install:
-  - 'npm install -g npm' # need latest npm for scoped modules
   - 'export DISPLAY=:99.0'
   - 'sh -e /etc/init.d/xvfb start'
 script: npm run ci
@@ -17,5 +15,5 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    node: '0.10'
+    node: '6'
     all_branches: true
