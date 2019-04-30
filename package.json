@@ -1,6 +1,6 @@
 {
   "name": "parallax-ide",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "Write, compile, and download code to your Parallax Boe-Bot Robot or custom BASIC Stamp microcontroller-based electronic creations.",
   "main": "index.js",
   "directories": {
@@ -41,7 +41,7 @@
     "eslint-plugin-mocha": "^0.5.1",
     "eslint-plugin-react": "^3.2.3",
     "expect": "^1.8.0",
-    "gulp": "git://github.com/gulpjs/gulp#4.0",
+    "gulp": "^4.0.1",
     "gulp-util": "^3.0.4",
     "gulp-zip": "^2.0.3",
     "html-loader": "^0.2.3",
