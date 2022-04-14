@@ -14,32 +14,40 @@ const RxTx = require('./rxtx');
 const styles = {
   container: {
     display: 'flex',
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    height: '100vh'
   },
   appbar: {
-    height: '56px'
+    flex: '0 0 56px'
+  },
+  view: {
+    display: 'flex',
+    flexDirection: 'row',
+    height: '100%'
+  },
+  sidebar: {
+    display: 'flex',
+    flex: '0 0 content'
   },
   main: {
     display: 'flex',
-    flex: 1
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'flex-end'
   },
   editor: {
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'column'
+    flexGrow: 1,
+    overflow: 'auto'
   },
-  sidebar: {
-    flex: '0 0 13rem',
-    order: -1,
-    display: 'flex',
-    zIndex: 4
+  debug: {
+    flexBasis: '16em'
+  },
+  debugstate: {
+    flexBasis: '2em'
   },
   overlay: {
     position: 'fixed',
     width: 0,
-    height: 0,
     zIndex: 9999
   }
 };
@@ -62,13 +70,19 @@ class Layout extends React.Component {
     return (
       <div style={styles.container}>
         <div style={styles.appbar}><AppBar/></div>
-        <div style={styles.main}>
-          <main style={styles.editor}>
-            <Editor handlers={handlers}/>
-            <Terminal store={store} handlers={handlers} />
-            <RxTx handlers={handlers} />
-          </main>
+        <div style={styles.view}>
           <div style={styles.sidebar}><SideBar workspace={workspace} handlers={handlers}/></div>
+          <div style={styles.main}>
+            <div style={styles.editor}>
+              <Editor handlers={handlers}/>
+            </div>
+            <div style={styles.debug}>
+              <Terminal store={store} handlers={handlers} />
+            </div>
+            <div style={styles.debugstate}>
+              <RxTx handlers={handlers} />
+            </div>
+          </div>
         </div>
         <div ref={(ref) => this._overlay = ref} style={styles.overlay}></div>
         <div>{this.props.children}</div>
