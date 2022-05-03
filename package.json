@@ -1,6 +1,6 @@
 {
   "name": "parallax-ide",
-  "version": "0.14.2",
+  "version": "0.14.4",
   "description": "Write, compile, and download code to your Parallax Boe-Bot Robot or custom BASIC Stamp microcontroller-based electronic creations.",
   "main": "index.js",
   "directories": {
