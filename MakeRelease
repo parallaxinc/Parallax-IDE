@@ -1,0 +1,25 @@
+echo
+echo ---Making Chrome App release in ./release folder---
+echo
+echo STEP 1 of 2: Clearing ./release folder
+echo
+# Clear release folder
+rm -R release/*
+
+echo
+echo STEP 2 of 2: Copying resources to ./release folder
+echo
+# Copy static resources
+cp -R assets          release/assets
+cp -R examples        release/examples
+cp -R fonts           release/fonts
+cp -R icons           release/icons
+cp -R _locales        release/_locales
+cp    background.js   release/
+cp    bundle.js       release/
+cp    index.html      release/
+cp    manifest.json   release/
+
+echo Done!
+
+

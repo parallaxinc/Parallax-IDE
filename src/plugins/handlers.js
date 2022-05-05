@@ -628,7 +628,7 @@ function handlers(app, opts, done){
         /dev\/cu\./
       ],
       source: content,
-      delay: 300
+      delay: 500
     };
 
     store.dispatch(creators.reloadDevices());
@@ -641,7 +641,7 @@ function handlers(app, opts, done){
           // windows serial sometimes needs to wait after boards scanned.
           setTimeout(function() {
             checkAutoDownload();
-          }, 100);
+          }, 300);
         }
       });
   }
@@ -685,7 +685,7 @@ function handlers(app, opts, done){
         /Bluetooth-Modem/,
         /dev\/cu\./
       ],
-      delay: 300
+      delay: 500
     };
 
     app.scanBoards(scanOpts)

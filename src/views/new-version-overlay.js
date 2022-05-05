@@ -13,7 +13,7 @@ const contentStyle = {
 };
 
 const releaseNotesLink = 'https://github.com/parallaxinc/Parallax-IDE/releases';
-const installationNotesLink = 'https://www.parallax.com/downloads/parallax-ide-chrome';
+const installationNotesLink = 'https://www.parallax.com/package/parallax-ide-for-chrome/';
 
 class NewVersionOverlay extends React.Component {
 
