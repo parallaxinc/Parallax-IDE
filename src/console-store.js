@@ -6,7 +6,7 @@
   subscribes through lenses but for now, just create a new store.
  */
 
-const createStore = require('@phated/redux-create-store');
+const createStore = require('redux-create-store');
 
 const reducers = {
   echo: require('./reducers/echo'),

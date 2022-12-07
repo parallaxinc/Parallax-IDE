@@ -7,7 +7,7 @@
     "test": "test"
   },
   "dependencies": {
-    "@phated/redux-create-store": "^0.3.0",
+    "redux-create-store": "git@github.com:parallaxinc/redux-create-store",
     "acorn": "^6.4.2",
     "bs2-serial": "^0.15.0",
     "codemirror": "^4.13.0",
