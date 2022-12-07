@@ -34,3 +34,8 @@ node_modules
 /bundle.js.map
 /dist/
 /release/
+
+
+# IDE configuration files
+.idea
+.vscode
