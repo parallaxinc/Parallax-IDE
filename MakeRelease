@@ -7,7 +7,7 @@ echo
 rm -R release/*
 
 echo
-echo STEP 2 of 2: Copying resources to ./release folder
+echo STEP 2 of 2: Copying static resources to ./release folder
 echo
 # Copy static resources
 cp -R assets          release/assets

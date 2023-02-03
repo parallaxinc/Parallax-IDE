@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!-- THIS FILE REQUIRED FOR PACKAGE-SIGNING — DO NOT REMOVE -->
+
+<installer-gui-script minSpecVersion="1">
+
+    <!-- Define install parameters -->
+    <title>BlocklyProp Launcher</title>
+    <organization>com.ParallaxInc</organization>
+    
+    <!-- Allow module installs, no scripts -->
+    <options customize="allow" require-scripts="false" rootVolumeOnly="false" allow-external-scripts="no" />
+
+    <!-- Must quit the IDE, if it is running -->
+    <pkg-ref id="com.ParallaxInc.BlocklyPropLauncher.app">
+        <must-close>
+            <app id="com.ParallaxInc.BlocklyPropLauncher"/>
+        </must-close>
+    </pkg-ref>
+    
+    <!-- Define documents displayed at various steps -->
+    <welcome    file="welcome.html"         mime-type="text/html" />
+    <background file="splash620x418.png"    mime-type="image/png" />
+    <conclusion file="conclusion.html"      mime-type="text/html" />
+
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.ParallaxInc.BlocklyPropLauncher.app"/>
+        </line>
+    </choices-outline>
+
+    <!-- Default complete package install -->
+    <choice
+        id="default"
+        visible="true"
+        title="BlocklyProp Launcher"
+        description="BlocklyProp Launcher installation">
+    </choice>
+
+    <!-- BPLauncher App pkg -->
+    <choice
+        id="com.ParallaxInc.BlocklyPropLauncher.app" 
+        visible="true"
+        title="BlocklyProp Launcher Application"
+        description="The BlocklyProp assistant application">
+        <pkg-ref id="com.ParallaxInc.BlocklyPropLauncher.app"/>
+    </choice>
+    
+    <pkg-ref
+        id="com.ParallaxInc.BlocklyPropLauncher.app"
+        onConclusion="none">BlocklyPropLauncher.pkg
+    </pkg-ref>
+
+</installer-gui-script>
