@@ -5,16 +5,16 @@
 <installer-gui-script minSpecVersion="1">
 
     <!-- Define install parameters -->
-    <title>BlocklyProp Launcher</title>
+    <title>Parallax IDE Launcher</title>
     <organization>com.ParallaxInc</organization>
     
     <!-- Allow module installs, no scripts -->
     <options customize="allow" require-scripts="false" rootVolumeOnly="false" allow-external-scripts="no" />
 
     <!-- Must quit the IDE, if it is running -->
-    <pkg-ref id="com.ParallaxInc.BlocklyPropLauncher.app">
+    <pkg-ref id="com.ParallaxInc.ParallaxIDE.app">
         <must-close>
-            <app id="com.ParallaxInc.BlocklyPropLauncher"/>
+            <app id="com.ParallaxInc.ParallaxIDE"/>
         </must-close>
     </pkg-ref>
     
@@ -25,7 +25,7 @@
 
     <choices-outline>
         <line choice="default">
-            <line choice="com.ParallaxInc.BlocklyPropLauncher.app"/>
+            <line choice="com.ParallaxInc.ParallaxIDE.app"/>
         </line>
     </choices-outline>
 
@@ -33,22 +33,22 @@
     <choice
         id="default"
         visible="true"
-        title="BlocklyProp Launcher"
-        description="BlocklyProp Launcher installation">
+        title="Parallax IDE"
+        description="Parallax IDE installation">
     </choice>
 
-    <!-- BPLauncher App pkg -->
+    <!-- ParallaxIDE App pkg -->
     <choice
-        id="com.ParallaxInc.BlocklyPropLauncher.app" 
+        id="com.ParallaxInc.ParallaxIDE.app" 
         visible="true"
-        title="BlocklyProp Launcher Application"
-        description="The BlocklyProp assistant application">
-        <pkg-ref id="com.ParallaxInc.BlocklyPropLauncher.app"/>
+        title="Parallax IDE Application"
+        description="The Parallax BASIC Stamp Editor">
+        <pkg-ref id="com.ParallaxInc.ParallaxIDE.app"/>
     </choice>
     
     <pkg-ref
-        id="com.ParallaxInc.BlocklyPropLauncher.app"
-        onConclusion="none">BlocklyPropLauncher.pkg
+        id="com.ParallaxInc.ParallaxIDE.app"
+        onConclusion="none">ParallaxIDE.pkg
     </pkg-ref>
 
 </installer-gui-script>

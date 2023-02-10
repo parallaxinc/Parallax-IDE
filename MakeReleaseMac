@@ -1,0 +1,21 @@
+echo
+echo ---Making Chrome App release in ./release and ./dist/.../app.nw folders---
+echo
+# Clear release folder and copy static resources to it
+./MakeRelease
+
+echo
+echo STEP 3: Clearing ./dist/.../app.nw mac application folder
+echo
+# Clear app.nw folder
+rm -R dist/ParallaxIDE.app/Contents/Resources/app.nw/*
+
+echo
+echo STEP 4: Copying release files to ./dist/.../app.nw windows application folder
+echo
+# Copy static resources
+cp -R release/* dist/ParallaxIDE.app/Contents/Resources/app.nw
+
+echo Done!
+echo
+

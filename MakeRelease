@@ -1,13 +1,13 @@
 echo
-echo ---Making Chrome App release in ./release folder ONLY---
+echo ...Making Chrome App release in ./release folder...
 echo
-echo STEP 1 of 2: Clearing ./release folder
+echo STEP 1: Clearing ./release folder
 echo
 # Clear release folder
 rm -R release/*
 
 echo
-echo STEP 2 of 2: Copying static resources to ./release folder
+echo STEP 2: Copying static resources to ./release folder
 echo
 # Copy static resources
 cp -R assets          release/assets
@@ -19,7 +19,5 @@ cp    background.js   release/
 cp    bundle.js       release/
 cp    index.html      release/
 cp    manifest.json   release/
-
-echo Done!
 
 

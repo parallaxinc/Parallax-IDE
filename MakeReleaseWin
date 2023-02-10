@@ -1,37 +1,22 @@
 echo
 echo ---Making Chrome App release in ./release and ./package/.../package.nw folders---
 echo
-echo STEP 1 of 4: Clearing ./release folder
-echo
-# Clear release folder
-rm -R release/*
+# Clear release folder and copy static resources to it
+./MakeRelease
 
 echo
-echo STEP 2 of 4: Copying static resources to ./release folder
-echo
-# Copy static resources
-cp -R assets          release/assets
-cp -R examples        release/examples
-cp -R fonts           release/fonts
-cp -R icons           release/icons
-cp -R _locales        release/_locales
-cp    background.js   release/
-cp    bundle.js       release/
-cp    index.html      release/
-cp    manifest.json   release/
-
-echo
-echo STEP 3 of 4: Clearing ./package/.../package.nw windows application folder
+echo STEP 3: Clearing ./package/.../package.nw windows application folder
 echo
 # Clear package.nw folder
 rm -R package/win-resources/nwjs/dependencies/package.nw/*
 
 echo
-echo STEP 4 of 4: Copying release files to ./package/.../package.nw windows application folder
+echo STEP 4: Copying release files to ./package/.../package.nw windows application folder
 echo
 # Copy static resources
 cp -R release/* package/win-resources/nwjs/dependencies/package.nw
 
 echo Done!
+echo
 
 
