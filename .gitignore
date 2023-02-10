@@ -19,11 +19,6 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directory
-# Commenting this out is preferred by some people, see
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
-node_modules
-
 # Users Environment Variables
 .lock-wscript
 
@@ -34,3 +29,28 @@ node_modules
 /bundle.js.map
 /dist/
 /release/
+
+# dotenv environment variables file
+.env
+
+# Idera tools
+.idea/
+
+# Node modules, extracted nwjs files, releases, installers, modified xml, and zip archives
+node_modules/
+package/win-resources/nwjs/dependencies/
+package/mac-resources/nwjs/
+release/
+release_exe/
+dist/
+*MOD.xml
+*.zip
+
+# Windows thumb files
+Thumbs.db
+
+# Mac finder files
+.DS_Store
+
+# Ultra Edit files
+*.bak

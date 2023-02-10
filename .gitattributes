@@ -1,1 +1,9 @@
 * text=auto
+*.ico filter=lfs diff=lfs merge=lfs -text
+*.icns filter=lfs diff=lfs merge=lfs -text
+*.bmp filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+package/win-resources/nwjs/nwjs-v*.exe filter=lfs diff=lfs merge=lfs -text
+assets/ParallaxIDE-Splash.png filter=lfs diff=lfs merge=lfs -text

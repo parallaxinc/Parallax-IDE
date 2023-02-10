@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!-- THIS FILE REQUIRED FOR PACKAGE-SIGNING — DO NOT REMOVE -->
+
+<installer-gui-script minSpecVersion="1">
+
+    <!-- Define install parameters -->
+    <title>Parallax IDE Launcher</title>
+    <organization>com.ParallaxInc</organization>
+    
+    <!-- Allow module installs, no scripts -->
+    <options customize="allow" require-scripts="false" rootVolumeOnly="false" allow-external-scripts="no" />
+
+    <!-- Must quit the IDE, if it is running -->
+    <pkg-ref id="com.ParallaxInc.ParallaxIDE.app">
+        <must-close>
+            <app id="com.ParallaxInc.ParallaxIDE"/>
+        </must-close>
+    </pkg-ref>
+    
+    <!-- Define documents displayed at various steps -->
+    <welcome    file="welcome.html"         mime-type="text/html" />
+    <background file="splash620x418.png"    mime-type="image/png" />
+    <conclusion file="conclusion.html"      mime-type="text/html" />
+
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.ParallaxInc.ParallaxIDE.app"/>
+        </line>
+    </choices-outline>
+
+    <!-- Default complete package install -->
+    <choice
+        id="default"
+        visible="true"
+        title="Parallax IDE"
+        description="Parallax IDE installation">
+    </choice>
+
+    <!-- ParallaxIDE App pkg -->
+    <choice
+        id="com.ParallaxInc.ParallaxIDE.app" 
+        visible="true"
+        title="Parallax IDE Application"
+        description="The Parallax BASIC Stamp Editor">
+        <pkg-ref id="com.ParallaxInc.ParallaxIDE.app"/>
+    </choice>
+    
+    <pkg-ref
+        id="com.ParallaxInc.ParallaxIDE.app"
+        onConclusion="none">ParallaxIDE.pkg
+    </pkg-ref>
+
+</installer-gui-script>
